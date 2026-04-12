@@ -1,0 +1,106 @@
+display-name: "&f&lArquero"
+permission: "NONE"
+
+equipment:
+  helmet: LEATHER_HELMET
+  chestplate: LEATHER_CHESTPLATE
+  leggings: LEATHER_LEGGINGS
+  boots: LEATHER_BOOTS
+
+passive-effects:
+  - SPEED|3
+  - DAMAGE_RESISTANCE|2
+
+warmup:
+  time: 5
+  sound:
+    enabled: true
+    type: "ENTITY_EXPERIENCE_ORB_PICKUP|0.5|1.0"
+  particle:
+    enabled: true
+    type: "happy_villager|10|0.5|0.5|0.5|0"
+  sound-completed:
+    enabled: true
+    type: "ENTITY_PLAYER_LEVELUP|1.0|1.0"
+  particle-completed:
+    enabled: true
+    type: "TOTEM_OF_UNDYING|30|0.5|0.5|0.5|0.1"
+  sound-cancel:
+    enabled: true
+    type: "ENTITY_VILLAGER_NO|1.0|0.8"
+  particle-cancel:
+    enabled: false
+    type: ""
+
+abilities:
+  SUGAR:
+    display-name: "&bVelocidad"
+    type: SELF
+    actions:
+      - RIGHT_CLICK_AIR
+      - RIGHT_CLICK_BLOCK
+    effects:
+      - SPEED|5|5
+    cooldown: 30
+    energy-cost: 0
+    radius: 0
+
+  FEATHER:
+    display-name: "&aSalto"
+    type: SELF
+    actions:
+      - RIGHT_CLICK_AIR
+      - RIGHT_CLICK_BLOCK
+    effects:
+      - JUMP|5|5
+    cooldown: 30
+    energy-cost: 0
+    radius: 0
+
+  IRON_INGOT:
+    display-name: "&7Resistencia"
+    type: SELF
+    actions:
+      - RIGHT_CLICK_AIR
+      - RIGHT_CLICK_BLOCK
+    effects:
+      - DAMAGE_RESISTANCE|3|5
+    cooldown: 30
+    energy-cost: 0
+    radius: 0
+
+weapons:
+  ARROW:
+    type: MARK
+    mark-duration: 10
+    give-glow: true
+    mark-same-class: false
+    marks:
+      1:
+        extra-damage: 7
+        color: "&7"
+        icon: "◆"
+        remove-invisibility: true
+        attacked-effects: []
+        attacker-effects: []
+      2:
+        extra-damage: 14
+        color: "&a"
+        icon: "◆◆"
+        remove-invisibility: true
+        attacked-effects: []
+        attacker-effects: []
+      3:
+        extra-damage: 21
+        color: "&e"
+        icon: "◆◆◆"
+        remove-invisibility: true
+        attacked-effects: []
+        attacker-effects: []
+      4:
+        extra-damage: 30
+        color: "&c"
+        icon: "◆◆◆◆"
+        remove-invisibility: true
+        attacked-effects: []
+        attacker-effects: []

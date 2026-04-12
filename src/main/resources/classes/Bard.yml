@@ -1,0 +1,170 @@
+display-name: "&6&lBardo"
+permission: "NONE"
+
+equipment:
+  helmet: GOLDEN_HELMET
+  chestplate: GOLDEN_CHESTPLATE
+  leggings: GOLDEN_LEGGINGS
+  boots: GOLDEN_BOOTS
+
+passive-effects:
+  - SPEED|2
+  - DAMAGE_RESISTANCE|2
+  - REGENERATION|1
+
+warmup:
+  time: 5
+  sound:
+    enabled: true
+    type: "ENTITY_EXPERIENCE_ORB_PICKUP|0.5|1.0"
+  particle:
+    enabled: true
+    type: "happy_villager|10|0.5|0.5|0.5|0"
+  sound-completed:
+    enabled: true
+    type: "ENTITY_PLAYER_LEVELUP|1.0|1.0"
+  particle-completed:
+    enabled: true
+    type: "TOTEM_OF_UNDYING|30|0.5|0.5|0.5|0.1"
+  sound-cancel:
+    enabled: true
+    type: "ENTITY_VILLAGER_NO|1.0|0.8"
+  particle-cancel:
+    enabled: false
+    type: ""
+
+energy:
+  enabled: true
+  name: "Energía"
+  symbol: "⚡"
+  color: "#ffd82b"
+  max: 100
+  regen-per-tick: 0.15
+
+abilities:
+  SUGAR:
+    display-name: "&eVelocidad"
+    type: TO_CLAN
+    actions:
+      - RIGHT_CLICK_AIR
+      - RIGHT_CLICK_BLOCK
+    effects:
+      - SPEED|3|5
+    cooldown: 7
+    energy-cost: 35
+    radius: 20
+
+  IRON_INGOT:
+    display-name: "&7Resistencia"
+    type: TO_CLAN
+    actions:
+      - RIGHT_CLICK_AIR
+      - RIGHT_CLICK_BLOCK
+    effects:
+      - DAMAGE_RESISTANCE|3|5
+    cooldown: 7
+    energy-cost: 35
+    radius: 20
+
+  FEATHER:
+    display-name: "&bSalto"
+    type: TO_CLAN
+    actions:
+      - RIGHT_CLICK_AIR
+      - RIGHT_CLICK_BLOCK
+    effects:
+      - JUMP|5|5
+    cooldown: 7
+    energy-cost: 35
+    radius: 20
+
+  BLAZE_POWDER:
+    display-name: "&cFuerza"
+    type: TO_CLAN
+    actions:
+      - RIGHT_CLICK_AIR
+      - RIGHT_CLICK_BLOCK
+    effects:
+      - INCREASE_DAMAGE|3|5
+    cooldown: 7
+    energy-cost: 35
+    radius: 20
+
+  GHAST_TEAR:
+    display-name: "&dRegeneración"
+    type: TO_CLAN
+    actions:
+      - RIGHT_CLICK_AIR
+      - RIGHT_CLICK_BLOCK
+    effects:
+      - REGENERATION|2|5
+    cooldown: 7
+    energy-cost: 35
+    radius: 20
+
+  MAGMA_CREAM:
+    display-name: "&6Res. al fuego"
+    type: TO_CLAN
+    actions:
+      - RIGHT_CLICK_AIR
+      - RIGHT_CLICK_BLOCK
+    effects:
+      - FIRE_RESISTANCE|1|35
+    cooldown: 7
+    energy-cost: 35
+    radius: 20
+
+  WHEAT:
+    display-name: "&fInvisibilidad"
+    type: TO_CLAN
+    actions:
+      - RIGHT_CLICK_AIR
+      - RIGHT_CLICK_BLOCK
+    effects:
+      - INVISIBILITY|1|35
+    cooldown: 7
+    energy-cost: 35
+    radius: 20
+
+hold-effects:
+  SUGAR:
+    type: TO_CLAN
+    radius: 20
+    effects:
+      - SPEED|2|2
+
+  IRON_INGOT:
+    type: TO_CLAN
+    radius: 20
+    effects:
+      - DAMAGE_RESISTANCE|1|2
+
+  FEATHER:
+    type: TO_CLAN
+    radius: 20
+    effects:
+      - JUMP|2|2
+
+  BLAZE_POWDER:
+    type: TO_CLAN
+    radius: 20
+    effects:
+      - INCREASE_DAMAGE|2|2
+
+  GHAST_TEAR:
+    type: TO_CLAN
+    radius: 20
+    effects:
+      - REGENERATION|1|2
+
+  MAGMA_CREAM:
+    type: TO_CLAN
+    radius: 20
+    effects:
+      - FIRE_RESISTANCE|1|2
+
+  WHEAT:
+    type: TO_CLAN
+    radius: 20
+    effects:
+      - INVISIBILITY|1|2

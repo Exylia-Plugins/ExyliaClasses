@@ -1,0 +1,124 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
+plugins {
+    id 'java'
+    id 'com.gradleup.shadow' version '8.3.0'
+    id("io.freefair.lombok") version "8.14"
+    id 'com.lukittu.sdk' version 'v1.0.10-local'
+}
+
+def pluginName = 'ExyliaClasses'
+def mainPackage = 'net.exylia'
+def fullPackage = "${mainPackage}.exyliaClasses"
+def outputDirectory = "C:\\Seafile\\plugins\\loaders\\"
+
+group = mainPackage
+version = 'v1.0.0'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven {
+        name = "papermc-repo"
+        url = "https://repo.papermc.io/repository/maven-public/"
+    }
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://oss.sonatype.org/content/groups/public/' }
+    maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    maven { url = uri("https://repo.codemc.io/repository/maven-releases/") }
+    maven { url = uri("https://repo.codemc.io/repository/maven-snapshots/") }
+}
+
+dependencies {
+    implementation("${mainPackage}:ExyliaCommons:1.0.0")
+    compileOnly 'com.lukittu.loader:lukittu-common:v1.0.10-local'
+    compileOnly 'com.lukittu.loader:lukittu-spigot:v1.0.10-local'
+    compileOnly 'com.github.ben-manes.caffeine:caffeine:3.2.2'
+    compileOnly 'io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT'
+    compileOnly 'me.clip:placeholderapi:2.11.5'
+    compileOnly 'io.github.revxrsal:lamp.common:4.0.0-rc.14'
+    compileOnly 'io.github.revxrsal:lamp.bukkit:4.0.0-rc.14'
+    compileOnly 'io.github.revxrsal:lamp.brigadier:4.0.0-rc.14'
+}
+
+def targetJavaVersion = 21
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-parameters'
+
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release.set(targetJavaVersion)
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+shadowJar {
+    archiveBaseName.set(pluginName)
+    archiveClassifier.set('')
+    destinationDirectory = file(outputDirectory + "plugins\\")
+    minimize()
+    exclude 'com/lukittu/**'
+    exclude 'de/exlll/**'
+    exclude 'org/snakeyaml/**'
+    exclude 'org/yaml/**'
+    relocate "${mainPackage}.commons", "${fullPackage}.shadow.commons"
+}
+
+tasks.register('cleanTarget', Delete) {
+    delete 'target/'
+}
+
+clean.dependsOn cleanTarget
+
+tasks.register('buildAll') {
+    dependsOn clean, shadowJar
+    group = 'build'
+    description = 'Builds the plugin JAR and the Lukittu loader JAR'
+    doLast {
+        exec {
+            workingDir project.rootDir
+            commandLine 'cmd', '/c', 'gradlew.bat', 'assembleLoaderJar'
+        }
+    }
+}
+
+lukittu {
+    platform.set('spigot')
+    mainClass.set('net.exylia.exyliaClasses.ExyliaClasses')
+    productId.set('64c9a438-3ec2-4cdb-8540-eebdc6a984c5')
+    teamId.set('824ea588-c7b2-4cf3-b9af-25cff6b5385c')
+    loaderVersion.set('v1.0.10-local')
+    configHeader.set('Request your license in https://discord.exylia.net')
+    lukittuBranch.set('spigot')
+    publicKey.set('LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUFtZkF5UUZSV3hRUGRDRndrSzJXTQpSeHhaWVRiWnpsTHBRNWE1dkhBdENQU3ZWaXRIRGVVN0FyeC94UW5pRUVGQW5rOVZRK2VLVGxEZWd6WjRwNU9lCjZQajdQSXNwVFBzL1pNWjNtMlFYN0ZOWkV6TnBTQjk2VjBuQ1RUWFlYdjVUNndEbWVDOEhhWG5iVXFNUUJkZmYKR0ZaUjYrajU4clhBR1I2Q2o5Vkh2MVJyRmhuWEU2cDNXemcxS1F4dG9wVElxNlMzMGtJaGZLeFN4YWh4blVjVQowcmt1N3pOWkFpMGp4RHNESE9hU1lmSmFKbllTUk04bXdvb0tRSWFNNmFWdVIzYUt2MU84aTNHcXJmZFUwcFFUCkFjTWMzZU9nb0poam0yVzR5U2Z5RFZsR3lmZkxpbTgzWHhOWDU0SzlLMEJhUm9wc3Z1R1lSNXpVYjFNT05Ea1gKOHdJREFRQUIKLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==')
+    outputLoaderJarPath.set("${outputDirectory}/Exylia-Classes-Loader.jar")
+    resourcePaths.set([
+        "src/loader/resources/plugin.yml": "plugin.yml"
+    ])
+
+    release {
+        dependsOn(project.tasks.named('shadowJar'))
+        injars(project.tasks.named('shadowJar', ShadowJar).flatMap { it.archiveFile })
+        authorization.set("c1eadb685a61714e6ecc9e9a6f8e95e912944359f2da63fb145493b855672204")
+        status.set("PUBLISHED")
+        setAsLatest.set(true)
+        branchId.set("337c1c7f-5b62-4961-becd-60254f3de40f")
+    }
+}
