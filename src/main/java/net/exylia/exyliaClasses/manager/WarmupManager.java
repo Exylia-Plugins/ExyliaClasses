@@ -2,7 +2,8 @@ package net.exylia.exyliaClasses.manager;
 
 import net.exylia.exyliaClasses.model.ClassDefinition;
 import net.exylia.exyliaClasses.model.Warmup;
-import net.exylia.commons.v2.config.Messages;
+import net.exylia.exyliaClasses.config.MessagesDefaults;
+import net.exylia.commons.v2.placeholders.context.PlaceholderContext;
 import net.exylia.commons.v2.tasks.api.TaskAPI;
 import net.exylia.commons.v2.tasks.scheduler.ScheduledTask;
 import net.exylia.commons.v2.visual.api.MessageAPI;
@@ -44,9 +45,9 @@ public class WarmupManager {
             int timeLeft = remaining.get();
 
             if (timeLeft > 0) {
-                MessageAPI.send(player, Messages.get("warmup.timer",
-                        "%class%", classDef.getDisplayName(),
-                        "%time%", timeLeft));
+                MessageAPI.send(player, MessagesDefaults.Warmup.TIMER, PlaceholderContext.create()
+                        .put("class", classDef.getDisplayName())
+                        .put("time", timeLeft));
 
                 if (warmup.getTickSound() != null)
                     SoundAPI.play(player, warmup.getTickSound());
@@ -78,7 +79,7 @@ public class WarmupManager {
                     SoundAPI.play(player, warmup.getCancelSound());
                 if (warmup.getCancelParticle() != null)
                     ParticleAPI.spawn(player.getLocation(), ParticleBuilder.fromString(warmup.getCancelParticle()));
-                MessageAPI.send(player, Messages.get("warmup.canceled"));
+                MessageAPI.send(player, MessagesDefaults.Warmup.CANCELED);
             }
         }
     }

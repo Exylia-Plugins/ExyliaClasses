@@ -7,19 +7,28 @@ import net.exylia.exyliaClasses.model.Ability;
 import net.exylia.exyliaClasses.model.ClassDefinition;
 import net.exylia.exyliaClasses.model.PlayerState;
 import net.exylia.exyliaClasses.util.ClanHelper;
-import net.exylia.commons.v2.config.Messages;
+import net.exylia.exyliaClasses.config.MessagesDefaults;
+import net.exylia.commons.v2.debug.api.DebugAPI;
+import net.exylia.commons.v2.placeholders.context.PlaceholderContext;
+import net.exylia.commons.v2.tasks.api.TaskAPI;
 import net.exylia.commons.v2.visual.api.EffectAPI;
 import net.exylia.commons.v2.visual.api.MessageAPI;
+import net.exylia.commons.v2.visual.api.ParticleAPI;
+import net.exylia.commons.v2.visual.api.SoundAPI;
+import net.exylia.commons.v2.visual.builder.ParticleBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 public class AbilityListener implements Listener {
 
@@ -31,8 +40,9 @@ public class AbilityListener implements Listener {
                 .registerEvents(this, ExyliaClasses.getInstance().getPlugin());
     }
 
-    @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.HIGH)
     public void onInteract(PlayerInteractEvent event) {
+        if (event.getHand() != EquipmentSlot.HAND) return;
         Player player = event.getPlayer();
 
         Optional<PlayerState> stateOpt = classManager.getStateManager().get(player);
@@ -48,7 +58,9 @@ public class AbilityListener implements Listener {
         Ability ability = classDef.getAbilities().get(material);
         if (ability == null) return;
 
-        if (!ability.getActions().contains(event.getAction())) return;
+        Action action = event.getAction();
+        if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK
+                && action != Action.LEFT_CLICK_AIR && action != Action.LEFT_CLICK_BLOCK) return;
 
         event.setCancelled(true);
 
@@ -56,17 +68,17 @@ public class AbilityListener implements Listener {
 
         if (cooldownManager.isOnCooldown(player, material)) {
             long remaining = cooldownManager.getRemainingSeconds(player, material);
-            MessageAPI.send(player, Messages.get("abilities.cooldown",
-                    "%ability%", ability.getDisplayName(),
-                    "%time%", remaining));
+            MessageAPI.send(player, MessagesDefaults.Abilities.COOLDOWN, PlaceholderContext.create()
+                    .put("ability", ability.getDisplayName())
+                    .put("time", remaining));
             return;
         }
 
         if (ability.getEnergyCost() > 0) {
             if (state.getEnergy() < ability.getEnergyCost()) {
-                MessageAPI.send(player, Messages.get("abilities.no-energy",
-                        "%needed%", (int) ability.getEnergyCost(),
-                        "%current%", (int) state.getEnergy()));
+                MessageAPI.send(player, MessagesDefaults.Abilities.NO_ENERGY, PlaceholderContext.create()
+                        .put("needed", (int) ability.getEnergyCost())
+                        .put("current", (int) state.getEnergy()));
                 return;
             }
             state.setEnergy(state.getEnergy() - ability.getEnergyCost());
@@ -77,16 +89,28 @@ public class AbilityListener implements Listener {
         cooldownManager.setCooldown(player, material, ability.getCooldown());
         player.setCooldown(material, ability.getCooldown() * 20);
 
-        List<Player> targets = ClanHelper.getTargets(player, ability.getType(), ability.getRadius());
-        for (Player target : targets) {
-            EffectAPI.applyAll(target, ability.getEffects());
+        if (ability.getSound() != null) SoundAPI.play(player, ability.getSound());
+        if (ability.getParticles() != null)
+            ParticleAPI.spawn(player.getLocation(), ParticleBuilder.fromString(ability.getParticles()));
 
-            if (!target.equals(player)) {
-                notifyTarget(target, player, ability);
-            }
+        DebugAPI.logPluginDebug("[Ability] " + player.getName() + " used " + material + " | type=" + ability.getType() + " radius=" + ability.getRadius() + " effects=" + ability.getEffects());
+        List<Player> targets = ClanHelper.getTargets(player, ability.getType(), ability.getRadius());
+        DebugAPI.logPluginDebug("[Ability] targets: " + targets.stream().map(Player::getName).toList());
+
+        List<String> effects = ability.getEffects();
+        String particles = ability.getParticles();
+        for (Player target : targets) {
+            TaskAPI.atLater(target, () -> {
+                EffectAPI.applyAll(target, effects);
+                if (particles != null) {
+                    ParticleAPI.spawn(target.getLocation(), ParticleBuilder.fromString(particles));
+                }
+                if (!target.equals(player)) notifyTarget(target, player, ability);
+            }, 0L, TimeUnit.MILLISECONDS);
         }
 
-        MessageAPI.send(player, Messages.get("abilities.used", "%ability%", ability.getDisplayName()));
+        MessageAPI.send(player, MessagesDefaults.Abilities.USED, PlaceholderContext.create()
+                .put("ability", ability.getDisplayName()));
     }
 
     private void removeOneItem(Player player, Material material) {
@@ -101,14 +125,14 @@ public class AbilityListener implements Listener {
     }
 
     private void notifyTarget(Player target, Player caster, Ability ability) {
-        String route = switch (ability.getType()) {
-            case TO_CLAN, TO_CLAN_AND_ALLY, TO_ALLY -> "abilities.clan";
-            case TO_ENEMY -> "abilities.enemy";
+        String message = switch (ability.getType()) {
+            case TO_CLAN, TO_CLAN_AND_ALLY, TO_ALLY -> MessagesDefaults.Abilities.CLAN;
+            case TO_ENEMY -> MessagesDefaults.Abilities.ENEMY;
             default -> null;
         };
-        if (route == null) return;
-        MessageAPI.send(target, Messages.get(route,
-                "%player%", caster.getName(),
-                "%ability%", ability.getDisplayName()));
+        if (message == null) return;
+        MessageAPI.send(target, message, PlaceholderContext.create()
+                .put("player", caster.getName())
+                .put("ability", ability.getDisplayName()));
     }
 }

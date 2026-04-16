@@ -4,6 +4,7 @@ import net.exylia.exyliaClasses.manager.ClassManager;
 import net.exylia.exyliaClasses.model.ClassDefinition;
 import net.exylia.exyliaClasses.model.HoldEffect;
 import net.exylia.exyliaClasses.util.ClanHelper;
+import net.exylia.commons.v2.debug.api.DebugAPI;
 import net.exylia.commons.v2.tasks.api.TaskAPI;
 import net.exylia.commons.v2.visual.api.EffectAPI;
 import net.exylia.commons.v2.tasks.scheduler.ScheduledTask;
@@ -13,6 +14,7 @@ import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class HoldEffectListener {
 
@@ -26,24 +28,34 @@ public class HoldEffectListener {
     public void start() {
         task = TaskAPI.syncTimer(() -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
-                classManager.getStateManager().get(player).ifPresent(state -> {
-                    if (!state.isInClass()) return;
-                    ClassDefinition classDef = state.getCurrentClass();
+                if (classManager.getStateManager().get(player)
+                        .filter(s -> s.isInClass() && !s.getCurrentClass().getHoldEffects().isEmpty())
+                        .isEmpty()) continue;
 
-                    Map<Material, HoldEffect> holdEffects = classDef.getHoldEffects();
-                    if (holdEffects.isEmpty()) return;
+                TaskAPI.atLater(player, () -> {
+                    classManager.getStateManager().get(player).ifPresent(state -> {
+                        if (!state.isInClass()) return;
+                        ClassDefinition classDef = state.getCurrentClass();
 
-                    Material heldMaterial = player.getInventory().getItemInMainHand().getType();
-                    HoldEffect holdEffect = holdEffects.get(heldMaterial);
-                    if (holdEffect == null) return;
+                        Map<Material, HoldEffect> holdEffects = classDef.getHoldEffects();
+                        if (holdEffects.isEmpty()) return;
 
-                    List<Player> targets = ClanHelper.getTargets(player, holdEffect.getType(), holdEffect.getRadius());
-                    for (Player target : targets) {
-                        EffectAPI.applyAll(target, holdEffect.getEffects());
-                    }
-                });
+                        Material heldMaterial = player.getInventory().getItemInMainHand().getType();
+                        HoldEffect holdEffect = holdEffects.get(heldMaterial);
+                        if (holdEffect == null) return;
+
+                        DebugAPI.logPluginDebug("[HoldEffect] " + player.getName() + " holding " + heldMaterial + " | type=" + holdEffect.getType() + " radius=" + holdEffect.getRadius() + " effects=" + holdEffect.getEffects());
+                        List<Player> targets = ClanHelper.getTargets(player, holdEffect.getType(), holdEffect.getRadius());
+                        DebugAPI.logPluginDebug("[HoldEffect] applying to " + targets.stream().map(Player::getName).toList());
+
+                        List<String> effects = holdEffect.getEffects();
+                        for (Player target : targets) {
+                            TaskAPI.atLater(target, () -> EffectAPI.applyAll(target, effects), 0L, TimeUnit.MILLISECONDS);
+                        }
+                    });
+                }, 0L, TimeUnit.MILLISECONDS);
             }
-        }, 0L, 20L);
+        }, 0L, 10L);
     }
 
     public void stop() {

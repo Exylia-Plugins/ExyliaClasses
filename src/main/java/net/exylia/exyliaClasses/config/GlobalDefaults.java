@@ -39,6 +39,7 @@ public class GlobalDefaults {
             public static BossBarConfig CONFIG = BossBarConfig.builder("%mark_color%%mark_icon% +%extra_damage%% {muted}(%time_formatted%)")
                     .color(BossBar.Color.RED)
                     .style(BossBar.Overlay.NOTCHED_20)
+                    .updateInterval(2L)
                     .build();
         }
     }

@@ -1,13 +1,14 @@
 package net.exylia.exyliaClasses.loader;
 
 import net.exylia.exyliaClasses.model.*;
+import net.exylia.exyliaClasses.model.specialpassive.SpecialPassive;
+import net.exylia.exyliaClasses.model.specialpassive.SpecialPassiveType;
 import net.exylia.exyliaClasses.model.weapon.*;
 import net.exylia.commons.v2.config.Configs;
 import net.exylia.commons.v2.debug.api.DebugAPI;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.event.block.Action;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,6 +26,10 @@ public class ClassDefinitionLoader {
     public List<ClassDefinition> loadAll() {
         Configs.get("classes/Archer");
         Configs.get("classes/Bard");
+        Configs.get("classes/Miner");
+        Configs.get("classes/Rogue");
+        Configs.get("classes/Sorcerer");
+        Configs.get("classes/Tank");
 
         File classesDir = new File(plugin.getDataFolder(), "classes");
         List<ClassDefinition> result = new ArrayList<>();
@@ -38,7 +43,6 @@ public class ClassDefinitionLoader {
                 ClassDefinition def = load(name);
                 if (def != null) {
                     result.add(def);
-                    DebugAPI.logPluginInfo("Clase cargada: " + def.getDisplayName());
                 }
             } catch (Exception e) {
                 DebugAPI.logPluginError("Error al cargar clase desde " + file.getName(), e);
@@ -55,6 +59,7 @@ public class ClassDefinitionLoader {
 
         Map<EquipmentSlot, Material> equipment = parseEquipment(cfg.getConfigurationSection("equipment"));
         List<String> passiveEffects = cfg.getStringList("passive-effects");
+        List<SpecialPassive> specialPassives = parseSpecialPassives(cfg.getMapList("special-passives"));
         Warmup warmup = parseWarmup(cfg.getConfigurationSection("warmup"));
         Energy energy = parseEnergy(cfg.getConfigurationSection("energy"));
         Map<Material, Ability> abilities = parseAbilities(cfg.getConfigurationSection("abilities"));
@@ -62,7 +67,7 @@ public class ClassDefinitionLoader {
         Map<Material, Weapon> weapons = parseWeapons(cfg.getConfigurationSection("weapons"));
 
         return new ClassDefinition(id, displayName, permission, equipment,
-                passiveEffects, warmup, energy, abilities, holdEffects, weapons);
+                passiveEffects, specialPassives, warmup, energy, abilities, holdEffects, weapons);
     }
 
     private Map<EquipmentSlot, Material> parseEquipment(ConfigurationSection section) {
@@ -133,30 +138,19 @@ public class ClassDefinitionLoader {
 
                 String displayName = abilitySection.getString("display-name", key);
                 AbilityType type = AbilityType.fromString(abilitySection.getString("type", "SELF"));
-                Set<Action> actions = parseActions(abilitySection.getStringList("actions"));
                 List<String> effects = abilitySection.getStringList("effects");
                 int cooldown = abilitySection.getInt("cooldown", 30);
                 double energyCost = abilitySection.getDouble("energy-cost", 0);
                 double radius = abilitySection.getDouble("radius", 0);
+                String particles = parseParticleSection(abilitySection.getConfigurationSection("particles"));
+                String sound = parseSoundSection(abilitySection.getConfigurationSection("sound"));
 
-                map.put(material, new Ability(displayName, material, type, actions, effects, cooldown, energyCost, radius));
+                map.put(material, new Ability(displayName, material, type, effects, cooldown, energyCost, radius, particles, sound));
             } catch (IllegalArgumentException e) {
                 DebugAPI.logPluginWarn("Material inválido para habilidad: " + key);
             }
         }
         return map;
-    }
-
-    private Set<Action> parseActions(List<String> actionStrings) {
-        Set<Action> actions = new LinkedHashSet<>();
-        for (String s : actionStrings) {
-            try {
-                actions.add(Action.valueOf(s.toUpperCase()));
-            } catch (IllegalArgumentException e) {
-                DebugAPI.logPluginWarn("Acción inválida: " + s);
-            }
-        }
-        return actions;
     }
 
     private Map<Material, HoldEffect> parseHoldEffects(ConfigurationSection section) {
@@ -235,6 +229,31 @@ public class ClassDefinitionLoader {
         return new MarkWeapon(material, duration, giveGlow, markSameClass, levels);
     }
 
+    @SuppressWarnings("unchecked")
+    private List<SpecialPassive> parseSpecialPassives(List<Map<?, ?>> mapList) {
+        List<SpecialPassive> result = new ArrayList<>();
+        if (mapList == null || mapList.isEmpty()) return result;
+
+        for (Map<?, ?> entry : mapList) {
+            String typeStr = (String) entry.get("type");
+            String condition = String.valueOf(entry.get("condition"));
+            Object effectsObj = entry.get("effects");
+
+            SpecialPassiveType type = SpecialPassiveType.fromString(typeStr);
+            if (type == null) {
+                DebugAPI.logPluginWarn("Tipo de pasiva especial inválido: " + typeStr);
+                continue;
+            }
+
+            List<String> effects = effectsObj instanceof List<?> list
+                    ? list.stream().map(Object::toString).toList()
+                    : List.of();
+
+            result.add(new SpecialPassive(type, condition, effects));
+        }
+        return result;
+    }
+
     private BackstabWeapon parseBackstabWeapon(Material material, ConfigurationSection section) {
         double extraDamage = section.getDouble("extra-damage", 50);
         boolean canDead = section.getBoolean("can-dead", false);
@@ -242,8 +261,12 @@ public class ClassDefinitionLoader {
         boolean breakItem = section.getBoolean("break-item", false);
         List<String> attackedEffects = section.getStringList("attacked-effects");
         List<String> attackerEffects = section.getStringList("attacker-effects");
+        String attackedParticles = parseParticleSection(section.getConfigurationSection("attacked-particles"));
+        String attackerParticles = parseParticleSection(section.getConfigurationSection("attacker-particles"));
+        String attackedSound = parseSoundSection(section.getConfigurationSection("attacked-sound"));
+        String attackerSound = parseSoundSection(section.getConfigurationSection("attacker-sound"));
 
         return new BackstabWeapon(material, extraDamage, canDead, cooldownNeed, breakItem,
-                attackedEffects, attackerEffects, null, null, null, null);
+                attackedEffects, attackerEffects, attackedParticles, attackerParticles, attackedSound, attackerSound);
     }
 }

@@ -6,9 +6,13 @@ import net.exylia.exyliaClasses.model.ClassDefinition;
 import net.exylia.exyliaClasses.model.PlayerState;
 import net.exylia.exyliaClasses.model.weapon.BackstabWeapon;
 import net.exylia.exyliaClasses.model.weapon.WeaponType;
-import net.exylia.commons.v2.config.Messages;
+import net.exylia.exyliaClasses.config.MessagesDefaults;
+import net.exylia.commons.v2.placeholders.context.PlaceholderContext;
 import net.exylia.commons.v2.visual.api.EffectAPI;
 import net.exylia.commons.v2.visual.api.MessageAPI;
+import net.exylia.commons.v2.visual.api.ParticleAPI;
+import net.exylia.commons.v2.visual.api.SoundAPI;
+import net.exylia.commons.v2.visual.builder.ParticleBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -45,38 +49,41 @@ public class BackstabListener implements Listener {
 
         float attackCooldown = attacker.getAttackCooldown();
         if (attackCooldown < backstab.getAttackCooldownNeed()) {
-            MessageAPI.send(attacker, Messages.get("weapons.backstab.no-cooldown",
-                    "%current%", String.format("%.0f", attackCooldown * 100),
-                    "%needed%", String.format("%.0f", backstab.getAttackCooldownNeed() * 100)));
+            MessageAPI.send(attacker, MessagesDefaults.Weapons.Backstab.NO_COOLDOWN, PlaceholderContext.create()
+                    .put("current", String.format("%.0f", attackCooldown * 100))
+                    .put("needed", String.format("%.0f", backstab.getAttackCooldownNeed() * 100)));
             return;
         }
 
         if (!isBackstab(attacker, target)) return;
 
-        double currentDamage = event.getDamage();
-        double extraDamage = currentDamage * (backstab.getExtraDamage() / 100.0);
-        double finalDamage = currentDamage + extraDamage;
+        double newHealth = target.getHealth() - backstab.getExtraDamage();
 
-        if (!backstab.isCanDead()) {
-            double targetHealth = target.getHealth();
-            if (finalDamage >= targetHealth) {
-                MessageAPI.send(attacker, Messages.get("weapons.backstab.cant-dead"));
-                finalDamage = Math.max(targetHealth - 0.5, currentDamage);
-            }
+        if (!backstab.isCanDead() && newHealth <= 0) {
+            MessageAPI.send(attacker, MessagesDefaults.Weapons.Backstab.CANT_DEAD);
+            return;
         }
 
-        event.setDamage(finalDamage);
+        event.setDamage(0);
+        target.setHealth(Math.max(0, newHealth));
 
         EffectAPI.applyAll(target, backstab.getAttackedEffects());
         EffectAPI.applyAll(attacker, backstab.getAttackerEffects());
 
+        if (backstab.getAttackedSound() != null) SoundAPI.play(target, backstab.getAttackedSound());
+        if (backstab.getAttackedParticles() != null)
+            ParticleAPI.spawn(target.getLocation(), ParticleBuilder.fromString(backstab.getAttackedParticles()));
+        if (backstab.getAttackerSound() != null) SoundAPI.play(attacker, backstab.getAttackerSound());
+        if (backstab.getAttackerParticles() != null)
+            ParticleAPI.spawn(attacker.getLocation(), ParticleBuilder.fromString(backstab.getAttackerParticles()));
+
         if (backstab.isBreakItem()) {
-            attacker.getInventory().getItemInMainHand().setDurability(Short.MAX_VALUE);
+            attacker.getInventory().setItemInMainHand(null);
         }
 
-        MessageAPI.send(attacker, Messages.get("weapons.backstab.success"));
-        MessageAPI.send(target, Messages.get("weapons.backstab.victim",
-                "%attacker%", attacker.getName()));
+        MessageAPI.send(attacker, MessagesDefaults.Weapons.Backstab.SUCCESS);
+        MessageAPI.send(target, MessagesDefaults.Weapons.Backstab.VICTIM, PlaceholderContext.create()
+                .put("attacker", attacker.getName()));
     }
 
     private boolean isBackstab(Player attacker, Player target) {

@@ -3,6 +3,7 @@ package net.exylia.exyliaClasses.util;
 import net.exylia.exyliaClasses.model.AbilityType;
 import net.exylia.commons.v2.clan.api.ClanAPI;
 import net.exylia.commons.v2.clan.model.Clan;
+import net.exylia.commons.v2.debug.api.DebugAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -27,20 +28,39 @@ public final class ClanHelper {
     }
 
     public static List<Player> getClanMembers(Player caster, double radius) {
+        List<Player> targets = new ArrayList<>();
+        targets.add(caster);
+
         Optional<Clan> clanOpt = ClanAPI.getPlayerClan(caster);
-        if (clanOpt.isEmpty()) return Collections.emptyList();
+        if (clanOpt.isEmpty()) {
+            DebugAPI.logPluginDebug("[ClanHelper] " + caster.getName() + " has no clan — targets: [self]");
+            return targets;
+        }
 
         Clan clan = clanOpt.get();
-        List<Player> targets = new ArrayList<>();
         double radiusSquared = radius * radius;
+        DebugAPI.logPluginDebug("[ClanHelper] " + caster.getName() + " clan online members: " + clan.getOnlineMembers().size() + " | radius: " + radius);
 
         for (UUID memberId : clan.getOnlineMembers()) {
             Player member = Bukkit.getPlayer(memberId);
-            if (member == null || !member.isOnline()) continue;
-            if (!caster.getWorld().equals(member.getWorld())) continue;
-            if (caster.getLocation().distanceSquared(member.getLocation()) > radiusSquared) continue;
+            if (member == null || !member.isOnline()) {
+                DebugAPI.logPluginDebug("[ClanHelper] skip " + memberId + " — offline or null");
+                continue;
+            }
+            if (member.equals(caster)) continue;
+            if (!caster.getWorld().equals(member.getWorld())) {
+                DebugAPI.logPluginDebug("[ClanHelper] skip " + member.getName() + " — different world");
+                continue;
+            }
+            double dist = caster.getLocation().distanceSquared(member.getLocation());
+            if (dist > radiusSquared) {
+                DebugAPI.logPluginDebug("[ClanHelper] skip " + member.getName() + " — out of range (dist²=" + String.format("%.1f", dist) + " > " + String.format("%.1f", radiusSquared) + ")");
+                continue;
+            }
             targets.add(member);
         }
+
+        DebugAPI.logPluginDebug("[ClanHelper] final targets for " + caster.getName() + ": " + targets.stream().map(Player::getName).toList());
         return targets;
     }
 

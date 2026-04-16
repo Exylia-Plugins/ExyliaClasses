@@ -8,13 +8,13 @@ import net.exylia.exyliaClasses.model.PlayerState;
 import net.exylia.exyliaClasses.model.Warmup;
 import net.exylia.exyliaClasses.model.weapon.MarkLevel;
 import net.exylia.exyliaClasses.util.EquipmentUtil;
+import net.exylia.exyliaClasses.config.MessagesDefaults;
 import net.exylia.commons.v2.placeholders.context.PlaceholderContext;
 import net.exylia.commons.v2.visual.api.BossBarAPI;
 import net.exylia.commons.v2.visual.api.EffectAPI;
 import net.exylia.commons.v2.visual.api.ParticleAPI;
 import net.exylia.commons.v2.visual.api.SoundAPI;
 import net.exylia.commons.v2.visual.builder.ParticleBuilder;
-import net.exylia.commons.v2.config.Messages;
 import net.exylia.commons.v2.tasks.api.TaskAPI;
 import net.exylia.commons.v2.tasks.scheduler.ScheduledTask;
 import net.exylia.commons.v2.visual.api.MessageAPI;
@@ -94,8 +94,8 @@ public class ClassManager {
 
     public void tryApplyClass(Player player, ClassDefinition classDef) {
         if (classDef.hasPermission() && !player.hasPermission(classDef.getPermission())) {
-            MessageAPI.send(player, Messages.get("no-permission",
-                    "%class%", classDef.getDisplayName()));
+            MessageAPI.send(player, MessagesDefaults.NO_PERMISSION, PlaceholderContext.create()
+                    .put("class", classDef.getDisplayName()));
             return;
         }
         warmupManager.startWarmup(player, classDef);
@@ -120,7 +120,8 @@ public class ClassManager {
         if (warmup.getCompletedParticle() != null)
             ParticleAPI.spawn(player.getLocation(), ParticleBuilder.fromString(warmup.getCompletedParticle()));
 
-        MessageAPI.send(player, Messages.get("warmup.ready", "%class%", classDef.getDisplayName()));
+        MessageAPI.send(player, MessagesDefaults.Warmup.READY, PlaceholderContext.create()
+                .put("class", classDef.getDisplayName()));
     }
 
     public void removeClass(Player player) {
@@ -133,6 +134,13 @@ public class ClassManager {
 
         EffectAPI.removeAll(player, classDef.getPassiveEffects());
 
+        if (!state.getActiveSpecialPassives().isEmpty()) {
+            for (var sp : state.getActiveSpecialPassives()) {
+                EffectAPI.removeAll(player, sp.getEffects());
+            }
+            state.getActiveSpecialPassives().clear();
+        }
+
         cancelEnergyTask(player, state);
         clearMark(player, state);
 
@@ -140,7 +148,8 @@ public class ClassManager {
         cooldownManager.clearCooldowns(player);
 
         if (player.isOnline()) {
-            MessageAPI.send(player, Messages.get("class.removed", "%class%", classDef.getDisplayName()));
+            MessageAPI.send(player, MessagesDefaults.ClassMessages.REMOVED, PlaceholderContext.create()
+                    .put("class", classDef.getDisplayName()));
         }
     }
 
@@ -158,6 +167,12 @@ public class ClassManager {
             ClassDefinition classDef = state.getCurrentClass();
             if (classDef != null) {
                 EffectAPI.removeAll(player, classDef.getPassiveEffects());
+                if (!state.getActiveSpecialPassives().isEmpty()) {
+                    for (var sp : state.getActiveSpecialPassives()) {
+                        EffectAPI.removeAll(player, sp.getEffects());
+                    }
+                    state.getActiveSpecialPassives().clear();
+                }
             }
             cancelEnergyTask(player, state);
             clearMark(player, state);
@@ -217,16 +232,14 @@ public class ClassManager {
             state.setMarkWeapon(null);
         }
         if (player.isOnline()) {
-            MessageAPI.send(player, Messages.get("weapons.mark.expired"));
+            MessageAPI.send(player, MessagesDefaults.Weapons.Mark.EXPIRED);
         }
     }
 
     public void clearMark(Player player, PlayerState state) {
         BossBarAPI.cancel(player, KEY_MARK);
         if (state.getMarkCount() > 0) {
-            if (player.isOnline()) {
-                player.setGlowing(false);
-            }
+            if (player.isOnline()) player.setGlowing(false);
             state.setMarkCount(0);
             state.setMarkWeapon(null);
         }
@@ -239,6 +252,17 @@ public class ClassManager {
         }
         BossBarAPI.cancel(player, KEY_ENERGY);
         state.setEnergy(0);
+    }
+
+    public void reapplyPassiveEffects(Player player) {
+        stateManager.get(player).ifPresent(state -> {
+            if (state.isInClass()) {
+                EffectAPI.applyAllInfinite(player, state.getCurrentClass().getPassiveEffects());
+                for (var sp : state.getActiveSpecialPassives()) {
+                    EffectAPI.applyAllInfinite(player, sp.getEffects());
+                }
+            }
+        });
     }
 
     public PlayerStateManager getStateManager() {

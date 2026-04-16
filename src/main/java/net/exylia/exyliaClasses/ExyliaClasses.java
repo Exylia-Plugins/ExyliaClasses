@@ -1,6 +1,7 @@
 package net.exylia.exyliaClasses;
 
 import lombok.Getter;
+import net.exylia.commons.v2.clan.api.ClanAPI;
 import net.exylia.exyliaClasses.api.ClassesAPI;
 import net.exylia.exyliaClasses.command.CommandRegistry;
 import net.exylia.exyliaClasses.config.GlobalDefaults;
@@ -13,7 +14,6 @@ import net.exylia.exyliaClasses.placeholder.ClassesPlaceholders;
 import net.exylia.commons.v2.loader.ExyliaLoaderPlugin;
 import net.exylia.commons.v2.debug.api.DebugAPI;
 import net.exylia.commons.v2.placeholders.api.Placeholders;
-import org.bukkit.Server;
 
 public class ExyliaClasses extends ExyliaLoaderPlugin {
 
@@ -27,6 +27,7 @@ public class ExyliaClasses extends ExyliaLoaderPlugin {
     private ClassesAPI classesAPI;
 
     private HoldEffectListener holdEffectListener;
+    private SpecialPassiveListener specialPassiveListener;
 
     @Override
     protected void onPreExyliaEnable() {
@@ -38,6 +39,7 @@ public class ExyliaClasses extends ExyliaLoaderPlugin {
     protected void onExyliaEnable() {
         DebugAPI.init(getPlugin());
         loadConfigs();
+        ClanAPI.initialize(getPlugin());
 
         PlayerStateManager stateManager = new PlayerStateManager();
         CooldownManager cooldownManager = new CooldownManager();
@@ -48,14 +50,19 @@ public class ExyliaClasses extends ExyliaLoaderPlugin {
 
         loadListeners();
         loadPlaceholders();
+        checkOnlinePlayers();
+    }
 
-        DebugAPI.logPluginSuccess("ExyliaClasses habilitado con "
-                + classManager.getClasses().size() + " clases.");
+    private void checkOnlinePlayers() {
+        for (var player : getPlugin().getServer().getOnlinePlayers()) {
+            classManager.checkArmorChange(player);
+        }
     }
 
     @Override
     protected void onExyliaDisable() {
         if (holdEffectListener != null) holdEffectListener.stop();
+        if (specialPassiveListener != null) specialPassiveListener.stop();
         if (classManager != null) classManager.disableAll();
         Placeholders.shutdown();
     }
@@ -63,7 +70,6 @@ public class ExyliaClasses extends ExyliaLoaderPlugin {
     private void loadConfigs() {
         GlobalDefaults.register();
         MessagesDefaults.register();
-        DebugAPI.logPluginSuccess("Configuración cargada");
     }
 
     private void loadListeners() {
@@ -75,13 +81,13 @@ public class ExyliaClasses extends ExyliaLoaderPlugin {
         holdEffectListener = new HoldEffectListener(classManager);
         holdEffectListener.start();
 
-        DebugAPI.logPluginSuccess("Listeners registrados");
+        specialPassiveListener = new SpecialPassiveListener(classManager);
+        specialPassiveListener.start();
     }
 
     private void loadPlaceholders() {
         Placeholders.initialize(getPlugin());
         Placeholders.registerAnnotatedClass(new ClassesPlaceholders(classesAPI));
         Placeholders.registerPapiExpander("classes");
-        DebugAPI.logPluginSuccess("Placeholders registrados");
     }
 }

@@ -7,17 +7,16 @@ import net.exylia.exyliaClasses.model.PlayerState;
 import net.exylia.exyliaClasses.model.weapon.MarkLevel;
 import net.exylia.exyliaClasses.model.weapon.MarkWeapon;
 import net.exylia.exyliaClasses.model.weapon.WeaponType;
-import net.exylia.commons.v2.config.Messages;
+import net.exylia.exyliaClasses.config.MessagesDefaults;
+import net.exylia.commons.v2.placeholders.context.PlaceholderContext;
 import net.exylia.commons.v2.visual.api.EffectAPI;
 import net.exylia.commons.v2.visual.api.MessageAPI;
-import org.bukkit.Material;
 import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 
@@ -31,31 +30,6 @@ public class MarkListener implements Listener {
         this.classManager = classManager;
         ExyliaClasses.getInstance().getPlugin().getServer().getPluginManager()
                 .registerEvents(this, ExyliaClasses.getInstance().getPlugin());
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onArrowHit(ProjectileHitEvent event) {
-        if (!(event.getEntity() instanceof Arrow arrow)) return;
-        if (!(event.getHitEntity() instanceof Player target)) return;
-        if (!(arrow.getShooter() instanceof Player shooter)) return;
-
-        Optional<PlayerState> shooterStateOpt = classManager.getStateManager().get(shooter);
-        if (shooterStateOpt.isEmpty() || !shooterStateOpt.get().isInClass()) return;
-
-        ClassDefinition classDef = shooterStateOpt.get().getCurrentClass();
-        if (!(classDef.getWeapons().get(Material.ARROW) instanceof MarkWeapon markWeapon)) return;
-
-        if (!markWeapon.isMarkSameClass()) {
-            Optional<PlayerState> targetStateOpt = classManager.getStateManager().get(target);
-            if (targetStateOpt.isPresent() && targetStateOpt.get().isInClass()) {
-                if (classDef.getId().equals(targetStateOpt.get().getCurrentClass().getId())) {
-                    MessageAPI.send(shooter, Messages.get("weapons.mark.same-class"));
-                    return;
-                }
-            }
-        }
-
-        applyMark(shooter, target, markWeapon);
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
@@ -74,6 +48,19 @@ public class MarkListener implements Listener {
                 .map(w -> (MarkWeapon) w)
                 .findFirst().orElse(null);
         if (markWeapon == null) return;
+
+        if (event.getDamager() instanceof Arrow) {
+            if (!markWeapon.isMarkSameClass()) {
+                Optional<PlayerState> targetStateOpt = classManager.getStateManager().get(target);
+                if (targetStateOpt.isPresent() && targetStateOpt.get().isInClass()) {
+                    if (classDef.getId().equals(targetStateOpt.get().getCurrentClass().getId())) {
+                        MessageAPI.send(attacker, MessagesDefaults.Weapons.Mark.SAME_CLASS);
+                        return;
+                    }
+                }
+            }
+            applyMark(attacker, target, markWeapon);
+        }
 
         Optional<PlayerState> targetStateOpt = classManager.getStateManager().get(target);
         if (targetStateOpt.isEmpty() || !targetStateOpt.get().isMarked()) return;
@@ -118,9 +105,11 @@ public class MarkListener implements Listener {
         MarkLevel level = markWeapon.getLevel(newCount);
         String damage = level != null ? String.valueOf((int) level.getExtraDamage()) : "?";
 
-        MessageAPI.send(shooter, Messages.get("weapons.mark.applied",
-                "%target%", target.getName(), "%damage%", damage));
-        MessageAPI.send(target, Messages.get("weapons.mark.received",
-                "%attacker%", shooter.getName(), "%damage%", damage));
+        MessageAPI.send(shooter, MessagesDefaults.Weapons.Mark.APPLIED, PlaceholderContext.create()
+                .put("target", target.getName())
+                .put("damage", damage));
+        MessageAPI.send(target, MessagesDefaults.Weapons.Mark.RECEIVED, PlaceholderContext.create()
+                .put("attacker", shooter.getName())
+                .put("damage", damage));
     }
 }
