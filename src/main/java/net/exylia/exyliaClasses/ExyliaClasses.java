@@ -2,6 +2,7 @@ package net.exylia.exyliaClasses;
 
 import lombok.Getter;
 import net.exylia.commons.v2.clan.api.ClanAPI;
+import net.exylia.commons.v2.clientapi.api.ClientAPI;
 import net.exylia.exyliaClasses.api.ClassesAPI;
 import net.exylia.exyliaClasses.command.CommandRegistry;
 import net.exylia.exyliaClasses.config.GlobalDefaults;
@@ -40,6 +41,7 @@ public class ExyliaClasses extends ExyliaLoaderPlugin {
         DebugAPI.init(getPlugin());
         loadConfigs();
         ClanAPI.initialize(getPlugin());
+        ClientAPI.initialize(getPlugin());
 
         PlayerStateManager stateManager = new PlayerStateManager();
         CooldownManager cooldownManager = new CooldownManager();

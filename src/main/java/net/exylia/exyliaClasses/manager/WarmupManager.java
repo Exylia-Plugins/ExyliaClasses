@@ -3,6 +3,9 @@ package net.exylia.exyliaClasses.manager;
 import net.exylia.exyliaClasses.model.ClassDefinition;
 import net.exylia.exyliaClasses.model.Warmup;
 import net.exylia.exyliaClasses.config.MessagesDefaults;
+import net.exylia.commons.v2.clientapi.cooldown.api.CooldownAPI;
+import net.exylia.commons.v2.clientapi.cooldown.model.CooldownDefinition;
+import net.exylia.commons.v2.clientapi.cooldown.model.CooldownIcon;
 import net.exylia.commons.v2.placeholders.context.PlaceholderContext;
 import net.exylia.commons.v2.tasks.api.TaskAPI;
 import net.exylia.commons.v2.tasks.scheduler.ScheduledTask;
@@ -10,8 +13,11 @@ import net.exylia.commons.v2.visual.api.MessageAPI;
 import net.exylia.commons.v2.visual.api.ParticleAPI;
 import net.exylia.commons.v2.visual.api.SoundAPI;
 import net.exylia.commons.v2.visual.builder.ParticleBuilder;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.EquipmentSlot;
 
+import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,11 +34,24 @@ public class WarmupManager {
         this.onComplete = onComplete;
     }
 
+    private static final String WARMUP_COOLDOWN_KEY = "class_warmup";
+
     public void startWarmup(Player player, ClassDefinition classDef) {
         cancelWarmup(player);
         warmupClasses.put(player.getUniqueId(), classDef);
 
         Warmup warmup = classDef.getWarmup();
+
+        if (CooldownAPI.isInitialized()) {
+            Material chestplate = classDef.getEquipment().get(EquipmentSlot.CHEST);
+            CooldownDefinition cooldownDef = CooldownDefinition.builder()
+                    .name(WARMUP_COOLDOWN_KEY)
+                    .duration(Duration.ofSeconds(warmup.getTime()))
+                    .icon(chestplate != null ? CooldownIcon.item(chestplate.name()) : CooldownIcon.item("COMPASS"))
+                    .build();
+            CooldownAPI.display(player, cooldownDef);
+        }
+
         AtomicInteger remaining = new AtomicInteger(warmup.getTime());
 
         ScheduledTask task = TaskAPI.atTimer(player, () -> {
@@ -72,6 +91,10 @@ public class WarmupManager {
 
         if (task != null) {
             task.cancel();
+
+            if (CooldownAPI.isInitialized()) {
+                CooldownAPI.remove(player, WARMUP_COOLDOWN_KEY);
+            }
 
             if (classDef != null && player.isOnline()) {
                 Warmup warmup = classDef.getWarmup();
