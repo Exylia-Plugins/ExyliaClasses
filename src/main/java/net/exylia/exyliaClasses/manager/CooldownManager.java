@@ -1,8 +1,12 @@
 package net.exylia.exyliaClasses.manager;
 
+import net.exylia.commons.v2.clientapi.cooldown.api.CooldownAPI;
+import net.exylia.commons.v2.clientapi.cooldown.model.CooldownDefinition;
+import net.exylia.commons.v2.clientapi.cooldown.model.CooldownIcon;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
+import java.time.Duration;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,6 +25,13 @@ public class CooldownManager {
     public void setCooldown(Player player, Material material, int seconds) {
         cooldowns.computeIfAbsent(player.getUniqueId(), k -> new ConcurrentHashMap<>())
                 .put(material, System.currentTimeMillis() + (seconds * 1000L));
+
+        CooldownDefinition definition = CooldownDefinition.builder()
+                .name("ability_" + material.name())
+                .duration(Duration.ofSeconds(seconds))
+                .icon(CooldownIcon.item(material.name()))
+                .build();
+        CooldownAPI.display(player, definition);
     }
 
     public long getRemainingSeconds(Player player, Material material) {
@@ -33,5 +44,6 @@ public class CooldownManager {
 
     public void clearCooldowns(Player player) {
         cooldowns.remove(player.getUniqueId());
+        CooldownAPI.removeAll(player);
     }
 }

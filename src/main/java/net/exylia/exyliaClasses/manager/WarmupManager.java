@@ -42,15 +42,13 @@ public class WarmupManager {
 
         Warmup warmup = classDef.getWarmup();
 
-        if (CooldownAPI.isInitialized()) {
-            Material chestplate = classDef.getEquipment().get(EquipmentSlot.CHEST);
-            CooldownDefinition cooldownDef = CooldownDefinition.builder()
-                    .name(WARMUP_COOLDOWN_KEY)
-                    .duration(Duration.ofSeconds(warmup.getTime()))
-                    .icon(chestplate != null ? CooldownIcon.item(chestplate.name()) : CooldownIcon.item("COMPASS"))
-                    .build();
-            CooldownAPI.display(player, cooldownDef);
-        }
+        Material chestplate = classDef.getEquipment().get(EquipmentSlot.CHEST);
+        CooldownDefinition cooldownDef = CooldownDefinition.builder()
+                .name(WARMUP_COOLDOWN_KEY)
+                .duration(Duration.ofSeconds(warmup.getTime()))
+                .icon(chestplate != null ? CooldownIcon.item(chestplate.name()) : CooldownIcon.item("COMPASS"))
+                .build();
+        CooldownAPI.display(player, cooldownDef);
 
         AtomicInteger remaining = new AtomicInteger(warmup.getTime());
 
@@ -92,9 +90,7 @@ public class WarmupManager {
         if (task != null) {
             task.cancel();
 
-            if (CooldownAPI.isInitialized()) {
-                CooldownAPI.remove(player, WARMUP_COOLDOWN_KEY);
-            }
+            CooldownAPI.remove(player, WARMUP_COOLDOWN_KEY);
 
             if (classDef != null && player.isOnline()) {
                 Warmup warmup = classDef.getWarmup();

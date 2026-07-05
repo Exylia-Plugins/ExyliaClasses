@@ -26,13 +26,17 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class AbilityListener implements Listener {
 
     private final ClassManager classManager;
+    private final Set<UUID> processingThisTick = new HashSet<>();
 
     public AbilityListener(ClassManager classManager) {
         this.classManager = classManager;
@@ -57,6 +61,10 @@ public class AbilityListener implements Listener {
         Material material = item.getType();
         Ability ability = classDef.getAbilities().get(material);
         if (ability == null) return;
+
+        if (!processingThisTick.add(player.getUniqueId())) return;
+        ExyliaClasses.getInstance().getPlugin().getServer().getScheduler()
+                .runTask(ExyliaClasses.getInstance().getPlugin(), () -> processingThisTick.remove(player.getUniqueId()));
 
         Action action = event.getAction();
         if (action != Action.RIGHT_CLICK_AIR && action != Action.RIGHT_CLICK_BLOCK
