@@ -4,7 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 import net.exylia.exyliaClasses.model.specialpassive.SpecialPassive;
 import net.exylia.exyliaClasses.model.weapon.MarkWeapon;
-import net.exylia.commons.v2.tasks.scheduler.ScheduledTask;
+import net.exylia.lib.effect.Display;
+import net.exylia.lib.task.TaskHandle;
 import org.bukkit.entity.Player;
 
 import java.util.HashSet;
@@ -17,10 +18,12 @@ public class PlayerState {
     private ClassDefinition currentClass;
 
     private double energy = 0;
-    private ScheduledTask energyTask;
+    private TaskHandle energyTask;
+    private Display energyDisplay;
 
     private int markCount = 0;
     private MarkWeapon markWeapon;
+    private Display markDisplay;
 
     private final Set<SpecialPassive> activeSpecialPassives = new HashSet<>();
 

@@ -4,32 +4,35 @@ import net.exylia.exyliaClasses.model.*;
 import net.exylia.exyliaClasses.model.specialpassive.SpecialPassive;
 import net.exylia.exyliaClasses.model.specialpassive.SpecialPassiveType;
 import net.exylia.exyliaClasses.model.weapon.*;
-import net.exylia.commons.v2.config.Configs;
-import net.exylia.commons.v2.debug.api.DebugAPI;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class ClassDefinitionLoader {
 
     private final JavaPlugin plugin;
+    private final Logger log;
 
     public ClassDefinitionLoader(JavaPlugin plugin) {
         this.plugin = plugin;
+        this.log = plugin.getLogger();
     }
 
     public List<ClassDefinition> loadAll() {
-        Configs.get("classes/Archer");
-        Configs.get("classes/Bard");
-        Configs.get("classes/Miner");
-        Configs.get("classes/Rogue");
-        Configs.get("classes/Sorcerer");
-        Configs.get("classes/Tank");
+        // Ensure default class files exist
+        String[] defaults = {"Archer", "Bard", "Miner", "Rogue", "Sorcerer", "Tank"};
+        for (String name : defaults) {
+            File file = new File(plugin.getDataFolder(), "classes/" + name + ".yml");
+            if (!file.exists()) {
+                plugin.saveResource("classes/" + name + ".yml", false);
+            }
+        }
 
         File classesDir = new File(plugin.getDataFolder(), "classes");
         List<ClassDefinition> result = new ArrayList<>();
@@ -41,18 +44,19 @@ public class ClassDefinitionLoader {
             String name = file.getName().replace(".yml", "");
             try {
                 ClassDefinition def = load(name);
-                if (def != null) {
-                    result.add(def);
-                }
+                if (def != null) result.add(def);
             } catch (Exception e) {
-                DebugAPI.logPluginError("Error al cargar clase desde " + file.getName(), e);
+                log.severe("Error loading class from " + file.getName() + ": " + e.getMessage());
             }
         }
         return result;
     }
 
     private ClassDefinition load(String name) {
-        FileConfiguration cfg = Configs.get("classes/" + name).raw();
+        File file = new File(plugin.getDataFolder(), "classes/" + name + ".yml");
+        if (!file.exists()) return null;
+
+        YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
         String id = name.toLowerCase();
         String displayName = cfg.getString("display-name", id);
         String permission = cfg.getString("permission", "NONE");
@@ -73,7 +77,6 @@ public class ClassDefinitionLoader {
     private Map<EquipmentSlot, Material> parseEquipment(ConfigurationSection section) {
         Map<EquipmentSlot, Material> map = new EnumMap<>(EquipmentSlot.class);
         if (section == null) return map;
-
         parseEquipmentSlot(section, "helmet", EquipmentSlot.HEAD, map);
         parseEquipmentSlot(section, "chestplate", EquipmentSlot.CHEST, map);
         parseEquipmentSlot(section, "leggings", EquipmentSlot.LEGS, map);
@@ -88,66 +91,64 @@ public class ClassDefinitionLoader {
         try {
             map.put(slot, Material.valueOf(value.toUpperCase()));
         } catch (IllegalArgumentException e) {
-            DebugAPI.logPluginWarn("Material inválido para " + key + ": " + value);
+            log.warning("Invalid material for " + key + ": " + value);
         }
     }
 
     private Warmup parseWarmup(ConfigurationSection section) {
         if (section == null) return new Warmup(5, null, null, null, null, null, null);
-
         int time = section.getInt("time", 5);
-        String tickSound = parseSoundSection(section.getConfigurationSection("sound"));
-        String tickParticle = parseParticleSection(section.getConfigurationSection("particle"));
-        String completedSound = parseSoundSection(section.getConfigurationSection("sound-completed"));
-        String completedParticle = parseParticleSection(section.getConfigurationSection("particle-completed"));
-        String cancelSound = parseSoundSection(section.getConfigurationSection("sound-cancel"));
-        String cancelParticle = parseParticleSection(section.getConfigurationSection("particle-cancel"));
-
-        return new Warmup(time, tickSound, tickParticle, completedSound, completedParticle, cancelSound, cancelParticle);
+        return new Warmup(time,
+            parseSoundString(section, "sound"),
+            parseParticleString(section, "particle"),
+            parseSoundString(section, "sound-completed"),
+            parseParticleString(section, "particle-completed"),
+            parseSoundString(section, "sound-cancel"),
+            parseParticleString(section, "particle-cancel"));
     }
 
-    private String parseSoundSection(ConfigurationSection section) {
-        if (section == null || !section.getBoolean("enabled", false)) return null;
-        return section.getString("type");
+    private String parseSoundString(ConfigurationSection parent, String key) {
+        ConfigurationSection s = parent.getConfigurationSection(key);
+        if (s == null || !s.getBoolean("enabled", false)) return null;
+        return s.getString("type");
     }
 
-    private String parseParticleSection(ConfigurationSection section) {
-        if (section == null || !section.getBoolean("enabled", false)) return null;
-        return section.getString("type");
+    private String parseParticleString(ConfigurationSection parent, String key) {
+        ConfigurationSection s = parent.getConfigurationSection(key);
+        if (s == null || !s.getBoolean("enabled", false)) return null;
+        return s.getString("type");
     }
 
     private Energy parseEnergy(ConfigurationSection section) {
         if (section == null || !section.getBoolean("enabled", false)) return null;
-        String name = section.getString("name", "Energy");
-        String symbol = section.getString("symbol", "⚡");
-        String color = section.getString("color", "#ffffff");
-        double max = section.getDouble("max", 100);
-        double regen = section.getDouble("regen-per-tick", 0.1);
-        return new Energy(name, symbol, color, max, regen);
+        return new Energy(
+            section.getString("name", "Energy"),
+            section.getString("symbol", "⚡"),
+            section.getString("color", "#ffffff"),
+            section.getDouble("max", 100),
+            section.getDouble("regen-per-tick", 0.1));
     }
 
     private Map<Material, Ability> parseAbilities(ConfigurationSection section) {
         Map<Material, Ability> map = new EnumMap<>(Material.class);
         if (section == null) return map;
-
         for (String key : section.getKeys(false)) {
             try {
-                Material material = Material.valueOf(key.toUpperCase());
-                ConfigurationSection abilitySection = section.getConfigurationSection(key);
-                if (abilitySection == null) continue;
-
-                String displayName = abilitySection.getString("display-name", key);
-                AbilityType type = AbilityType.fromString(abilitySection.getString("type", "SELF"));
-                List<String> effects = abilitySection.getStringList("effects");
-                int cooldown = abilitySection.getInt("cooldown", 30);
-                double energyCost = abilitySection.getDouble("energy-cost", 0);
-                double radius = abilitySection.getDouble("radius", 0);
-                String particles = parseParticleSection(abilitySection.getConfigurationSection("particles"));
-                String sound = parseSoundSection(abilitySection.getConfigurationSection("sound"));
-
-                map.put(material, new Ability(displayName, material, type, effects, cooldown, energyCost, radius, particles, sound));
+                Material m = Material.valueOf(key.toUpperCase());
+                ConfigurationSection s = section.getConfigurationSection(key);
+                if (s == null) continue;
+                map.put(m, new Ability(
+                    s.getString("display-name", key),
+                    m,
+                    AbilityType.fromString(s.getString("type", "SELF")),
+                    s.getStringList("effects"),
+                    s.getInt("cooldown", 30),
+                    s.getDouble("energy-cost", 0),
+                    s.getDouble("radius", 0),
+                    parseParticleString(s, "particles"),
+                    parseSoundString(s, "sound")));
             } catch (IllegalArgumentException e) {
-                DebugAPI.logPluginWarn("Material inválido para habilidad: " + key);
+                log.warning("Invalid material for ability: " + key);
             }
         }
         return map;
@@ -156,20 +157,17 @@ public class ClassDefinitionLoader {
     private Map<Material, HoldEffect> parseHoldEffects(ConfigurationSection section) {
         Map<Material, HoldEffect> map = new EnumMap<>(Material.class);
         if (section == null) return map;
-
         for (String key : section.getKeys(false)) {
             try {
-                Material material = Material.valueOf(key.toUpperCase());
-                ConfigurationSection holdSection = section.getConfigurationSection(key);
-                if (holdSection == null) continue;
-
-                AbilityType type = AbilityType.fromString(holdSection.getString("type", "SELF"));
-                double radius = holdSection.getDouble("radius", 0);
-                List<String> effects = holdSection.getStringList("effects");
-
-                map.put(material, new HoldEffect(material, type, radius, effects));
+                Material m = Material.valueOf(key.toUpperCase());
+                ConfigurationSection s = section.getConfigurationSection(key);
+                if (s == null) continue;
+                map.put(m, new HoldEffect(m,
+                    AbilityType.fromString(s.getString("type", "SELF")),
+                    s.getDouble("radius", 0),
+                    s.getStringList("effects")));
             } catch (IllegalArgumentException e) {
-                DebugAPI.logPluginWarn("Material inválido para hold-effect: " + key);
+                log.warning("Invalid material for hold-effect: " + key);
             }
         }
         return map;
@@ -178,95 +176,84 @@ public class ClassDefinitionLoader {
     private Map<Material, Weapon> parseWeapons(ConfigurationSection section) {
         Map<Material, Weapon> map = new EnumMap<>(Material.class);
         if (section == null) return map;
-
         for (String key : section.getKeys(false)) {
             try {
-                Material material = Material.valueOf(key.toUpperCase());
-                ConfigurationSection weaponSection = section.getConfigurationSection(key);
-                if (weaponSection == null) continue;
-
-                WeaponType type = WeaponType.valueOf(weaponSection.getString("type", "MARK").toUpperCase());
+                Material m = Material.valueOf(key.toUpperCase());
+                ConfigurationSection s = section.getConfigurationSection(key);
+                if (s == null) continue;
+                WeaponType type = WeaponType.valueOf(s.getString("type", "MARK").toUpperCase());
                 Weapon weapon = switch (type) {
-                    case MARK -> parseMarkWeapon(material, weaponSection);
-                    case BACKSTAB -> parseBackstabWeapon(material, weaponSection);
+                    case MARK -> parseMarkWeapon(m, s);
+                    case BACKSTAB -> parseBackstabWeapon(m, s);
                 };
-                if (weapon != null) map.put(material, weapon);
+                if (weapon != null) map.put(m, weapon);
             } catch (IllegalArgumentException e) {
-                DebugAPI.logPluginWarn("Material o tipo inválido para arma: " + key);
+                log.warning("Invalid material or type for weapon: " + key);
             }
         }
         return map;
     }
 
     private MarkWeapon parseMarkWeapon(Material material, ConfigurationSection section) {
-        int duration = section.getInt("mark-duration", 10);
-        boolean giveGlow = section.getBoolean("give-glow", false);
-        boolean markSameClass = section.getBoolean("mark-same-class", false);
-
         Map<Integer, MarkLevel> levels = new HashMap<>();
         ConfigurationSection marksSection = section.getConfigurationSection("marks");
         if (marksSection != null) {
             for (String levelKey : marksSection.getKeys(false)) {
                 try {
                     int level = Integer.parseInt(levelKey);
-                    ConfigurationSection lvlSection = marksSection.getConfigurationSection(levelKey);
-                    if (lvlSection == null) continue;
-
-                    double extraDamage = lvlSection.getDouble("extra-damage", 0);
-                    String color = lvlSection.getString("color", "&f");
-                    String icon = lvlSection.getString("icon", "◆");
-                    boolean removeInvis = lvlSection.getBoolean("remove-invisibility", false);
-                    List<String> attackedEffects = lvlSection.getStringList("attacked-effects");
-                    List<String> attackerEffects = lvlSection.getStringList("attacker-effects");
-
-                    levels.put(level, new MarkLevel(level, extraDamage, color, icon, removeInvis,
-                            attackedEffects, attackerEffects, null, null, null, null));
+                    ConfigurationSection lvl = marksSection.getConfigurationSection(levelKey);
+                    if (lvl == null) continue;
+                    levels.put(level, new MarkLevel(level,
+                        lvl.getDouble("extra-damage", 0),
+                        lvl.getString("color", "&f"),
+                        lvl.getString("icon", "◆"),
+                        lvl.getBoolean("remove-invisibility", false),
+                        lvl.getStringList("attacked-effects"),
+                        lvl.getStringList("attacker-effects"),
+                        null, null, null, null));
                 } catch (NumberFormatException e) {
-                    DebugAPI.logPluginWarn("Nivel de marca inválido: " + levelKey);
+                    log.warning("Invalid mark level: " + levelKey);
                 }
             }
         }
-        return new MarkWeapon(material, duration, giveGlow, markSameClass, levels);
+        return new MarkWeapon(material,
+            section.getInt("mark-duration", 10),
+            section.getBoolean("give-glow", false),
+            section.getBoolean("mark-same-class", false),
+            levels);
     }
 
     @SuppressWarnings("unchecked")
     private List<SpecialPassive> parseSpecialPassives(List<Map<?, ?>> mapList) {
         List<SpecialPassive> result = new ArrayList<>();
         if (mapList == null || mapList.isEmpty()) return result;
-
         for (Map<?, ?> entry : mapList) {
             String typeStr = (String) entry.get("type");
             String condition = String.valueOf(entry.get("condition"));
             Object effectsObj = entry.get("effects");
-
             SpecialPassiveType type = SpecialPassiveType.fromString(typeStr);
             if (type == null) {
-                DebugAPI.logPluginWarn("Tipo de pasiva especial inválido: " + typeStr);
+                log.warning("Invalid special passive type: " + typeStr);
                 continue;
             }
-
             List<String> effects = effectsObj instanceof List<?> list
-                    ? list.stream().map(Object::toString).toList()
-                    : List.of();
-
+                ? list.stream().map(Object::toString).toList() : List.of();
             result.add(new SpecialPassive(type, condition, effects));
         }
         return result;
     }
 
     private BackstabWeapon parseBackstabWeapon(Material material, ConfigurationSection section) {
-        double extraDamage = section.getDouble("extra-damage", 50);
-        boolean canDead = section.getBoolean("can-dead", false);
-        double cooldownNeed = section.getDouble("attack-cooldown-need", 0.9);
-        boolean breakItem = section.getBoolean("break-item", false);
-        List<String> attackedEffects = section.getStringList("attacked-effects");
-        List<String> attackerEffects = section.getStringList("attacker-effects");
-        String attackedParticles = parseParticleSection(section.getConfigurationSection("attacked-particles"));
-        String attackerParticles = parseParticleSection(section.getConfigurationSection("attacker-particles"));
-        String attackedSound = parseSoundSection(section.getConfigurationSection("attacked-sound"));
-        String attackerSound = parseSoundSection(section.getConfigurationSection("attacker-sound"));
-
-        return new BackstabWeapon(material, extraDamage, canDead, cooldownNeed, breakItem,
-                attackedEffects, attackerEffects, attackedParticles, attackerParticles, attackedSound, attackerSound);
+        return new BackstabWeapon(material,
+            section.getDouble("extra-damage", 50),
+            section.getBoolean("can-dead", false),
+            section.getDouble("attack-cooldown-need", 0.9),
+            section.getBoolean("break-item", false),
+            section.getStringList("attacked-effects"),
+            section.getStringList("attacker-effects"),
+            parseParticleString(section, "attacked-particles"),
+            parseParticleString(section, "attacker-particles"),
+            parseSoundString(section, "attacked-sound"),
+            parseSoundString(section, "attacker-sound"));
     }
 }

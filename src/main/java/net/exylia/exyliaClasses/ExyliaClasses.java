@@ -1,22 +1,21 @@
 package net.exylia.exyliaClasses;
 
 import lombok.Getter;
-import net.exylia.commons.v2.clan.api.ClanAPI;
-import net.exylia.commons.v2.clientapi.api.ClientAPI;
 import net.exylia.exyliaClasses.api.ClassesAPI;
 import net.exylia.exyliaClasses.command.CommandRegistry;
-import net.exylia.exyliaClasses.config.GlobalDefaults;
-import net.exylia.exyliaClasses.config.MessagesDefaults;
+import net.exylia.exyliaClasses.config.ClassesConfig;
 import net.exylia.exyliaClasses.listener.*;
 import net.exylia.exyliaClasses.manager.ClassManager;
-import net.exylia.exyliaClasses.manager.CooldownManager;
 import net.exylia.exyliaClasses.manager.PlayerStateManager;
 import net.exylia.exyliaClasses.placeholder.ClassesPlaceholders;
-import net.exylia.commons.v2.loader.ExyliaLoaderPlugin;
-import net.exylia.commons.v2.debug.api.DebugAPI;
-import net.exylia.commons.v2.placeholders.api.Placeholders;
+import net.exylia.lib.config.Configs;
+import net.exylia.lib.reload.Reloads;
+import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.java.JavaPlugin;
 
-public class ExyliaClasses extends ExyliaLoaderPlugin {
+import java.util.logging.Logger;
+
+public final class ExyliaClasses extends JavaPlugin {
 
     @Getter
     private static ExyliaClasses instance;
@@ -29,49 +28,45 @@ public class ExyliaClasses extends ExyliaLoaderPlugin {
 
     private HoldEffectListener holdEffectListener;
     private SpecialPassiveListener specialPassiveListener;
+    private ClassesConfig config;
+    private Reloads reloads;
+    private Logger log;
 
     @Override
-    protected void onPreExyliaEnable() {
+    public void onEnable() {
         instance = this;
-        CommandRegistry.register(this);
-    }
+        this.log = getLogger();
 
-    @Override
-    protected void onExyliaEnable() {
-        DebugAPI.init(getPlugin());
-        loadConfigs();
-        ClanAPI.initialize(getPlugin());
-        ClientAPI.initialize(getPlugin());
+        CommandRegistry.register(this);
+
+        loadConfig();
+        log.info("ExyliaLib: Clans=" + net.exylia.lib.clan.Clans.isSupported()
+            + " Clients=" + net.exylia.lib.client.Clients.isSupported());
 
         PlayerStateManager stateManager = new PlayerStateManager();
-        CooldownManager cooldownManager = new CooldownManager();
-        classManager = new ClassManager(getPlugin(), stateManager, cooldownManager);
+        classManager = new ClassManager(this, stateManager);
         classManager.loadClasses();
 
         classesAPI = new ClassesAPI(classManager);
+        reloads = Reloads.of(this)
+                .step("configs", () -> Configs.reloadAll(this))
+                .step("classes", classManager::loadClasses)
+                .step("active players", this::refreshOnlinePlayers);
 
         loadListeners();
         loadPlaceholders();
         checkOnlinePlayers();
     }
 
-    private void checkOnlinePlayers() {
-        for (var player : getPlugin().getServer().getOnlinePlayers()) {
-            classManager.checkArmorChange(player);
-        }
-    }
-
     @Override
-    protected void onExyliaDisable() {
+    public void onDisable() {
         if (holdEffectListener != null) holdEffectListener.stop();
         if (specialPassiveListener != null) specialPassiveListener.stop();
         if (classManager != null) classManager.disableAll();
-        Placeholders.shutdown();
     }
 
-    private void loadConfigs() {
-        GlobalDefaults.register();
-        MessagesDefaults.register();
+    private void loadConfig() {
+        config = ClassesConfig.load(this);
     }
 
     private void loadListeners() {
@@ -88,8 +83,25 @@ public class ExyliaClasses extends ExyliaLoaderPlugin {
     }
 
     private void loadPlaceholders() {
-        Placeholders.initialize(getPlugin());
-        Placeholders.registerAnnotatedClass(new ClassesPlaceholders(classesAPI));
-        Placeholders.registerPapiExpander("classes");
+        new ClassesPlaceholders(classesAPI).register(this);
     }
+
+    private void checkOnlinePlayers() {
+        for (var player : getServer().getOnlinePlayers()) {
+            classManager.checkArmorChange(player);
+        }
+    }
+
+    private void refreshOnlinePlayers() {
+        for (var player : getServer().getOnlinePlayers()) {
+            classManager.removeAll(player);
+            classManager.checkArmorChange(player);
+        }
+    }
+
+    public void reload(CommandSender sender) {
+        reloads.run(sender);
+    }
+
+    public Logger log() { return log; }
 }

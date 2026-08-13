@@ -1,21 +1,19 @@
 package net.exylia.exyliaClasses.manager;
 
+import net.exylia.exyliaClasses.config.ClassesMessages;
 import net.exylia.exyliaClasses.model.ClassDefinition;
 import net.exylia.exyliaClasses.model.Warmup;
-import net.exylia.exyliaClasses.config.MessagesDefaults;
-import net.exylia.commons.v2.clientapi.cooldown.api.CooldownAPI;
-import net.exylia.commons.v2.clientapi.cooldown.model.CooldownDefinition;
-import net.exylia.commons.v2.clientapi.cooldown.model.CooldownIcon;
-import net.exylia.commons.v2.placeholders.context.PlaceholderContext;
-import net.exylia.commons.v2.tasks.api.TaskAPI;
-import net.exylia.commons.v2.tasks.scheduler.ScheduledTask;
-import net.exylia.commons.v2.visual.api.MessageAPI;
-import net.exylia.commons.v2.visual.api.ParticleAPI;
-import net.exylia.commons.v2.visual.api.SoundAPI;
-import net.exylia.commons.v2.visual.builder.ParticleBuilder;
+import net.exylia.lib.client.Clients;
+import net.exylia.lib.client.Cooldown;
+import net.exylia.lib.effect.Effects;
+import net.exylia.lib.placeholder.Placeholders;
+import net.exylia.lib.task.TaskHandle;
+import net.exylia.lib.task.Tasks;
+import net.exylia.lib.text.Text;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.time.Duration;
 import java.util.Map;
@@ -26,15 +24,18 @@ import java.util.function.BiConsumer;
 
 public class WarmupManager {
 
-    private final Map<UUID, ScheduledTask> warmupTasks = new ConcurrentHashMap<>();
+    private static final String WARMUP_COOLDOWN_KEY = "class_warmup";
+
+    private final Map<UUID, TaskHandle> warmupTasks = new ConcurrentHashMap<>();
     private final Map<UUID, ClassDefinition> warmupClasses = new ConcurrentHashMap<>();
     private final BiConsumer<Player, ClassDefinition> onComplete;
+    private final JavaPlugin plugin;
 
-    public WarmupManager(BiConsumer<Player, ClassDefinition> onComplete) {
+    public WarmupManager(BiConsumer<Player, ClassDefinition> onComplete,
+                         JavaPlugin plugin) {
         this.onComplete = onComplete;
+        this.plugin = plugin;
     }
-
-    private static final String WARMUP_COOLDOWN_KEY = "class_warmup";
 
     public void startWarmup(Player player, ClassDefinition classDef) {
         cancelWarmup(player);
@@ -43,16 +44,13 @@ public class WarmupManager {
         Warmup warmup = classDef.getWarmup();
 
         Material chestplate = classDef.getEquipment().get(EquipmentSlot.CHEST);
-        CooldownDefinition cooldownDef = CooldownDefinition.builder()
-                .name(WARMUP_COOLDOWN_KEY)
-                .duration(Duration.ofSeconds(warmup.getTime()))
-                .icon(chestplate != null ? CooldownIcon.item(chestplate.name()) : CooldownIcon.item("COMPASS"))
-                .build();
-        CooldownAPI.display(player, cooldownDef);
+        Cooldown def = Cooldown.of(WARMUP_COOLDOWN_KEY, Duration.ofSeconds(warmup.getTime()))
+                .icon(Cooldown.Icon.item((chestplate != null ? chestplate : Material.COMPASS).name()));
+        Clients.cooldowns().show(player, def);
 
         AtomicInteger remaining = new AtomicInteger(warmup.getTime());
 
-        ScheduledTask task = TaskAPI.atTimer(player, () -> {
+        TaskHandle task = Tasks.of(plugin).runTimer(20L, 20L, handle -> {
             if (!player.isOnline()) {
                 warmupTasks.remove(player.getUniqueId());
                 warmupClasses.remove(player.getUniqueId());
@@ -62,43 +60,43 @@ public class WarmupManager {
             int timeLeft = remaining.get();
 
             if (timeLeft > 0) {
-                MessageAPI.send(player, MessagesDefaults.Warmup.TIMER, PlaceholderContext.create()
-                        .put("class", classDef.getDisplayName())
-                        .put("time", timeLeft));
+                sendMessage(player, ClassesMessages.load((net.exylia.exyliaClasses.ExyliaClasses) plugin).warmup().timer(),
+                        Map.of("class", classDef.getDisplayName(), "time", String.valueOf(timeLeft)));
 
                 if (warmup.getTickSound() != null)
-                    SoundAPI.play(player, warmup.getTickSound());
+                    playSound(player, warmup.getTickSound());
                 if (warmup.getTickParticle() != null)
-                    ParticleAPI.spawn(player.getLocation(), ParticleBuilder.fromString(warmup.getTickParticle()));
+                    showParticle(player, warmup.getTickParticle());
 
                 remaining.decrementAndGet();
             } else {
-                ScheduledTask t = warmupTasks.remove(player.getUniqueId());
+                TaskHandle t2 = warmupTasks.remove(player.getUniqueId());
                 warmupClasses.remove(player.getUniqueId());
-                if (t != null) t.cancel();
+                if (t2 != null) t2.cancel();
                 onComplete.accept(player, classDef);
             }
-        }, 20L, 20L);
+        });
 
         warmupTasks.put(player.getUniqueId(), task);
     }
 
     public void cancelWarmup(Player player) {
-        ScheduledTask task = warmupTasks.remove(player.getUniqueId());
+        TaskHandle task = warmupTasks.remove(player.getUniqueId());
         ClassDefinition classDef = warmupClasses.remove(player.getUniqueId());
 
         if (task != null) {
             task.cancel();
 
-            CooldownAPI.remove(player, WARMUP_COOLDOWN_KEY);
+            Clients.cooldowns().remove(player, WARMUP_COOLDOWN_KEY);
 
             if (classDef != null && player.isOnline()) {
                 Warmup warmup = classDef.getWarmup();
                 if (warmup.getCancelSound() != null)
-                    SoundAPI.play(player, warmup.getCancelSound());
+                    playSound(player, warmup.getCancelSound());
                 if (warmup.getCancelParticle() != null)
-                    ParticleAPI.spawn(player.getLocation(), ParticleBuilder.fromString(warmup.getCancelParticle()));
-                MessageAPI.send(player, MessagesDefaults.Warmup.CANCELED);
+                    showParticle(player, warmup.getCancelParticle());
+
+                sendMessage(player, ClassesMessages.load((net.exylia.exyliaClasses.ExyliaClasses) plugin).warmup().canceled(), null);
             }
         }
     }
@@ -112,8 +110,31 @@ public class WarmupManager {
     }
 
     public void cancelAll() {
-        warmupTasks.values().forEach(ScheduledTask::cancel);
+        warmupTasks.values().forEach(TaskHandle::cancel);
         warmupTasks.clear();
         warmupClasses.clear();
+    }
+
+    // --- helpers ---
+
+    public static void sendMessage(Player player, String raw, Map<String, String> ctx) {
+        if (ctx == null || ctx.isEmpty()) {
+            Text.of(Placeholders.apply(raw, player)).send(player);
+            return;
+        }
+
+        Map<String, Object> values = new java.util.HashMap<>();
+        values.putAll(ctx);
+        Text.of(Placeholders.apply(raw, player, values)).send(player);
+    }
+
+    static void playSound(Player player, String definition) {
+        if (definition == null || definition.isBlank()) return;
+        Effects.soundFrom(definition).show(player);
+    }
+
+    static void showParticle(Player player, String definition) {
+        if (definition == null || definition.isBlank()) return;
+        Effects.particleFrom(definition).at(player.getLocation()).show(player);
     }
 }

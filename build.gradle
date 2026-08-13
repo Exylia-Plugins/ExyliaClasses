@@ -2,17 +2,16 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     id 'java'
-    id 'com.gradleup.shadow' version '8.3.0'
+    id 'com.gradleup.shadow' version '8.3.11'
     id("io.freefair.lombok") version "8.14"
     id 'com.lukittu.sdk' version 'v1.0.10-local'
+    id 'net.exylia.release-tools' version '1.0.0-local'
 }
 
 def pluginName = 'ExyliaClasses'
 def mainPackage = 'net.exylia'
 def fullPackage = "${mainPackage}.exyliaClasses"
-def outputDirectory = System.getProperty("os.name").toLowerCase().contains("windows")
-        ? "C:/Seafile/plugins/loaders"
-        : "/home/diground/Seafile/plugins/loaders"
+def outputDirectory = "/home/coder/projects/jars"
 
 group = mainPackage
 version = 'v1.0.0'
@@ -32,15 +31,16 @@ repositories {
 }
 
 dependencies {
-    implementation("${mainPackage}:ExyliaCommons:1.0.0")
+    compileOnly("net.exylia:ExyliaLib:1.17.0")
+    compileOnly 'com.github.retrooper:packetevents-spigot:2.13.0'
     compileOnly 'com.lukittu.loader:lukittu-common:v1.0.10-local'
     compileOnly 'com.lukittu.loader:lukittu-spigot:v1.0.10-local'
     compileOnly 'com.github.ben-manes.caffeine:caffeine:3.2.2'
     compileOnly 'io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT'
     compileOnly 'me.clip:placeholderapi:2.11.5'
-    compileOnly 'io.github.revxrsal:lamp.common:4.0.0-rc.14'
-    compileOnly 'io.github.revxrsal:lamp.bukkit:4.0.0-rc.14'
-    compileOnly 'io.github.revxrsal:lamp.brigadier:4.0.0-rc.14'
+    compileOnly 'io.github.revxrsal:lamp.common:4.0.0-rc.17'
+    compileOnly 'io.github.revxrsal:lamp.bukkit:4.0.0-rc.17'
+    compileOnly 'io.github.revxrsal:lamp.brigadier:4.0.0-rc.17'
 }
 
 def targetJavaVersion = 21
@@ -74,13 +74,9 @@ processResources {
 shadowJar {
     archiveBaseName.set(pluginName)
     archiveClassifier.set('')
-    destinationDirectory = file(outputDirectory + "plugins\\")
+    destinationDirectory = file("/home/coder/projects/jars/plugins")
     minimize()
     exclude 'com/lukittu/**'
-    exclude 'de/exlll/**'
-    exclude 'org/snakeyaml/**'
-    exclude 'org/yaml/**'
-    relocate "${mainPackage}.commons", "${fullPackage}.shadow.commons"
 }
 
 tasks.register('cleanTarget', Delete) {
@@ -109,8 +105,9 @@ lukittu {
     loaderVersion.set('v1.0.10-local')
     configHeader.set('Request your license in https://discord.exylia.net')
     lukittuBranch.set('spigot')
+    exyliaLibVersion.set('1.17.0')
     publicKey.set('LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUFtZkF5UUZSV3hRUGRDRndrSzJXTQpSeHhaWVRiWnpsTHBRNWE1dkhBdENQU3ZWaXRIRGVVN0FyeC94UW5pRUVGQW5rOVZRK2VLVGxEZWd6WjRwNU9lCjZQajdQSXNwVFBzL1pNWjNtMlFYN0ZOWkV6TnBTQjk2VjBuQ1RUWFlYdjVUNndEbWVDOEhhWG5iVXFNUUJkZmYKR0ZaUjYrajU4clhBR1I2Q2o5Vkh2MVJyRmhuWEU2cDNXemcxS1F4dG9wVElxNlMzMGtJaGZLeFN4YWh4blVjVQowcmt1N3pOWkFpMGp4RHNESE9hU1lmSmFKbllTUk04bXdvb0tRSWFNNmFWdVIzYUt2MU84aTNHcXJmZFUwcFFUCkFjTWMzZU9nb0poam0yVzR5U2Z5RFZsR3lmZkxpbTgzWHhOWDU0SzlLMEJhUm9wc3Z1R1lSNXpVYjFNT05Ea1gKOHdJREFRQUIKLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==')
-    outputLoaderJarPath.set("${outputDirectory}/Exylia-Classes-Loader.jar")
+    outputLoaderJarPath.set("/home/coder/projects/jars/loaders/Exylia-Classes-Loader.jar")
     resourcePaths.set([
         "src/loader/resources/plugin.yml": "plugin.yml"
     ])
@@ -123,4 +120,13 @@ lukittu {
         setAsLatest.set(true)
         branchId.set("337c1c7f-5b62-4961-becd-60254f3de40f")
     }
+}
+
+exyliaRelease {
+    resourceName.set(pluginName)
+    bbbResourceId.set('81542')
+    bbbResourceUrl.set('https://builtbybit.com/resources/exylia-classes-modern-hcf-classes-pvp.81542/')
+    loaderJarPath.set("${outputDirectory}/loaders/Exylia-Classes-Loader.jar")
+    discordWebhookUrl.set('https://discord.com/api/webhooks/1533541307333607655/t-Ggav0QD0ni-gybCp4SfmbljkSOrA0jZey8GacdQprZbL7pGU8Mkw8T3oM4lxiqnzof')
+    discordColor.set(0x5865F2)
 }

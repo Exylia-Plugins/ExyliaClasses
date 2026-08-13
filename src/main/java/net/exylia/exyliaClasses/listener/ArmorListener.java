@@ -3,7 +3,7 @@ package net.exylia.exyliaClasses.listener;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import net.exylia.exyliaClasses.ExyliaClasses;
 import net.exylia.exyliaClasses.manager.ClassManager;
-import net.exylia.commons.v2.tasks.api.TaskAPI;
+import net.exylia.lib.task.Tasks;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,22 +14,22 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
-import java.util.concurrent.TimeUnit;
-
 public class ArmorListener implements Listener {
 
     private final ClassManager classManager;
+    private final ExyliaClasses plugin;
 
     public ArmorListener(ClassManager classManager) {
         this.classManager = classManager;
-        ExyliaClasses.getInstance().getPlugin().getServer().getPluginManager()
-                .registerEvents(this, ExyliaClasses.getInstance().getPlugin());
+        this.plugin = ExyliaClasses.getInstance();
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        TaskAPI.atLater(player, () -> classManager.checkArmorChange(player), 100L, TimeUnit.MILLISECONDS);
+        plugin.getServer().getGlobalRegionScheduler().runDelayed(plugin, t ->
+            classManager.checkArmorChange(player), 2L);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -45,18 +45,19 @@ public class ArmorListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
-        TaskAPI.atLater(player, () -> classManager.checkArmorChange(player), 100L, TimeUnit.MILLISECONDS);
+        plugin.getServer().getGlobalRegionScheduler().runDelayed(plugin, t ->
+            classManager.checkArmorChange(player), 2L);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onResurrect(EntityResurrectEvent event) {
         if (event.isCancelled() || !(event.getEntity() instanceof Player player)) return;
-        TaskAPI.atLater(player, () -> classManager.reapplyPassiveEffects(player), 50L, TimeUnit.MILLISECONDS);
+        Tasks.of(plugin).runAtEntity(player, () ->
+            classManager.reapplyPassiveEffects(player));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
     public void onArmorChange(PlayerArmorChangeEvent event) {
-        Player player = event.getPlayer();
-        classManager.checkArmorChange(player);
+        classManager.checkArmorChange(event.getPlayer());
     }
 }
