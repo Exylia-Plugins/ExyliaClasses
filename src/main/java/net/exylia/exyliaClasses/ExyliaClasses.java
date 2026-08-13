@@ -6,12 +6,14 @@ import lombok.Getter;
 import net.exylia.exyliaClasses.api.ClassesAPI;
 import net.exylia.exyliaClasses.command.CommandRegistry;
 import net.exylia.exyliaClasses.config.ClassesConfig;
+import net.exylia.exyliaClasses.config.ClassesMessages;
 import net.exylia.exyliaClasses.listener.*;
 import net.exylia.exyliaClasses.manager.ClassManager;
 import net.exylia.exyliaClasses.manager.PlayerStateManager;
 import net.exylia.exyliaClasses.placeholder.ClassesPlaceholders;
 import net.exylia.lib.config.Configs;
 import net.exylia.lib.reload.Reloads;
+import net.exylia.lib.text.Prefixes;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -68,8 +70,12 @@ public final class ExyliaClasses implements LoaderPlugin<SpigotLukittuLoader> {
         classesAPI = new ClassesAPI(classManager);
         reloads = Reloads.of(plugin)
                 .step("configs", () -> Configs.reloadAll(plugin))
+                .step("prefix", () -> Prefixes.set(plugin, ClassesMessages.load(plugin).prefix()))
                 .step("classes", classManager::loadClasses)
                 .step("active players", this::refreshOnlinePlayers);
+
+        // The reload only runs when asked; enable has to set the prefix itself.
+        Prefixes.set(plugin, ClassesMessages.load(plugin).prefix());
 
         loadListeners();
         loadPlaceholders();

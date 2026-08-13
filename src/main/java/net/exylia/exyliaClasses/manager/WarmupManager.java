@@ -1,12 +1,12 @@
 package net.exylia.exyliaClasses.manager;
 
+import net.exylia.exyliaClasses.ExyliaClasses;
 import net.exylia.exyliaClasses.config.ClassesMessages;
 import net.exylia.exyliaClasses.model.ClassDefinition;
 import net.exylia.exyliaClasses.model.Warmup;
 import net.exylia.lib.client.Clients;
 import net.exylia.lib.client.Cooldown;
 import net.exylia.lib.effect.Effects;
-import net.exylia.lib.placeholder.Placeholders;
 import net.exylia.lib.task.TaskHandle;
 import net.exylia.lib.task.Tasks;
 import net.exylia.lib.text.Text;
@@ -118,14 +118,18 @@ public class WarmupManager {
     // --- helpers ---
 
     public static void sendMessage(Player player, String raw, Map<String, String> ctx) {
-        if (ctx == null || ctx.isEmpty()) {
-            Text.of(Placeholders.apply(raw, player)).send(player);
-            return;
+        // Text.from, not Text.of: that is what makes %prefix% this plugin's.
+        Text text = Text.from(ExyliaClasses.getInstance().getPlugin(), raw).forPlayer(player);
+
+        if (ctx != null) {
+            // Substituted on the parsed component, so the shared part of the
+            // line still hits the parse cache while the values differ.
+            for (Map.Entry<String, String> entry : ctx.entrySet()) {
+                text = text.with("%" + entry.getKey() + "%", entry.getValue());
+            }
         }
 
-        Map<String, Object> values = new java.util.HashMap<>();
-        values.putAll(ctx);
-        Text.of(Placeholders.apply(raw, player, values)).send(player);
+        text.send(player);
     }
 
     static void playSound(Player player, String definition) {
