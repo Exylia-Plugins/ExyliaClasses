@@ -23,7 +23,7 @@ public record ClassesConfig(
         BossBarConfig markBar) {
 
     public ClassesConfig() {
-        this(false, new BossBarConfig(), new BossBarConfig());
+        this(false, BossBarConfig.energy(), BossBarConfig.mark());
     }
 
     /** Boss bar settings. */
@@ -46,6 +46,30 @@ public record ClassesConfig(
     ) {
         public BossBarConfig() {
             this(true, "", "PURPLE", "PROGRESS");
+        }
+
+        /**
+         * The energy bar as it ships.
+         *
+         * <p>Notched into twenty segments, so a glance at the bar reads as a
+         * number of pips rather than a length to estimate.
+         */
+        static BossBarConfig energy() {
+            return new BossBarConfig(true,
+                    "%energy_color%%symbol% %energy% / %max%",
+                    "YELLOW", "NOTCHED_20");
+        }
+
+        /**
+         * The mark bar as it ships.
+         *
+         * <p>Continuous rather than notched: it tracks time running out, which
+         * is a smooth thing, and {@code %time%} spells out the same number.
+         */
+        static BossBarConfig mark() {
+            return new BossBarConfig(true,
+                    "%mark_color%%mark_icon% +%extra_damage%% {muted}(%time%)",
+                    "RED", "PROGRESS");
         }
     }
 
