@@ -122,10 +122,12 @@ public class WarmupManager {
         Text text = Text.from(ExyliaClasses.getInstance().getPlugin(), raw).forPlayer(player);
 
         if (ctx != null) {
-            // Substituted on the parsed component, so the shared part of the
-            // line still hits the parse cache while the values differ.
+            // Formatted, because these values are display names from the class
+            // files — "<#c8c8c8><bold>ARCHER</bold>" is its colours, and literal
+            // insertion prints the tags. Nothing here is typed by a player;
+            // that kind of value belongs in with(), which stays literal.
             for (Map.Entry<String, String> entry : ctx.entrySet()) {
-                text = text.with("%" + entry.getKey() + "%", entry.getValue());
+                text = text.withFormatted("%" + entry.getKey() + "%", entry.getValue());
             }
         }
 

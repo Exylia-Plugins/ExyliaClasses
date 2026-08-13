@@ -31,7 +31,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly("net.exylia:ExyliaLib:1.17.2")
+    compileOnly("net.exylia:ExyliaLib:1.18.0")
     compileOnly 'com.github.retrooper:packetevents-spigot:2.13.0'
     compileOnly 'com.lukittu.loader:lukittu-common:v1.0.10-local'
     compileOnly 'com.lukittu.loader:lukittu-spigot:v1.0.10-local'
