@@ -201,7 +201,7 @@ public class ClassManager {
 
         Display display = state.getEnergyDisplay();
         if (display == null || !display.isShowing()) {
-            display = Effects.bossBar(text)
+            display = Effects.of(plugin).bossBar(text)
                     .colour(bb.colour())
                     .overlay(bb.overlay())
                     .progress(progress)
@@ -236,7 +236,7 @@ public class ClassManager {
         Map<String, Object> ctx = buildMarkContext(level);
 
         String text = Placeholders.apply(bb.text(), target, ctx);
-        Display display = Effects.bossBar(text)
+        Display display = Effects.of(plugin).bossBar(text)
                 .colour(bb.colour())
                 .overlay(bb.overlay())
                 .countdown(state.getMarkWeapon().getMarkDuration())
