@@ -22,13 +22,13 @@ public class SpecialPassiveListener {
     }
 
     public void start() {
-        task = Tasks.of(ExyliaClasses.getInstance()).runTimer(0L, 20L, () -> {
+        task = Tasks.of(ExyliaClasses.getInstance().getPlugin()).runTimer(0L, 20L, () -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (classManager.getStateManager().get(player)
                         .filter(s -> s.isInClass() && !s.getCurrentClass().getSpecialPassives().isEmpty())
                         .isEmpty()) continue;
 
-                Tasks.of(ExyliaClasses.getInstance()).runAtEntity(player, () -> {
+                Tasks.of(ExyliaClasses.getInstance().getPlugin()).runAtEntity(player, () -> {
                     classManager.getStateManager().get(player).ifPresent(state -> {
                         if (!state.isInClass()) return;
                         ClassDefinition classDef = state.getCurrentClass();

@@ -26,8 +26,8 @@ public class BackstabListener implements Listener {
     public BackstabListener(ClassManager classManager) {
         this.classManager = classManager;
         ClassesMessages.load(ExyliaClasses.getInstance());
-        ExyliaClasses.getInstance().getServer().getPluginManager()
-                .registerEvents(this, ExyliaClasses.getInstance());
+        ExyliaClasses.getInstance().getPlugin().getServer().getPluginManager()
+                .registerEvents(this, ExyliaClasses.getInstance().getPlugin());
     }
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)

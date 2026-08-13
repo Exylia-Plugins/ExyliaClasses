@@ -25,13 +25,13 @@ public class HoldEffectListener {
     }
 
     public void start() {
-        task = Tasks.of(ExyliaClasses.getInstance()).runTimer(0L, 10L, () -> {
+        task = Tasks.of(ExyliaClasses.getInstance().getPlugin()).runTimer(0L, 10L, () -> {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 if (classManager.getStateManager().get(player)
                         .filter(s -> s.isInClass() && !s.getCurrentClass().getHoldEffects().isEmpty())
                         .isEmpty()) continue;
 
-                Tasks.of(ExyliaClasses.getInstance()).runAtEntity(player, () -> {
+                Tasks.of(ExyliaClasses.getInstance().getPlugin()).runAtEntity(player, () -> {
                     classManager.getStateManager().get(player).ifPresent(state -> {
                         if (!state.isInClass()) return;
                         ClassDefinition classDef = state.getCurrentClass();

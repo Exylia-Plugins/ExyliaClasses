@@ -17,11 +17,11 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 public class ArmorListener implements Listener {
 
     private final ClassManager classManager;
-    private final ExyliaClasses plugin;
+    private final org.bukkit.plugin.java.JavaPlugin plugin;
 
     public ArmorListener(ClassManager classManager) {
         this.classManager = classManager;
-        this.plugin = ExyliaClasses.getInstance();
+        this.plugin = ExyliaClasses.getInstance().getPlugin();
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 

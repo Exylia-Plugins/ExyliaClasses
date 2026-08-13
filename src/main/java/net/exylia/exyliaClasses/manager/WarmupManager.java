@@ -60,7 +60,7 @@ public class WarmupManager {
             int timeLeft = remaining.get();
 
             if (timeLeft > 0) {
-                sendMessage(player, ClassesMessages.load((net.exylia.exyliaClasses.ExyliaClasses) plugin).warmup().timer(),
+                sendMessage(player, ClassesMessages.load(plugin).warmup().timer(),
                         Map.of("class", classDef.getDisplayName(), "time", String.valueOf(timeLeft)));
 
                 if (warmup.getTickSound() != null)
@@ -96,7 +96,7 @@ public class WarmupManager {
                 if (warmup.getCancelParticle() != null)
                     showParticle(player, warmup.getCancelParticle());
 
-                sendMessage(player, ClassesMessages.load((net.exylia.exyliaClasses.ExyliaClasses) plugin).warmup().canceled(), null);
+                sendMessage(player, ClassesMessages.load(plugin).warmup().canceled(), null);
             }
         }
     }

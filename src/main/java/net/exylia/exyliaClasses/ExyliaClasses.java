@@ -1,5 +1,7 @@
 package net.exylia.exyliaClasses;
 
+import com.lukittu.loader.LoaderPlugin;
+import com.lukittu.loader.spigot.SpigotLukittuLoader;
 import lombok.Getter;
 import net.exylia.exyliaClasses.api.ClassesAPI;
 import net.exylia.exyliaClasses.command.CommandRegistry;
@@ -15,7 +17,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Logger;
 
-public final class ExyliaClasses extends JavaPlugin {
+/**
+ * The plugin itself.
+ *
+ * <p>This is not a {@link JavaPlugin}: the Lukittu loader is the plugin Bukkit
+ * knows about, and it hands this class the {@code JavaPlugin} to register
+ * against. Extending {@code JavaPlugin} here makes the loader's
+ * {@code asSubclass(LoaderPlugin.class)} fail with a {@code ClassCastException}
+ * the moment it tries to start the inner plugin.
+ */
+public final class ExyliaClasses implements LoaderPlugin<SpigotLukittuLoader> {
 
     @Getter
     private static ExyliaClasses instance;
@@ -26,6 +37,11 @@ public final class ExyliaClasses extends JavaPlugin {
     @Getter
     private ClassesAPI classesAPI;
 
+    /** The Bukkit plugin everything registers against — the loader. */
+    @Getter
+    private JavaPlugin plugin;
+
+    private SpigotLukittuLoader loader;
     private HoldEffectListener holdEffectListener;
     private SpecialPassiveListener specialPassiveListener;
     private ClassesConfig config;
@@ -33,9 +49,11 @@ public final class ExyliaClasses extends JavaPlugin {
     private Logger log;
 
     @Override
-    public void onEnable() {
+    public void start(SpigotLukittuLoader lukittuLoader) {
         instance = this;
-        this.log = getLogger();
+        this.loader = lukittuLoader;
+        this.plugin = lukittuLoader.getPlugin();
+        this.log = plugin.getLogger();
 
         CommandRegistry.register(this);
 
@@ -44,12 +62,12 @@ public final class ExyliaClasses extends JavaPlugin {
             + " Clients=" + net.exylia.lib.client.Clients.isSupported());
 
         PlayerStateManager stateManager = new PlayerStateManager();
-        classManager = new ClassManager(this, stateManager);
+        classManager = new ClassManager(plugin, stateManager);
         classManager.loadClasses();
 
         classesAPI = new ClassesAPI(classManager);
-        reloads = Reloads.of(this)
-                .step("configs", () -> Configs.reloadAll(this))
+        reloads = Reloads.of(plugin)
+                .step("configs", () -> Configs.reloadAll(plugin))
                 .step("classes", classManager::loadClasses)
                 .step("active players", this::refreshOnlinePlayers);
 
@@ -59,7 +77,7 @@ public final class ExyliaClasses extends JavaPlugin {
     }
 
     @Override
-    public void onDisable() {
+    public void shutdown(SpigotLukittuLoader lukittuLoader) {
         if (holdEffectListener != null) holdEffectListener.stop();
         if (specialPassiveListener != null) specialPassiveListener.stop();
         if (classManager != null) classManager.disableAll();
@@ -83,17 +101,17 @@ public final class ExyliaClasses extends JavaPlugin {
     }
 
     private void loadPlaceholders() {
-        new ClassesPlaceholders(classesAPI).register(this);
+        new ClassesPlaceholders(classesAPI).register(plugin);
     }
 
     private void checkOnlinePlayers() {
-        for (var player : getServer().getOnlinePlayers()) {
+        for (var player : plugin.getServer().getOnlinePlayers()) {
             classManager.checkArmorChange(player);
         }
     }
 
     private void refreshOnlinePlayers() {
-        for (var player : getServer().getOnlinePlayers()) {
+        for (var player : plugin.getServer().getOnlinePlayers()) {
             classManager.removeAll(player);
             classManager.checkArmorChange(player);
         }

@@ -36,7 +36,7 @@ public class ClassManager {
     public ClassManager(JavaPlugin plugin, PlayerStateManager stateManager) {
         this.plugin = plugin;
         this.stateManager = stateManager;
-        ClassesMessages.load((net.exylia.exyliaClasses.ExyliaClasses) plugin);
+        ClassesMessages.load(plugin);
         this.warmupManager = new WarmupManager(this::activateClass, plugin);
         this.loader = new ClassDefinitionLoader(plugin);
     }
@@ -81,7 +81,7 @@ public class ClassManager {
 
     public void tryApplyClass(Player player, ClassDefinition classDef) {
         if (classDef.hasPermission() && !player.hasPermission(classDef.getPermission())) {
-            WarmupManager.sendMessage(player, ClassesMessages.load((net.exylia.exyliaClasses.ExyliaClasses) plugin).noPermission(),
+            WarmupManager.sendMessage(player, ClassesMessages.load(plugin).noPermission(),
                     Map.of("class", classDef.getDisplayName()));
             return;
         }
@@ -107,7 +107,7 @@ public class ClassManager {
         if (warmup.getCompletedParticle() != null)
             WarmupManager.showParticle(player, warmup.getCompletedParticle());
 
-        WarmupManager.sendMessage(player, ClassesMessages.load((net.exylia.exyliaClasses.ExyliaClasses) plugin).warmup().ready(),
+        WarmupManager.sendMessage(player, ClassesMessages.load(plugin).warmup().ready(),
                 Map.of("class", classDef.getDisplayName()));
     }
 
@@ -140,7 +140,7 @@ public class ClassManager {
         state.setCurrentClass(null);
 
         if (player.isOnline()) {
-            WarmupManager.sendMessage(player, ClassesMessages.load((net.exylia.exyliaClasses.ExyliaClasses) plugin).classSection().removed(),
+            WarmupManager.sendMessage(player, ClassesMessages.load(plugin).classSection().removed(),
                     Map.of("class", classDef.getDisplayName()));
         }
     }
@@ -189,7 +189,7 @@ public class ClassManager {
     }
 
     private void updateEnergyBossBar(Player player, PlayerState state, Energy energy) {
-        ClassesConfig.BossBarConfig bb = ClassesConfig.load((net.exylia.exyliaClasses.ExyliaClasses) plugin).energyBar();
+        ClassesConfig.BossBarConfig bb = ClassesConfig.load(plugin).energyBar();
         if (!bb.enabled()) return;
 
         float progress = (float) (state.getEnergy() / energy.getMax());
@@ -229,7 +229,7 @@ public class ClassManager {
     // --- mark ---
 
     public void createMarkBossBar(Player target, PlayerState state) {
-        ClassesConfig.BossBarConfig bb = ClassesConfig.load((net.exylia.exyliaClasses.ExyliaClasses) plugin).markBar();
+        ClassesConfig.BossBarConfig bb = ClassesConfig.load(plugin).markBar();
         if (!bb.enabled()) return;
 
         MarkLevel level = state.getMarkWeapon().getLevel(state.getMarkCount());
@@ -264,7 +264,7 @@ public class ClassManager {
         }
         state.setMarkDisplay(null);
         if (player.isOnline()) {
-            WarmupManager.sendMessage(player, ClassesMessages.load((net.exylia.exyliaClasses.ExyliaClasses) plugin).weapons().mark().expired(), null);
+            WarmupManager.sendMessage(player, ClassesMessages.load(plugin).weapons().mark().expired(), null);
         }
     }
 

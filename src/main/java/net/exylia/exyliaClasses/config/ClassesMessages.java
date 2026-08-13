@@ -170,7 +170,12 @@ public record ClassesMessages(
     }
 
     /** Loads and returns the messages, creating the file on first access. */
-    public static ClassesMessages load(ExyliaClasses plugin) {
+    public static ClassesMessages load(org.bukkit.plugin.Plugin plugin) {
         return Configs.define(plugin, "messages", ClassesMessages.class).load().get();
+    }
+
+    /** The same, for callers that hold the plugin rather than the Bukkit one. */
+    public static ClassesMessages load(ExyliaClasses plugin) {
+        return load(plugin.getPlugin());
     }
 }

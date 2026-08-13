@@ -46,7 +46,12 @@ public record ClassesConfig(
     }
 
     /** Loads and returns the config, creating it on first access. */
-    public static ClassesConfig load(ExyliaClasses plugin) {
+    public static ClassesConfig load(org.bukkit.plugin.Plugin plugin) {
         return Configs.define(plugin, "config", ClassesConfig.class).load().get();
+    }
+
+    /** The same, for callers that hold the plugin rather than the Bukkit one. */
+    public static ClassesConfig load(ExyliaClasses plugin) {
+        return load(plugin.getPlugin());
     }
 }

@@ -31,8 +31,8 @@ public class AbilityListener implements Listener {
     public AbilityListener(ClassManager classManager) {
         this.classManager = classManager;
         ClassesMessages.load(ExyliaClasses.getInstance());
-        ExyliaClasses.getInstance().getServer().getPluginManager()
-                .registerEvents(this, ExyliaClasses.getInstance());
+        ExyliaClasses.getInstance().getPlugin().getServer().getPluginManager()
+                .registerEvents(this, ExyliaClasses.getInstance().getPlugin());
     }
 
     @EventHandler(priority = EventPriority.NORMAL)

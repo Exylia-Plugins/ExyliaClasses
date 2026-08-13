@@ -8,7 +8,7 @@ public final class CommandRegistry {
     private CommandRegistry() {}
 
     public static void register(ExyliaClasses plugin) {
-        var lamp = BukkitLamp.builder(plugin).build();
+        var lamp = BukkitLamp.builder(plugin.getPlugin()).build();
         lamp.register(new ClassesCommand());
     }
 }
