@@ -12,12 +12,12 @@ import net.exylia.exyliaClasses.manager.ClassManager;
 import net.exylia.exyliaClasses.manager.PlayerStateManager;
 import net.exylia.exyliaClasses.placeholder.ClassesPlaceholders;
 import net.exylia.lib.config.Configs;
+import net.exylia.lib.debug.Debug;
 import net.exylia.lib.reload.Reloads;
 import net.exylia.lib.text.Prefixes;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.logging.Logger;
 
 /**
  * The plugin itself.
@@ -48,19 +48,20 @@ public final class ExyliaClasses implements LoaderPlugin<SpigotLukittuLoader> {
     private SpecialPassiveListener specialPassiveListener;
     private ClassesConfig config;
     private Reloads reloads;
-    private Logger log;
+    private Debug debug;
 
     @Override
     public void start(SpigotLukittuLoader lukittuLoader) {
         instance = this;
         this.loader = lukittuLoader;
         this.plugin = lukittuLoader.getPlugin();
-        this.log = plugin.getLogger();
 
         CommandRegistry.register(this);
 
         loadConfig();
-        log.info("ExyliaLib: Clans=" + net.exylia.lib.clan.Clans.isSupported()
+        debug = Debug.of(plugin).enabled(config.debug());
+        debug.motd();
+        debug.log("ExyliaLib: Clans=" + net.exylia.lib.clan.Clans.isSupported()
             + " Clients=" + net.exylia.lib.client.Clients.isSupported());
 
         PlayerStateManager stateManager = new PlayerStateManager();
@@ -71,6 +72,7 @@ public final class ExyliaClasses implements LoaderPlugin<SpigotLukittuLoader> {
         reloads = Reloads.of(plugin)
                 .step("configs", () -> Configs.reloadAll(plugin))
                 .step("prefix", () -> Prefixes.set(plugin, ClassesMessages.load(plugin).prefix()))
+                .step("debug flag", () -> debug.enabled(ClassesConfig.load(plugin).debug()))
                 .step("classes", classManager::loadClasses)
                 .step("active players", this::refreshOnlinePlayers);
 
@@ -127,5 +129,5 @@ public final class ExyliaClasses implements LoaderPlugin<SpigotLukittuLoader> {
         reloads.run(sender);
     }
 
-    public Logger log() { return log; }
+    public Debug debug() { return debug; }
 }

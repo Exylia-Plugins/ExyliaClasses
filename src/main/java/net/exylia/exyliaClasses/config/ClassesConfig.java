@@ -11,6 +11,10 @@ import net.exylia.exyliaClasses.ExyliaClasses;
  */
 @Comment("ExyliaClasses configuration.")
 public record ClassesConfig(
+        @Comment("Print diagnostic lines to the console: integration status, load detail.")
+        @Comment("Off in production; turn it on when something behaves oddly.")
+        boolean debug,
+
         @Comment("Energy bar displayed above the hotbar.")
         @Comment("")
         BossBarConfig energyBar,
@@ -19,7 +23,7 @@ public record ClassesConfig(
         BossBarConfig markBar) {
 
     public ClassesConfig() {
-        this(new BossBarConfig(), new BossBarConfig());
+        this(false, new BossBarConfig(), new BossBarConfig());
     }
 
     /** Boss bar settings. */

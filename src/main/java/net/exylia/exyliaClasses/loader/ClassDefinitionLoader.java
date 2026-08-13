@@ -12,16 +12,16 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.*;
-import java.util.logging.Logger;
+import net.exylia.lib.debug.Debug;
 
 public class ClassDefinitionLoader {
 
     private final JavaPlugin plugin;
-    private final Logger log;
+    private final Debug debug;
 
     public ClassDefinitionLoader(JavaPlugin plugin) {
         this.plugin = plugin;
-        this.log = plugin.getLogger();
+        this.debug = Debug.of(plugin);
     }
 
     public List<ClassDefinition> loadAll() {
@@ -46,7 +46,7 @@ public class ClassDefinitionLoader {
                 ClassDefinition def = load(name);
                 if (def != null) result.add(def);
             } catch (Exception e) {
-                log.severe("Error loading class from " + file.getName() + ": " + e.getMessage());
+                debug.error("Error loading class from " + file.getName() + ": " + e.getMessage(), e);
             }
         }
         return result;
@@ -91,7 +91,7 @@ public class ClassDefinitionLoader {
         try {
             map.put(slot, Material.valueOf(value.toUpperCase()));
         } catch (IllegalArgumentException e) {
-            log.warning("Invalid material for " + key + ": " + value);
+            debug.warn("Invalid material for " + key + ": " + value);
         }
     }
 
@@ -148,7 +148,7 @@ public class ClassDefinitionLoader {
                     parseParticleString(s, "particles"),
                     parseSoundString(s, "sound")));
             } catch (IllegalArgumentException e) {
-                log.warning("Invalid material for ability: " + key);
+                debug.warn("Invalid material for ability: " + key);
             }
         }
         return map;
@@ -167,7 +167,7 @@ public class ClassDefinitionLoader {
                     s.getDouble("radius", 0),
                     s.getStringList("effects")));
             } catch (IllegalArgumentException e) {
-                log.warning("Invalid material for hold-effect: " + key);
+                debug.warn("Invalid material for hold-effect: " + key);
             }
         }
         return map;
@@ -188,7 +188,7 @@ public class ClassDefinitionLoader {
                 };
                 if (weapon != null) map.put(m, weapon);
             } catch (IllegalArgumentException e) {
-                log.warning("Invalid material or type for weapon: " + key);
+                debug.warn("Invalid material or type for weapon: " + key);
             }
         }
         return map;
@@ -212,7 +212,7 @@ public class ClassDefinitionLoader {
                         lvl.getStringList("attacker-effects"),
                         null, null, null, null));
                 } catch (NumberFormatException e) {
-                    log.warning("Invalid mark level: " + levelKey);
+                    debug.warn("Invalid mark level: " + levelKey);
                 }
             }
         }
@@ -233,7 +233,7 @@ public class ClassDefinitionLoader {
             Object effectsObj = entry.get("effects");
             SpecialPassiveType type = SpecialPassiveType.fromString(typeStr);
             if (type == null) {
-                log.warning("Invalid special passive type: " + typeStr);
+                debug.warn("Invalid special passive type: " + typeStr);
                 continue;
             }
             List<String> effects = effectsObj instanceof List<?> list
