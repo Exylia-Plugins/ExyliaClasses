@@ -30,8 +30,29 @@ repositories {
     maven { url = uri("https://repo.codemc.io/repository/maven-snapshots/") }
 }
 
+/**
+ * ExyliaLib is always consumed at its newest release.
+ *
+ * It sits in its own configuration so the version it resolved to can be read
+ * back without resolving the whole compile classpath. That readback is the
+ * point: the Lukittu loader needs to be told which ExyliaLib this jar expects,
+ * and typing that number a second time is how the two drift apart.
+ *
+ * Dynamic versions are cached for 24 hours by default, which would keep a build
+ * compiling against yesterday's library after a new one is published. "Always
+ * the latest" has to mean this build, not the one after the cache expires.
+ */
+configurations {
+    exyliaLib
+    compileOnly.extendsFrom(exyliaLib)
+}
+
+configurations.configureEach {
+    resolutionStrategy.cacheDynamicVersionsFor 0, 'seconds'
+}
+
 dependencies {
-    compileOnly("net.exylia:ExyliaLib:1.18.3")
+    exyliaLib 'net.exylia:ExyliaLib:latest.release'
     compileOnly 'com.github.retrooper:packetevents-spigot:2.13.0'
     compileOnly 'com.lukittu.loader:lukittu-common:v1.0.10-local'
     compileOnly 'com.lukittu.loader:lukittu-spigot:v1.0.10-local'
@@ -97,6 +118,27 @@ tasks.register('buildAll') {
     }
 }
 
+/**
+ * The exact ExyliaLib this jar was compiled against.
+ *
+ * Resolved lazily rather than at configuration time so that a task which does
+ * not need it (clean, the release tasks) never pays for the lookup, and so a
+ * network hiccup cannot fail configuration of the whole build.
+ *
+ * This is what feeds the loader below. Anything else — a literal, a separate
+ * property — is a second place to state the same fact, and the two go out of
+ * sync silently: this plugin used to compile against 1.18.3 while telling the
+ * loader 1.17.2 was enough, so a server running 1.17.2 was cleared to start and
+ * then died on NoSuchMethodError in front of a player.
+ */
+def resolvedExyliaLibVersion = provider {
+    configurations.exyliaLib.resolvedConfiguration
+            .resolvedArtifacts
+            .find { it.moduleVersion.id.name == 'ExyliaLib' }
+            ?.moduleVersion?.id?.version
+            ?: { throw new GradleException('ExyliaLib did not resolve — is it published?') }()
+}
+
 lukittu {
     platform.set('spigot')
     mainClass.set('net.exylia.exyliaClasses.ExyliaClasses')
@@ -105,7 +147,8 @@ lukittu {
     loaderVersion.set('v1.0.10-local')
     configHeader.set('Request your license in https://discord.exylia.net')
     lukittuBranch.set('spigot')
-    exyliaLibVersion.set('1.17.2')
+    // Derived, never typed: see resolvedExyliaLibVersion above.
+    exyliaLibVersion.set(resolvedExyliaLibVersion)
     publicKey.set('LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUFtZkF5UUZSV3hRUGRDRndrSzJXTQpSeHhaWVRiWnpsTHBRNWE1dkhBdENQU3ZWaXRIRGVVN0FyeC94UW5pRUVGQW5rOVZRK2VLVGxEZWd6WjRwNU9lCjZQajdQSXNwVFBzL1pNWjNtMlFYN0ZOWkV6TnBTQjk2VjBuQ1RUWFlYdjVUNndEbWVDOEhhWG5iVXFNUUJkZmYKR0ZaUjYrajU4clhBR1I2Q2o5Vkh2MVJyRmhuWEU2cDNXemcxS1F4dG9wVElxNlMzMGtJaGZLeFN4YWh4blVjVQowcmt1N3pOWkFpMGp4RHNESE9hU1lmSmFKbllTUk04bXdvb0tRSWFNNmFWdVIzYUt2MU84aTNHcXJmZFUwcFFUCkFjTWMzZU9nb0poam0yVzR5U2Z5RFZsR3lmZkxpbTgzWHhOWDU0SzlLMEJhUm9wc3Z1R1lSNXpVYjFNT05Ea1gKOHdJREFRQUIKLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==')
     outputLoaderJarPath.set("/root/Java/jars/loaders/Exylia-Classes-Loader.jar")
     resourcePaths.set([
