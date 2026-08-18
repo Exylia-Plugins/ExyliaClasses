@@ -50,7 +50,7 @@ public class WarmupManager {
 
         AtomicInteger remaining = new AtomicInteger(warmup.getTime());
 
-        TaskHandle task = Tasks.of(plugin).runTimer(20L, 20L, handle -> {
+        TaskHandle task = Tasks.of(plugin).runAtEntityTimer(player, 20L, 20L, handle -> {
             if (!player.isOnline()) {
                 warmupTasks.remove(player.getUniqueId());
                 warmupClasses.remove(player.getUniqueId());

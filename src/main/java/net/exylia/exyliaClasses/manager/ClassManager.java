@@ -176,7 +176,7 @@ public class ClassManager {
     // --- energy ---
 
     private void startEnergyTask(Player player, PlayerState state, Energy energy) {
-        TaskHandle task = Tasks.of(plugin).runTimer(0L, 1L, handle -> {
+        TaskHandle task = Tasks.of(plugin).runAtEntityTimer(player, 0L, 1L, handle -> {
             if (!player.isOnline() || !state.isInClass()) return;
             double current = state.getEnergy();
             double newEnergy = Math.min(current + energy.getRegenPerTick(), energy.getMax());

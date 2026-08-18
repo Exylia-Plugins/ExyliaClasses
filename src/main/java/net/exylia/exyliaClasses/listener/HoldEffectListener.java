@@ -44,7 +44,14 @@ public class HoldEffectListener {
                         List<Player> targets = ClanHelper.getTargets(
                                 player, holdEffect.getType(), holdEffect.getRadius());
                         for (Player target : targets) {
-                            Effects.apply(target, holdEffect.getEffects());
+                            if (target.equals(player)) {
+                                Effects.apply(target, holdEffect.getEffects());
+                            } else {
+                                // A target near a region border is owned by another
+                                // thread, so it gets its own hop instead of ours.
+                                Tasks.of(ExyliaClasses.getInstance().getPlugin())
+                                        .runAtEntity(target, () -> Effects.apply(target, holdEffect.getEffects()));
+                            }
                         }
                     });
                 });
