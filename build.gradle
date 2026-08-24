@@ -147,6 +147,8 @@ lukittu {
     loaderVersion.set('v1.0.10-local')
     configHeader.set('Request your license in https://discord.exylia.net')
     lukittuBranch.set('spigot')
+    devBranchId.set('95c44987-7653-46e8-8a9f-64090d309c8d')
+    devLukittuBranch.set('dev')
     // Derived, never typed: see resolvedExyliaLibVersion above.
     exyliaLibVersion.set(resolvedExyliaLibVersion)
     publicKey.set('LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUFtZkF5UUZSV3hRUGRDRndrSzJXTQpSeHhaWVRiWnpsTHBRNWE1dkhBdENQU3ZWaXRIRGVVN0FyeC94UW5pRUVGQW5rOVZRK2VLVGxEZWd6WjRwNU9lCjZQajdQSXNwVFBzL1pNWjNtMlFYN0ZOWkV6TnBTQjk2VjBuQ1RUWFlYdjVUNndEbWVDOEhhWG5iVXFNUUJkZmYKR0ZaUjYrajU4clhBR1I2Q2o5Vkh2MVJyRmhuWEU2cDNXemcxS1F4dG9wVElxNlMzMGtJaGZLeFN4YWh4blVjVQowcmt1N3pOWkFpMGp4RHNESE9hU1lmSmFKbllTUk04bXdvb0tRSWFNNmFWdVIzYUt2MU84aTNHcXJmZFUwcFFUCkFjTWMzZU9nb0poam0yVzR5U2Z5RFZsR3lmZkxpbTgzWHhOWDU0SzlLMEJhUm9wc3Z1R1lSNXpVYjFNT05Ea1gKOHdJREFRQUIKLS0tLS1FTkQgUFVCTElDIEtFWS0tLS0tCg==')

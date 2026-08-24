@@ -44,6 +44,7 @@ public class BackstabListener implements Listener {
                 .map(w -> (BackstabWeapon) w)
                 .findFirst().orElse(null);
         if (backstab == null) return;
+        if (attacker.getInventory().getItemInMainHand().getType() != backstab.getMaterial()) return;
 
         float attackCooldown = attacker.getAttackCooldown();
         if (attackCooldown < backstab.getAttackCooldownNeed()) {

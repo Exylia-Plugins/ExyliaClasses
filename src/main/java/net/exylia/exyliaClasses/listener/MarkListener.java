@@ -36,8 +36,9 @@ public class MarkListener implements Listener {
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onDamage(EntityDamageByEntityEvent event) {
         if (!(event.getEntity() instanceof Player target)) return;
+        if (!(event.getDamager() instanceof Arrow arrow)) return;
 
-        Player shooter = resolveShooter(event);
+        Player shooter = resolveShooter(arrow);
         if (shooter == null) return;
         if (shooter.equals(target)) return;
 
@@ -50,6 +51,7 @@ public class MarkListener implements Listener {
                 .map(w -> (MarkWeapon) w)
                 .findFirst().orElse(null);
         if (markWeapon == null) return;
+        if (arrow.getItemStack().getType() != markWeapon.getMaterial()) return;
 
         if (!markWeapon.isMarkSameClass()) {
             Optional<PlayerState> targetStateOpt = classManager.getStateManager().get(target);
@@ -88,12 +90,9 @@ public class MarkListener implements Listener {
                 Map.of("attacker", shooter.getName(), "damage", damage));
     }
 
-    private Player resolveShooter(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Player player) return player;
-        if (event.getDamager() instanceof Arrow arrow) {
-            ProjectileSource source = arrow.getShooter();
-            if (source instanceof Player player) return player;
-        }
+    private Player resolveShooter(Arrow arrow) {
+        ProjectileSource source = arrow.getShooter();
+        if (source instanceof Player player) return player;
         return null;
     }
 }
