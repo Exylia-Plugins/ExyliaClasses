@@ -11,6 +11,9 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
 import java.util.*;
 import net.exylia.lib.debug.Debug;
 
@@ -29,9 +32,7 @@ public class ClassDefinitionLoader {
         String[] defaults = {"Archer", "Bard", "Miner", "Rogue", "Sorcerer", "Tank"};
         for (String name : defaults) {
             File file = new File(plugin.getDataFolder(), "classes/" + name + ".yml");
-            if (!file.exists()) {
-                plugin.saveResource("classes/" + name + ".yml", false);
-            }
+            saveResource("classes/" + name + ".yml", file);
         }
 
         File classesDir = new File(plugin.getDataFolder(), "classes");
@@ -50,6 +51,33 @@ public class ClassDefinitionLoader {
             }
         }
         return result;
+    }
+
+    /**
+     * Writes a file shipped inside the payload jar, once.
+     *
+     * <p>Never overwrites: what is on disk is what the server owner edited.
+     *
+     * <p>Reads through this class's classloader rather than
+     * {@link JavaPlugin#saveResource}, which looks inside the jar the server
+     * loaded — under Lukittu that is the loader jar, which carries a plugin.yml
+     * and nothing else.
+     *
+     * @param path the resource path inside the payload jar
+     * @param file where it goes in the loader data folder
+     */
+    private void saveResource(String path, File file) {
+        if (file.exists()) return;
+
+        try (InputStream resource = getClass().getClassLoader().getResourceAsStream(path)) {
+            if (resource == null) {
+                throw new IllegalArgumentException("Embedded resource '" + path + "' cannot be found");
+            }
+            Files.createDirectories(file.toPath().getParent());
+            Files.copy(resource, file.toPath());
+        } catch (IOException exception) {
+            throw new IllegalStateException("Could not save " + path, exception);
+        }
     }
 
     private ClassDefinition load(String name) {
