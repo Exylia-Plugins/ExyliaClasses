@@ -4,6 +4,7 @@ import com.lukittu.loader.LoaderPlugin;
 import com.lukittu.loader.spigot.SpigotLukittuLoader;
 import lombok.Getter;
 import net.exylia.exyliaClasses.api.ClassesAPI;
+import net.exylia.exyliaClasses.api.ClassesServiceImpl;
 import net.exylia.exyliaClasses.command.CommandRegistry;
 import net.exylia.exyliaClasses.config.ClassesConfig;
 import net.exylia.exyliaClasses.config.ClassesMessages;
@@ -69,6 +70,10 @@ public final class ExyliaClasses implements LoaderPlugin<SpigotLukittuLoader> {
         classManager.loadClasses();
 
         classesAPI = new ClassesAPI(classManager);
+        // The public API, for plugins outside the suite. Registered here rather
+        // than at the end of start(): the class manager it reads is up, and a
+        // plugin enabling after us must find it whatever order the server chose.
+        ClassesServiceImpl.register(lukittuLoader);
         reloads = Reloads.of(plugin)
                 .step("configs", () -> Configs.reloadAll(plugin))
                 .step("prefix", () -> Prefixes.set(plugin, ClassesMessages.load(plugin).prefix()))
