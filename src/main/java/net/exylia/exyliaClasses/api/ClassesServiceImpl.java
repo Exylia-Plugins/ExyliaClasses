@@ -8,10 +8,12 @@ import net.exylia.exyliaClasses.model.ClassDefinition;
 import net.exylia.exyliaClasses.model.Energy;
 import net.exylia.exyliaClasses.model.PlayerState;
 import net.exylia.lib.api.classes.AbilityType;
+import net.exylia.lib.api.classes.AbilityUseResult;
 import net.exylia.lib.api.classes.ClassAbility;
 import net.exylia.lib.api.classes.ClassEnergy;
 import net.exylia.lib.api.classes.ClassesService;
 import net.exylia.lib.api.classes.PlayerClass;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.ServicePriority;
 import org.jetbrains.annotations.NotNull;
@@ -171,6 +173,31 @@ public final class ClassesServiceImpl implements ClassesService {
         api().removeFromClass(player);
     }
 
+    @Override
+    @NotNull
+    public AbilityUseResult useAbility(@NotNull Player player, @NotNull Material trigger) {
+        return switch (manager().useAbility(player, trigger)) {
+            case USED -> AbilityUseResult.USED;
+            case NOT_IN_CLASS -> AbilityUseResult.NOT_IN_CLASS;
+            case UNKNOWN_ABILITY -> AbilityUseResult.UNKNOWN_ABILITY;
+            case ON_COOLDOWN -> AbilityUseResult.ON_COOLDOWN;
+            case NOT_ENOUGH_ENERGY -> AbilityUseResult.NOT_ENOUGH_ENERGY;
+            case CANCELLED -> AbilityUseResult.CANCELLED;
+        };
+    }
+
+    // ── Energy ─────────────────────────────────────────────────────────────
+
+    @Override
+    public boolean giveEnergy(@NotNull Player player, double amount) {
+        return manager().giveEnergy(player, amount);
+    }
+
+    @Override
+    public boolean spendEnergy(@NotNull Player player, double amount) {
+        return manager().spendEnergy(player, amount);
+    }
+
     // ── Translation ────────────────────────────────────────────────────────
 
     private static ClassesAPI api() {
@@ -185,7 +212,13 @@ public final class ClassesServiceImpl implements ClassesService {
         return manager().getStateManager().get(player);
     }
 
-    private static PlayerClass toClass(ClassDefinition definition) {
+    /**
+     * A class as the public API sees it.
+     *
+     * <p>Public because the events the plugin fires carry the same shape as the
+     * service returns, and building it twice is how the two drift apart.
+     */
+    public static PlayerClass toClass(ClassDefinition definition) {
         return new PlayerClass(definition.getId(), definition.getDisplayName(),
                 // "NONE", blank and absent all mean the same thing to the plugin
                 // and would each mean something different to a caller reading it.
@@ -193,7 +226,7 @@ public final class ClassesServiceImpl implements ClassesService {
                 Map.copyOf(definition.getEquipment()));
     }
 
-    private static ClassAbility toAbility(org.bukkit.Material trigger, Ability ability) {
+    public static ClassAbility toAbility(org.bukkit.Material trigger, Ability ability) {
         return new ClassAbility(ability.getDisplayName(), trigger, toAbilityType(ability.getType()),
                 ability.getCooldown(), ability.getEnergyCost(), ability.getRadius());
     }

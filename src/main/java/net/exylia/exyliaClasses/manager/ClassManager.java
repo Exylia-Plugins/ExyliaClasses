@@ -1,24 +1,34 @@
 package net.exylia.exyliaClasses.manager;
 
+import net.exylia.exyliaClasses.api.ClassesServiceImpl;
 import net.exylia.exyliaClasses.config.ClassesConfig;
 import net.exylia.exyliaClasses.config.ClassesMessages;
 import net.exylia.exyliaClasses.loader.ClassDefinitionLoader;
+import net.exylia.exyliaClasses.model.Ability;
 import net.exylia.exyliaClasses.model.ClassDefinition;
 import net.exylia.exyliaClasses.model.Energy;
 import net.exylia.exyliaClasses.model.PlayerState;
 import net.exylia.exyliaClasses.model.Warmup;
 import net.exylia.exyliaClasses.model.weapon.MarkLevel;
+import net.exylia.exyliaClasses.util.ClanHelper;
 import net.exylia.exyliaClasses.util.EquipmentUtil;
+import net.exylia.lib.api.classes.event.AbilityUseEvent;
+import net.exylia.lib.api.classes.event.ClassEquipEvent;
+import net.exylia.lib.api.classes.event.ClassRemoveEvent;
 import net.exylia.lib.clan.Clans;
+import net.exylia.lib.client.Clients;
+import net.exylia.lib.client.Cooldown;
 import net.exylia.lib.effect.Display;
 import net.exylia.lib.effect.Effects;
 import net.exylia.lib.placeholder.Placeholders;
 import net.exylia.lib.task.TaskHandle;
 import net.exylia.lib.task.Tasks;
 import net.exylia.lib.util.ItemCooldowns;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.time.Duration;
 import java.util.*;
 
 public class ClassManager {
@@ -89,6 +99,7 @@ public class ClassManager {
     }
 
     public void activateClass(Player player, ClassDefinition classDef) {
+        if (!new ClassEquipEvent(player, ClassesServiceImpl.toClass(classDef)).callEvent()) return;
         PlayerState state = stateManager.getOrCreate(player);
         state.setCurrentClass(classDef);
 
@@ -143,6 +154,8 @@ public class ClassManager {
             WarmupManager.sendMessage(player, ClassesMessages.load(plugin).classSection().removed(),
                     Map.of("class", classDef.getDisplayName()));
         }
+
+        new ClassRemoveEvent(player, ClassesServiceImpl.toClass(classDef)).callEvent();
     }
 
     public void removeAll(Player player) {
@@ -173,7 +186,106 @@ public class ClassManager {
         }
     }
 
+    // --- abilities ---
+
+    public enum AbilityOutcome { USED, NOT_IN_CLASS, UNKNOWN_ABILITY, ON_COOLDOWN, NOT_ENOUGH_ENERGY, CANCELLED }
+
+    public AbilityOutcome useAbility(Player player, Material material) {
+        Optional<PlayerState> stateOpt = stateManager.get(player);
+        if (stateOpt.isEmpty() || !stateOpt.get().isInClass()) return AbilityOutcome.NOT_IN_CLASS;
+
+        PlayerState state = stateOpt.get();
+        ClassDefinition classDef = state.getCurrentClass();
+        Ability ability = classDef.getAbilities().get(material);
+        if (ability == null) return AbilityOutcome.UNKNOWN_ABILITY;
+
+        if (ItemCooldowns.isActive(player, material)) {
+            WarmupManager.sendMessage(player, ClassesMessages.load(plugin).abilities().cooldown(),
+                    Map.of("ability", ability.getDisplayName(),
+                            "time", ItemCooldowns.remainingFormatted(player, material)));
+            return AbilityOutcome.ON_COOLDOWN;
+        }
+
+        double energyCost = ability.getEnergyCost();
+        if (energyCost > 0 && state.getEnergy() < energyCost) {
+            WarmupManager.sendMessage(player, ClassesMessages.load(plugin).abilities().noEnergy(),
+                    Map.of("needed", String.format("%.0f", energyCost),
+                            "current", String.format("%.1f", state.getEnergy())));
+            return AbilityOutcome.NOT_ENOUGH_ENERGY;
+        }
+
+        if (!new AbilityUseEvent(player, ClassesServiceImpl.toClass(classDef),
+                ClassesServiceImpl.toAbility(material, ability)).callEvent()) {
+            return AbilityOutcome.CANCELLED;
+        }
+
+        if (energyCost > 0) {
+            state.setEnergy(state.getEnergy() - energyCost);
+        }
+
+        if (ability.getCooldown() > 0) {
+            Duration duration = Duration.ofSeconds(ability.getCooldown());
+            ItemCooldowns.start(player, material, duration);
+            Clients.cooldowns().show(player,
+                    Cooldown.of("ability_" + material.name(), duration)
+                            .icon(Cooldown.Icon.item(material.name())));
+        }
+
+        List<Player> targets = ClanHelper.getTargets(player, ability.getType(), ability.getRadius());
+        for (Player target : targets) {
+            if (!target.isOnline()) continue;
+            net.exylia.lib.util.Effects.apply(target, ability.getEffects());
+            if (ability.getParticles() != null) showParticle(target, ability.getParticles());
+        }
+
+        if (ability.getSound() != null) playSound(player, ability.getSound());
+
+        WarmupManager.sendMessage(player, ClassesMessages.load(plugin).abilities().used(),
+                Map.of("ability", ability.getDisplayName()));
+
+        for (Player target : targets) {
+            if (!target.equals(player)) notifyTarget(target, player, ability);
+        }
+        return AbilityOutcome.USED;
+    }
+
+    private void notifyTarget(Player target, Player caster, Ability ability) {
+        String message = switch (ability.getType()) {
+            case TO_CLAN, TO_CLAN_AND_ALLY, TO_ALLY -> ClassesMessages.load(plugin).abilities().clan();
+            case TO_ENEMY -> ClassesMessages.load(plugin).abilities().enemy();
+            default -> null;
+        };
+        if (message == null) return;
+        WarmupManager.sendMessage(target, message,
+                Map.of("player", caster.getName(), "ability", ability.getDisplayName()));
+    }
+
     // --- energy ---
+
+    public boolean giveEnergy(Player player, double amount) {
+        if (amount < 0) throw new IllegalArgumentException("Energy amount cannot be negative: " + amount);
+        PlayerState state = energyState(player);
+        if (state == null) return false;
+        Energy energy = state.getCurrentClass().getEnergy();
+        state.setEnergy(Math.min(state.getEnergy() + amount, energy.getMax()));
+        updateEnergyBossBar(player, state, energy);
+        return true;
+    }
+
+    public boolean spendEnergy(Player player, double amount) {
+        if (amount < 0) throw new IllegalArgumentException("Energy amount cannot be negative: " + amount);
+        PlayerState state = energyState(player);
+        if (state == null || state.getEnergy() < amount) return false;
+        state.setEnergy(state.getEnergy() - amount);
+        updateEnergyBossBar(player, state, state.getCurrentClass().getEnergy());
+        return true;
+    }
+
+    private PlayerState energyState(Player player) {
+        return stateManager.get(player)
+                .filter(state -> state.isInClass() && state.getCurrentClass().getEnergy() != null)
+                .orElse(null);
+    }
 
     private void startEnergyTask(Player player, PlayerState state, Energy energy) {
         TaskHandle task = Tasks.of(plugin).runAtEntityTimer(player, 0L, 1L, handle -> {
