@@ -25,7 +25,8 @@ public record ClassesMessages(
         ClassSection classSection,
         Abilities abilities,
         Weapons weapons,
-        Command command) {
+        Command command,
+        BossBars bossBars) {
 
     public ClassesMessages() {
         this(
@@ -35,8 +36,25 @@ public record ClassesMessages(
             new ClassSection(),
             new Abilities(),
             new Weapons(),
-            new Command()
+            new Command(),
+            new BossBars()
         );
+    }
+
+    @Comment("The boss bar titles; their colour and segments are in config.yml.")
+    public record BossBars(
+            @Comment("The energy bar. %energy_color%, %symbol%, %energy% and %max% come from the class.")
+            String energy,
+
+            @Comment("The mark bar. %mark_color%, %mark_icon%, %extra_damage% and %time% come from the mark.")
+            String mark
+    ) {
+        public BossBars() {
+            this(
+                "%energy_color%%symbol% %energy% / %max%",
+                "%mark_color%%mark_icon% +%extra_damage%% {muted}(%time%)"
+            );
+        }
     }
 
     @Comment("Warmup messages, shown while waiting to join a class.")
@@ -171,7 +189,7 @@ public record ClassesMessages(
 
     /** Loads and returns the messages, creating the file on first access. */
     public static ClassesMessages load(org.bukkit.plugin.Plugin plugin) {
-        return Configs.define(plugin, "messages", ClassesMessages.class).load().get();
+        return Configs.define(plugin, "messages", ClassesMessages.class).translated().load().get();
     }
 
     /** The same, for callers that hold the plugin rather than the Bukkit one. */

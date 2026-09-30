@@ -305,7 +305,7 @@ public class ClassManager {
         if (!bb.enabled()) return;
 
         float progress = (float) (state.getEnergy() / energy.getMax());
-        String text = Placeholders.apply(bb.text(), player,
+        String text = Placeholders.apply(ClassesMessages.load(plugin).bossBars().energy(), player,
                 Map.of("energy_color", (Object) energy.getColor(),
                         "symbol", energy.getSymbol(),
                         "energy", String.format("%.1f", state.getEnergy()),
@@ -347,7 +347,7 @@ public class ClassManager {
         MarkLevel level = state.getMarkWeapon().getLevel(state.getMarkCount());
         Map<String, Object> ctx = buildMarkContext(level);
 
-        String text = Placeholders.apply(bb.text(), target, ctx);
+        String text = Placeholders.apply(ClassesMessages.load(plugin).bossBars().mark(), target, ctx);
         Display display = Effects.of(plugin).bossBar(text)
                 .colour(bb.colour())
                 .overlay(bb.overlay())
