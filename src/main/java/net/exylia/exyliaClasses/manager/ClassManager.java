@@ -142,11 +142,8 @@ public class ClassManager {
         cancelEnergyTask(player, state);
         clearMark(player, state);
 
-        for (var material : classDef.getAbilities().keySet()) {
-            ItemCooldowns.clear(player, material);
-            net.exylia.lib.client.Clients.cooldowns().remove(player,
-                    "ability_" + material.name());
-        }
+        // Ability cooldowns are deliberately kept: they live per UUID in ExyliaLib and
+        // expire on their own, so swapping armour, relogging or dying cannot reset them.
 
         state.setCurrentClass(null);
 
@@ -161,6 +158,8 @@ public class ClassManager {
     public void removeAll(Player player) {
         warmupManager.cancelWarmup(player);
         removeClass(player);
+        // A marked player without a class still glows: clear the mark regardless.
+        stateManager.get(player).ifPresent(state -> clearMark(player, state));
         stateManager.remove(player);
     }
 
@@ -347,14 +346,23 @@ public class ClassManager {
         MarkLevel level = state.getMarkWeapon().getLevel(state.getMarkCount());
         Map<String, Object> ctx = buildMarkContext(level);
 
+        // A new hit restarts the countdown: drop the previous bar first, detached so its
+        // end does not expire the refreshed mark.
+        Display previous = state.getMarkDisplay();
+        state.setMarkDisplay(null);
+        if (previous != null) previous.stop();
+
         String text = Placeholders.apply(ClassesMessages.load(plugin).bossBars().mark(), target, ctx);
+        Display[] self = new Display[1];
         Display display = Effects.of(plugin).bossBar(text)
                 .colour(bb.colour())
                 .overlay(bb.overlay())
                 .countdown(state.getMarkWeapon().getMarkDuration())
-                .onEnd(() -> expireMark(target, state))
+                .onEnd(() -> {
+                    if (self[0] != null && state.getMarkDisplay() == self[0]) expireMark(target, state);
+                })
                 .show(target);
-        // Store for cleanup
+        self[0] = display;
         state.setMarkDisplay(display);
     }
 
@@ -383,11 +391,12 @@ public class ClassManager {
     public void clearMark(Player player, PlayerState state) {
         Display display = state.getMarkDisplay();
         if (display != null) {
-            display.stop();
             state.setMarkDisplay(null);
+            display.stop();
         }
         if (state.getMarkCount() > 0) {
-            if (player.isOnline()) player.setGlowing(false);
+            // Unconditional: the glowing flag is saved with the player, so it must go even on quit.
+            player.setGlowing(false);
             state.setMarkCount(0);
             state.setMarkWeapon(null);
         }
@@ -437,6 +446,13 @@ public class ClassManager {
             case "to_enemy" -> getEnemies(caster, radius);
             default -> List.of(caster);
         };
+    }
+
+    /** Redraws the client overlay of ability cooldowns that survived a relog or respawn. */
+    public void restoreCooldownOverlays(Player player) {
+        for (ClassDefinition def : classes.values()) {
+            for (Material material : def.getAbilities().keySet()) ItemCooldowns.restore(player, material);
+        }
     }
 
     // --- accessors ---

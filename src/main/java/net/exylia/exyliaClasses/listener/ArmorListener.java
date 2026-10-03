@@ -28,8 +28,10 @@ public class ArmorListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        plugin.getServer().getGlobalRegionScheduler().runDelayed(plugin, t ->
-            classManager.checkArmorChange(player), 2L);
+        plugin.getServer().getGlobalRegionScheduler().runDelayed(plugin, t -> {
+            classManager.restoreCooldownOverlays(player);
+            classManager.checkArmorChange(player);
+        }, 2L);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -45,8 +47,10 @@ public class ArmorListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
-        plugin.getServer().getGlobalRegionScheduler().runDelayed(plugin, t ->
-            classManager.checkArmorChange(player), 2L);
+        plugin.getServer().getGlobalRegionScheduler().runDelayed(plugin, t -> {
+            classManager.restoreCooldownOverlays(player);
+            classManager.checkArmorChange(player);
+        }, 2L);
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
