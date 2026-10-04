@@ -160,7 +160,8 @@ lukittu {
     release {
         dependsOn(project.tasks.named('shadowJar'))
         injars(project.tasks.named('shadowJar', ShadowJar).flatMap { it.archiveFile })
-        authorization.set("c1eadb685a61714e6ecc9e9a6f8e95e912944359f2da63fb145493b855672204")
+        // Secrets live in ~/.gradle/gradle.properties, never in this repository.
+        authorization.set(providers.gradleProperty('lukittuReleaseToken').orElse(''))
         status.set("PUBLISHED")
         setAsLatest.set(true)
         branchId.set("337c1c7f-5b62-4961-becd-60254f3de40f")
@@ -172,6 +173,6 @@ exyliaRelease {
     bbbResourceId.set('81542')
     bbbResourceUrl.set('https://builtbybit.com/resources/exylia-classes-modern-hcf-classes-pvp.81542/')
     loaderJarPath.set("${outputDirectory}/loaders/Exylia-Classes-Loader.jar")
-    discordWebhookUrl.set('https://discord.com/api/webhooks/1533541307333607655/t-Ggav0QD0ni-gybCp4SfmbljkSOrA0jZey8GacdQprZbL7pGU8Mkw8T3oM4lxiqnzof')
+    discordWebhookUrl.set(providers.gradleProperty('exyliaDiscordWebhookUrl').orElse(''))
     discordColor.set(0x5865F2)
 }
