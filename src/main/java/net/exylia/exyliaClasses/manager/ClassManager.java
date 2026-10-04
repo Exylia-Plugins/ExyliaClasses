@@ -16,8 +16,6 @@ import net.exylia.lib.api.classes.event.AbilityUseEvent;
 import net.exylia.lib.api.classes.event.ClassEquipEvent;
 import net.exylia.lib.api.classes.event.ClassRemoveEvent;
 import net.exylia.lib.clan.Clans;
-import net.exylia.lib.client.Clients;
-import net.exylia.lib.client.Cooldown;
 import net.exylia.lib.effect.Display;
 import net.exylia.lib.effect.Effects;
 import net.exylia.lib.placeholder.Placeholders;
@@ -224,10 +222,8 @@ public class ClassManager {
 
         if (ability.getCooldown() > 0) {
             Duration duration = Duration.ofSeconds(ability.getCooldown());
+            // ItemCooldowns also puts it on the HUD of Lunar and SurvivalCore.
             ItemCooldowns.start(player, material, duration);
-            Clients.cooldowns().show(player,
-                    Cooldown.of("ability_" + material.name(), duration)
-                            .icon(Cooldown.Icon.item(material.name())));
         }
 
         List<Player> targets = ClanHelper.getTargets(player, ability.getType(), ability.getRadius());
