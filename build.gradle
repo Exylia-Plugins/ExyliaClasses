@@ -172,6 +172,7 @@ exyliaRelease {
     resourceName.set(pluginName)
     bbbResourceId.set('81542')
     bbbResourceUrl.set('https://builtbybit.com/resources/exylia-classes-modern-hcf-classes-pvp.81542/')
+    docsUrl.set('https://docs.exylia.net/docs/exyliaclasses/')
     loaderJarPath.set("${outputDirectory}/loaders/Exylia-Classes-Loader.jar")
     discordWebhookUrl.set(providers.gradleProperty('exyliaDiscordWebhookUrl').orElse(''))
     discordColor.set(0x5865F2)
