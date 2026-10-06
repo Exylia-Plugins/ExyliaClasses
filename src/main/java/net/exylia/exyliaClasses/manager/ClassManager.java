@@ -18,10 +18,12 @@ import net.exylia.lib.api.classes.event.ClassRemoveEvent;
 import net.exylia.lib.clan.Clans;
 import net.exylia.lib.effect.Display;
 import net.exylia.lib.effect.Effects;
+import net.exylia.lib.format.Numbers;
 import net.exylia.lib.placeholder.Placeholders;
 import net.exylia.lib.task.TaskHandle;
 import net.exylia.lib.task.Tasks;
 import net.exylia.lib.util.ItemCooldowns;
+import net.exylia.lib.util.TimeFormats;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -199,15 +201,16 @@ public class ClassManager {
         if (ItemCooldowns.isActive(player, material)) {
             WarmupManager.sendMessage(player, ClassesMessages.load(plugin).abilities().cooldown(),
                     Map.of("ability", ability.getDisplayName(),
-                            "time", ItemCooldowns.remainingFormatted(player, material)));
+                            "time", ItemCooldowns.remainingFormatted(player, material),
+                            "duration", TimeFormats.render(Math.ceil(ItemCooldowns.remainingSeconds(player, material)), TimeFormats.Style.COMPACT)));
             return AbilityOutcome.ON_COOLDOWN;
         }
 
         double energyCost = ability.getEnergyCost();
         if (energyCost > 0 && state.getEnergy() < energyCost) {
             WarmupManager.sendMessage(player, ClassesMessages.load(plugin).abilities().noEnergy(),
-                    Map.of("needed", String.format("%.0f", energyCost),
-                            "current", String.format("%.1f", state.getEnergy())));
+                    Map.of("needed", Numbers.decimals(energyCost, 0),
+                            "current", Numbers.decimals(state.getEnergy(), 1)));
             return AbilityOutcome.NOT_ENOUGH_ENERGY;
         }
 
@@ -303,7 +306,7 @@ public class ClassManager {
         String text = Placeholders.apply(ClassesMessages.load(plugin).bossBars().energy(), player,
                 Map.of("energy_color", (Object) energy.getColor(),
                         "symbol", energy.getSymbol(),
-                        "energy", String.format("%.1f", state.getEnergy()),
+                        "energy", Numbers.decimals(state.getEnergy(), 1),
                         "max", String.valueOf((int) energy.getMax())));
 
         Display display = state.getEnergyDisplay();

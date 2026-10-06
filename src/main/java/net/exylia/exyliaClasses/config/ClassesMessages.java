@@ -70,7 +70,7 @@ public record ClassesMessages(
     ) {
         public Warmup() {
             this(
-                "[sound:BLOCK_NOTE_BLOCK_PLING|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {muted}Joining {highlight}%class% {muted}in {warning}%time%s{muted}...",
+                "[sound:BLOCK_NOTE_BLOCK_PLING|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {muted}Joining {highlight}%class% {muted}in {warning}%duration% ⌚{muted}...",
                 "[sound:ENTITY_PLAYER_LEVELUP|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {success}You are now {highlight}%class%{success}!",
                 "[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Class change cancelled."
             );
@@ -106,7 +106,7 @@ public record ClassesMessages(
     ) {
         public Abilities() {
             this(
-                "[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}%ability%&r {muted}is on cooldown. {warning}%time%s {muted}remaining.",
+                "[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}%ability%&r {muted}is on cooldown. {warning}%duration% ⌚ {muted}remaining.",
                 "{primary}&lEXYLIA CLASSES &8•&r {success}You used {highlight}%ability%{success}!",
                 "{primary}&lEXYLIA CLASSES &8•&r {muted}%player% {success}used {highlight}%ability% {muted}on your group.",
                 "{primary}&lEXYLIA CLASSES &8•&r {error}%player% {muted}used {highlight}%ability% {error}on you!",

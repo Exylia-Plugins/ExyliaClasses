@@ -1,13 +1,13 @@
 prefix: '{primary}&lEXYLIA CLASSES &8•&r'
 no-permission: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}No tienes permiso para usar la clase {highlight}%class%{error}.'
 warmup:
-  timer: '[sound:BLOCK_NOTE_BLOCK_PLING|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {muted}Entrando a {highlight}%class% {muted}en {warning}%time%s{muted}...'
+  timer: '[sound:BLOCK_NOTE_BLOCK_PLING|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {muted}Entrando a {highlight}%class% {muted}en {warning}%duration% ⌚{muted}...'
   ready: '[sound:ENTITY_PLAYER_LEVELUP|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {success}¡Ahora eres {highlight}%class%{success}!'
   canceled: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Cambio de clase cancelado.'
 class-section:
   removed: '{primary}&lEXYLIA CLASSES &8•&r {muted}Ya no eres {highlight}%class%{muted}.'
 abilities:
-  cooldown: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}%ability%&r {muted}está en cooldown. {warning}%time%s {muted}restantes.'
+  cooldown: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}%ability%&r {muted}está en cooldown. {warning}%duration% ⌚ {muted}restantes.'
   used: '{primary}&lEXYLIA CLASSES &8•&r {success}¡Usaste {highlight}%ability%{success}!'
   clan: '{primary}&lEXYLIA CLASSES &8•&r {muted}%player% {success}usó {highlight}%ability% {muted}en tu grupo.'
   enemy: '{primary}&lEXYLIA CLASSES &8•&r {error}¡%player% {muted}usó {highlight}%ability% {error}contra ti!'

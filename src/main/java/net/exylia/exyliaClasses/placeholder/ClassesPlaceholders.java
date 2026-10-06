@@ -5,6 +5,7 @@ import net.exylia.exyliaClasses.model.ClassDefinition;
 import net.exylia.exyliaClasses.model.Energy;
 import net.exylia.exyliaClasses.model.PlayerState;
 import net.exylia.exyliaClasses.model.weapon.MarkLevel;
+import net.exylia.lib.format.Numbers;
 import net.exylia.lib.placeholder.Placeholders;
 import org.bukkit.plugin.Plugin;
 
@@ -44,7 +45,7 @@ public class ClassesPlaceholders {
     }
 
     private String playerEnergy(org.bukkit.entity.Player player) {
-        return api.getPlayerState(player).map(s -> String.format("%.1f", s.getEnergy())).orElse("0");
+        return api.getPlayerState(player).map(s -> Numbers.decimals(s.getEnergy(), 1)).orElse("0");
     }
 
     private String playerMaxEnergy(org.bukkit.entity.Player player) {

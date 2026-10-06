@@ -8,6 +8,7 @@ import net.exylia.exyliaClasses.model.ClassDefinition;
 import net.exylia.exyliaClasses.model.PlayerState;
 import net.exylia.exyliaClasses.model.weapon.BackstabWeapon;
 import net.exylia.exyliaClasses.model.weapon.WeaponType;
+import net.exylia.lib.format.Numbers;
 import net.exylia.lib.util.Effects;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -49,8 +50,8 @@ public class BackstabListener implements Listener {
         float attackCooldown = attacker.getAttackCooldown();
         if (attackCooldown < backstab.getAttackCooldownNeed()) {
             WarmupManager.sendMessage(attacker, ClassesMessages.load(ExyliaClasses.getInstance()).weapons().backstab().noCooldown(),
-                    Map.of("current", String.format("%.0f", attackCooldown * 100),
-                            "needed", String.format("%.0f", backstab.getAttackCooldownNeed() * 100)));
+                    Map.of("current", Numbers.decimals(attackCooldown * 100, 0),
+                            "needed", Numbers.decimals(backstab.getAttackCooldownNeed() * 100, 0)));
             return;
         }
 

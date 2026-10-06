@@ -10,6 +10,7 @@ import net.exylia.lib.effect.Effects;
 import net.exylia.lib.task.TaskHandle;
 import net.exylia.lib.task.Tasks;
 import net.exylia.lib.text.Text;
+import net.exylia.lib.util.TimeFormats;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.EquipmentSlot;
@@ -61,7 +62,8 @@ public class WarmupManager {
 
             if (timeLeft > 0) {
                 sendMessage(player, ClassesMessages.load(plugin).warmup().timer(),
-                        Map.of("class", classDef.getDisplayName(), "time", String.valueOf(timeLeft)));
+                        Map.of("class", classDef.getDisplayName(), "time", String.valueOf(timeLeft),
+                                "duration", TimeFormats.render(timeLeft, TimeFormats.Style.COMPACT)));
 
                 if (warmup.getTickSound() != null)
                     playSound(player, warmup.getTickSound());
