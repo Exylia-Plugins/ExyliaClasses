@@ -202,7 +202,7 @@ public class ClassManager {
             WarmupManager.sendMessage(player, ClassesMessages.load(plugin).abilities().cooldown(),
                     Map.of("ability", ability.getDisplayName(),
                             "time", ItemCooldowns.remainingFormatted(player, material),
-                            "duration", TimeFormats.render(Math.ceil(ItemCooldowns.remainingSeconds(player, material)), TimeFormats.Style.COMPACT)));
+                            "duration", TimeFormats.render(ItemCooldowns.remainingSeconds(player, material), TimeFormats.Style.PRECISE)));
             return AbilityOutcome.ON_COOLDOWN;
         }
 
