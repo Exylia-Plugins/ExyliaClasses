@@ -1,6 +1,5 @@
 package net.exylia.exyliaClasses.api;
 
-import com.lukittu.loader.spigot.SpigotLukittuLoader;
 import net.exylia.exyliaClasses.ExyliaClasses;
 import net.exylia.exyliaClasses.manager.ClassManager;
 import net.exylia.exyliaClasses.model.Ability;
@@ -15,6 +14,7 @@ import net.exylia.lib.api.classes.ClassesService;
 import net.exylia.lib.api.classes.PlayerClass;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.ServicePriority;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,15 +50,14 @@ public final class ClassesServiceImpl implements ClassesService {
     /**
      * Publishes the service so other plugins can find it.
      *
-     * <p>Registered against the loader's {@code JavaPlugin}, which is what
-     * Bukkit knows about: unregistration then happens by itself when the plugin
-     * disables, so a reload cannot leave a stale implementation behind.
+     * <p>Registered against the plugin, so unregistration happens by itself
+     * when it disables and a reload cannot leave a stale implementation behind.
      *
-     * @param loader the loader hosting this plugin
+     * @param plugin this plugin
      */
-    public static void register(@NotNull SpigotLukittuLoader loader) {
-        loader.getPlugin().getServer().getServicesManager()
-                .register(ClassesService.class, new ClassesServiceImpl(), loader.getPlugin(),
+    public static void register(@NotNull Plugin plugin) {
+        plugin.getServer().getServicesManager()
+                .register(ClassesService.class, new ClassesServiceImpl(), plugin,
                         ServicePriority.Normal);
     }
 

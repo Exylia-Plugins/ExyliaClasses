@@ -1,7 +1,5 @@
 package net.exylia.exyliaClasses;
 
-import com.lukittu.loader.LoaderPlugin;
-import com.lukittu.loader.spigot.SpigotLukittuLoader;
 import lombok.Getter;
 import net.exylia.exyliaClasses.api.ClassesAPI;
 import net.exylia.exyliaClasses.api.ClassesServiceImpl;
@@ -21,15 +19,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 
 /**
- * The plugin itself.
- *
- * <p>This is not a {@link JavaPlugin}: the Lukittu loader is the plugin Bukkit
- * knows about, and it hands this class the {@code JavaPlugin} to register
- * against. Extending {@code JavaPlugin} here makes the loader's
- * {@code asSubclass(LoaderPlugin.class)} fail with a {@code ClassCastException}
- * the moment it tries to start the inner plugin.
+ * The plugin itself, started by {@link ExyliaClassesPlugin} once ExyliaLib is present.
  */
-public final class ExyliaClasses implements LoaderPlugin<SpigotLukittuLoader> {
+public final class ExyliaClasses {
 
     @Getter
     private static ExyliaClasses instance;
@@ -40,22 +32,19 @@ public final class ExyliaClasses implements LoaderPlugin<SpigotLukittuLoader> {
     @Getter
     private ClassesAPI classesAPI;
 
-    /** The Bukkit plugin everything registers against — the loader. */
+    /** The Bukkit plugin everything registers against. */
     @Getter
     private JavaPlugin plugin;
 
-    private SpigotLukittuLoader loader;
     private HoldEffectListener holdEffectListener;
     private SpecialPassiveListener specialPassiveListener;
     private ClassesConfig config;
     private Reloads reloads;
     private Debug debug;
 
-    @Override
-    public void start(SpigotLukittuLoader lukittuLoader) {
+    public void start(JavaPlugin plugin) {
         instance = this;
-        this.loader = lukittuLoader;
-        this.plugin = lukittuLoader.getPlugin();
+        this.plugin = plugin;
 
         CommandRegistry.register(this);
 
@@ -73,7 +62,7 @@ public final class ExyliaClasses implements LoaderPlugin<SpigotLukittuLoader> {
         // The public API, for plugins outside the suite. Registered here rather
         // than at the end of start(): the class manager it reads is up, and a
         // plugin enabling after us must find it whatever order the server chose.
-        ClassesServiceImpl.register(lukittuLoader);
+        ClassesServiceImpl.register(plugin);
         reloads = Reloads.of(plugin)
                 .step("configs", () -> Configs.reloadAll(plugin))
                 .step("prefix", () -> Prefixes.set(plugin, ClassesMessages.load(plugin).prefix()))
@@ -89,8 +78,7 @@ public final class ExyliaClasses implements LoaderPlugin<SpigotLukittuLoader> {
         checkOnlinePlayers();
     }
 
-    @Override
-    public void shutdown(SpigotLukittuLoader lukittuLoader) {
+    public void shutdown() {
         if (holdEffectListener != null) holdEffectListener.stop();
         if (specialPassiveListener != null) specialPassiveListener.stop();
         if (classManager != null) classManager.disableAll();

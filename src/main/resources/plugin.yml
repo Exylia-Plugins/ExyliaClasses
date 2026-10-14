@@ -1,15 +1,24 @@
 name: ExyliaClasses
 version: '${version}'
-main: net.exylia.exyliaClasses.ExyliaClasses
+main: net.exylia.exyliaClasses.ExyliaClassesPlugin
 api-version: '1.20'
 authors: [ DiGround ]
-website: https://link.exylia.net/@services
+website: https://github.com/Exylia-Plugins/ExyliaClasses
+description: HCF PvP classes (Bard, Archer, Rogue, Miner, Tank, Sorcerer) chosen by the armour a player wears.
+
+# Kept up to date by ExyliaLib from this repository's GitHub releases.
+exylia-updates: Exylia-Plugins/ExyliaClasses
+# The oldest ExyliaLib this build runs on; ExyliaLib holds back an update that needs a newer one.
+exylia-lib: '${exyliaLibVersion}'
+
 folia-supported: true
 
 depend:
   - packetevents
 
 softdepend:
+  # Required, but soft so this plugin still starts without it: it then downloads ExyliaLib
+  # and asks for a restart.
   - ExyliaLib
   - PlaceholderAPI
 
