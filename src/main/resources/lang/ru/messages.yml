@@ -1,0 +1,31 @@
+prefix: '{primary}&lEXYLIA CLASSES &8•&r'
+no-permission: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}У тебя нет прав на класс {highlight}%class%{error}.'
+warmup:
+  timer: '[sound:BLOCK_NOTE_BLOCK_PLING|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {muted}Смена класса на {highlight}%class% {muted}через {warning}%duration% ⌚{muted}...'
+  ready: '[sound:ENTITY_PLAYER_LEVELUP|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {success}Теперь твой класс — {highlight}%class%{success}!'
+  canceled: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Смена класса отменена.'
+class-section:
+  removed: '{primary}&lEXYLIA CLASSES &8•&r {muted}Твой класс больше не {highlight}%class%{muted}.'
+abilities:
+  cooldown: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}%ability%&r {muted}на перезарядке. Осталось {warning}%duration% ⌚{muted}.'
+  used: '{primary}&lEXYLIA CLASSES &8•&r {success}Ты использовал {highlight}%ability%{success}!'
+  clan: '{primary}&lEXYLIA CLASSES &8•&r {muted}%player% {success}использовал {highlight}%ability% {muted}в твоей группе.'
+  enemy: '{primary}&lEXYLIA CLASSES &8•&r {error}%player% {muted}использовал {highlight}%ability% {error}против тебя!'
+  no-energy: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Мало энергии. Нужно {warning}%needed% {error}(у тебя {warning}%current%{error}).'
+weapons:
+  mark:
+    applied: '{primary}&lEXYLIA CLASSES &8•&r {muted}Ты пометил {highlight}%target%{muted}. {muted}(+{error}%damage%% {muted}урона)'
+    received: '{primary}&lEXYLIA CLASSES &8•&r {muted}Тебя пометил {highlight}%attacker%{muted}. {muted}(+{error}%damage%% {muted}урона)'
+    expired: '{primary}&lEXYLIA CLASSES &8•&r {muted}Срок твоих меток истёк.'
+    same-class: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Нельзя пометить игрока своего класса.'
+  backstab:
+    success: '[sound:ENTITY_PLAYER_ATTACK_CRIT|1.0|1.5]{primary}&lEXYLIA CLASSES &8•&r {success}Удар в спину удался!'
+    victim: '{primary}&lEXYLIA CLASSES &8•&r {error}{highlight}%attacker% {error}ударил тебя в спину!'
+    no-cooldown: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Удар ещё не заряжен. {muted}(%current%% / %needed%%)'
+    cant-dead: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Нельзя убить ударом в спину.'
+command:
+  reload: '{primary}&lEXYLIA CLASSES &8•&r {success}Конфигурация успешно перезагружена.'
+  no-permission: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}У тебя нет прав на эту команду.'
+boss-bars:
+  energy: '%energy_color%%symbol% %energy% / %max%'
+  mark: '%mark_color%%mark_icon% +%extra_damage%% {muted}(%time%)'
