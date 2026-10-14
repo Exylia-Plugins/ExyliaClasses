@@ -16,7 +16,7 @@ import java.util.Map;
 @Comment("ExyliaClasses configuration.")
 public record ClassesConfig(
         @Comment("Language of this plugin's menus and messages. 'default' follows the language set in")
-        @Comment("ExyliaLib's config.yml; en, es, pt, fr or ru set this plugin alone. Each one is a folder under")
+        @Comment("ExyliaLib's config.yml; en, es, pt, fr, ru or tr set this plugin alone. Each one is a folder under")
         @Comment("lang/ you can edit; 'custom' holds the files this server had before languages existed.")
         String language,
 

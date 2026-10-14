@@ -1,0 +1,31 @@
+prefix: '{primary}&lEXYLIA CLASSES &8•&r'
+no-permission: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Bu sınıfı kullanma yetkin yok: {highlight}%class%{error}.'
+warmup:
+  timer: '[sound:BLOCK_NOTE_BLOCK_PLING|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {muted}Sınıfın {highlight}%class% {muted}olarak değişiyor: {warning}%duration% ⌚{muted}...'
+  ready: '[sound:ENTITY_PLAYER_LEVELUP|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {success}Artık sınıfın: {highlight}%class%{success}!'
+  canceled: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Sınıf değişimi iptal edildi.'
+class-section:
+  removed: '{primary}&lEXYLIA CLASSES &8•&r {muted}Artık şu sınıfta değilsin: {highlight}%class%{muted}.'
+abilities:
+  cooldown: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}%ability%&r {muted}bekleme süresinde. Kalan: {warning}%duration% ⌚{muted}.'
+  used: '{primary}&lEXYLIA CLASSES &8•&r {success}Yetenek kullanıldı: {highlight}%ability%{success}!'
+  clan: '{primary}&lEXYLIA CLASSES &8•&r {muted}%player% {success}grubuna {highlight}%ability% {muted}uyguladı.'
+  enemy: '{primary}&lEXYLIA CLASSES &8•&r {error}%player% {muted}sana karşı {highlight}%ability% {error}kullandı!'
+  no-energy: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Yetersiz enerji. Gereken: {warning}%needed% {error}(sende {warning}%current%{error}).'
+weapons:
+  mark:
+    applied: '{primary}&lEXYLIA CLASSES &8•&r {muted}İşaretlediğin oyuncu: {highlight}%target%{muted}. {muted}(+{error}%damage%% {muted}hasar)'
+    received: '{primary}&lEXYLIA CLASSES &8•&r {muted}Seni işaretleyen: {highlight}%attacker%{muted}. {muted}(+{error}%damage%% {muted}hasar)'
+    expired: '{primary}&lEXYLIA CLASSES &8•&r {muted}İşaretlerinin süresi doldu.'
+    same-class: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Kendi sınıfından birini işaretleyemezsin.'
+  backstab:
+    success: '[sound:ENTITY_PLAYER_ATTACK_CRIT|1.0|1.5]{primary}&lEXYLIA CLASSES &8•&r {success}Sırttan bıçaklama başarılı!'
+    victim: '{primary}&lEXYLIA CLASSES &8•&r {error}{highlight}%attacker% {error}seni sırtından bıçakladı!'
+    no-cooldown: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Saldırın henüz yeterince dolmadı. {muted}(%current%% / %needed%%)'
+    cant-dead: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Sırttan bıçaklamayla öldüremezsin.'
+command:
+  reload: '{primary}&lEXYLIA CLASSES &8•&r {success}Yapılandırma başarıyla yeniden yüklendi.'
+  no-permission: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Bu komutu kullanma yetkin yok.'
+boss-bars:
+  energy: '%energy_color%%symbol% %energy% / %max%'
+  mark: '%mark_color%%mark_icon% +%extra_damage%% {muted}(%time%)'
