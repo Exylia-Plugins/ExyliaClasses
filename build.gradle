@@ -14,7 +14,7 @@ def fullPackage = "${mainPackage}.exyliaClasses"
 def outputDirectory = "/root/Java/jars"
 
 group = mainPackage
-version = 'v1.0.0'
+version = 'v1.1.0'
 
 repositories {
     mavenLocal()
