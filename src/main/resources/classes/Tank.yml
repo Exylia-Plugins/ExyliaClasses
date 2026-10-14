@@ -1,0 +1,81 @@
+display-name: "<#492791><bold>TANK</bold>"
+permission: "NONE"
+
+equipment:
+  helmet: TURTLE_HELMET
+  chestplate: NETHERITE_CHESTPLATE
+  leggings: NETHERITE_LEGGINGS
+  boots: NETHERITE_BOOTS
+
+passive-effects:
+  - SLOW|3
+  - SLOW_DIGGING|2
+  - WEAKNESS|2
+  - DAMAGE_RESISTANCE|3
+
+warmup:
+  time: 5
+  sound:
+    enabled: true
+    type: "BLOCK_AMETHYST_BLOCK_PLACE|1|1"
+  particle:
+    enabled: true
+    type: "BUBBLE_POP|100|1.5|1.5|1.5|3"
+  sound-completed:
+    enabled: true
+    type: "BLOCK_PISTON_EXTEND|1|1"
+  particle-completed:
+    enabled: true
+    type: "REVERSE_PORTAL|100|1.5|1.5|1.5|3"
+  sound-cancel:
+    enabled: true
+    type: "BLOCK_ANVIL_PLACE|1|1"
+  particle-cancel:
+    enabled: true
+    type: "DRIP_LAVA|100|1.5|1.5|1.5|3"
+
+abilities:
+  NETHERITE_SCRAP:
+    display-name: "<#ababab><bold>RESISTANCE"
+    type: SELF
+    effects:
+      - DAMAGE_RESISTANCE|5|7
+    cooldown: 30
+    energy-cost: 0
+    radius: 0
+    particles:
+      enabled: true
+      type: "CAMPFIRE_COSY_SMOKE|100|1.5|1.5|1.5|2"
+    sound:
+      enabled: true
+      type: "ENTITY_EVOKER_PREPARE_SUMMON|1|1"
+
+  GHAST_TEAR:
+    display-name: "<#ff00e1><bold>REGENERATION"
+    type: SELF
+    effects:
+      - REGENERATION|4|7
+    cooldown: 30
+    energy-cost: 0
+    radius: 0
+    particles:
+      enabled: true
+      type: "REVERSE_PORTAL|100|1.5|1.5|1.5|2"
+    sound:
+      enabled: true
+      type: "ENTITY_EVOKER_PREPARE_SUMMON|1|1"
+
+  LEATHER:
+    display-name: "<#bfb0bd><bold>SATURATION"
+    type: SELF
+    effects:
+      - SATURATION|4|7
+    cooldown: 30
+    energy-cost: 0
+    radius: 0
+    particles:
+      enabled: true
+      type: "FIREWORKS_SPARK|100|1.5|1.5|1.5|2"
+    sound:
+      enabled: true
+      type: "ENTITY_EVOKER_PREPARE_SUMMON|1|1"

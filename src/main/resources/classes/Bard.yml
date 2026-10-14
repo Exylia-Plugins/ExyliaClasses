@@ -1,0 +1,191 @@
+display-name: "<#ffd82b><bold>BARD</bold>"
+permission: "NONE"
+
+equipment:
+  helmet: GOLDEN_HELMET
+  chestplate: GOLDEN_CHESTPLATE
+  leggings: GOLDEN_LEGGINGS
+  boots: GOLDEN_BOOTS
+
+passive-effects:
+  - SPEED|2
+  - DAMAGE_RESISTANCE|2
+  - REGENERATION|1
+
+warmup:
+  time: 5
+  sound:
+    enabled: true
+    type: "BLOCK_AMETHYST_BLOCK_PLACE|1|1"
+  particle:
+    enabled: true
+    type: "BUBBLE_POP|100|1.5|1.5|1.5|3"
+  sound-completed:
+    enabled: true
+    type: "BLOCK_PISTON_EXTEND|1|1"
+  particle-completed:
+    enabled: true
+    type: "REVERSE_PORTAL|100|1.5|1.5|1.5|3"
+  sound-cancel:
+    enabled: true
+    type: "BLOCK_ANVIL_PLACE|1|1"
+  particle-cancel:
+    enabled: true
+    type: "DRIP_LAVA|100|1.5|1.5|1.5|3"
+
+energy:
+  enabled: true
+  name: "Energy"
+  symbol: "⚡"
+  color: "<#ffd82b>"
+  max: 100
+  regen-per-tick: 0.08
+
+abilities:
+  SUGAR:
+    display-name: "<#ffd82b><bold>SPEED"
+    type: TO_CLAN
+    effects:
+      - SPEED|3|5
+    cooldown: 7
+    energy-cost: 35
+    radius: 20
+    particles:
+      enabled: true
+      type: "CRIT|60|1|1|1|1"
+    sound:
+      enabled: true
+      type: "BLOCK_NOTE_BLOCK_GUITAR|1|2"
+
+  IRON_INGOT:
+    display-name: "<#9e9e9e><bold>RESISTANCE"
+    type: TO_CLAN
+    effects:
+      - DAMAGE_RESISTANCE|3|5
+    cooldown: 7
+    energy-cost: 35
+    radius: 20
+    particles:
+      enabled: true
+      type: "CAMPFIRE_COSY_SMOKE|60|1|1|1|0.5"
+    sound:
+      enabled: true
+      type: "BLOCK_NOTE_BLOCK_IRON_XYLOPHONE|1|1"
+
+  FEATHER:
+    display-name: "<#63e5ff><bold>JUMP"
+    type: TO_CLAN
+    effects:
+      - JUMP|5|5
+    cooldown: 7
+    energy-cost: 35
+    radius: 20
+    particles:
+      enabled: true
+      type: "CLOUD|50|1|1|1|0.5"
+    sound:
+      enabled: true
+      type: "BLOCK_NOTE_BLOCK_FLUTE|1|2"
+
+  BLAZE_POWDER:
+    display-name: "<#ff5555><bold>STRENGTH"
+    type: TO_CLAN
+    effects:
+      - INCREASE_DAMAGE|3|5
+    cooldown: 7
+    energy-cost: 35
+    radius: 20
+    particles:
+      enabled: true
+      type: "FLAME|50|1|1|1|0.5"
+    sound:
+      enabled: true
+      type: "BLOCK_NOTE_BLOCK_BASS|1|1"
+
+  GHAST_TEAR:
+    display-name: "<#ff77ff><bold>REGENERATION"
+    type: TO_CLAN
+    effects:
+      - REGENERATION|2|5
+    cooldown: 7
+    energy-cost: 35
+    radius: 20
+    particles:
+      enabled: true
+      type: "REVERSE_PORTAL|50|1|1|1|0.5"
+    sound:
+      enabled: true
+      type: "BLOCK_NOTE_BLOCK_CHIME|1|2"
+
+  MAGMA_CREAM:
+    display-name: "<#ff9f20><bold>FIRE RESISTANCE"
+    type: TO_CLAN
+    effects:
+      - FIRE_RESISTANCE|1|35
+    cooldown: 7
+    energy-cost: 35
+    radius: 20
+    particles:
+      enabled: true
+      type: "LAVA|20|1|1|1|0.5"
+    sound:
+      enabled: true
+      type: "BLOCK_FIRE_AMBIENT|1|1"
+
+  WHEAT:
+    display-name: "<#e0e0e0><bold>INVISIBILITY"
+    type: TO_CLAN
+    effects:
+      - INVISIBILITY|1|35
+    cooldown: 7
+    energy-cost: 35
+    radius: 20
+    particles:
+      enabled: true
+      type: "PORTAL|60|1|1|1|0.5"
+    sound:
+      enabled: true
+      type: "ENTITY_ENDERMAN_TELEPORT|1|1"
+
+hold-effects:
+  SUGAR:
+    type: TO_CLAN
+    radius: 20
+    effects:
+      - SPEED|2|5
+
+  IRON_INGOT:
+    type: TO_CLAN
+    radius: 20
+    effects:
+      - DAMAGE_RESISTANCE|1|5
+
+  FEATHER:
+    type: TO_CLAN
+    radius: 20
+    effects:
+      - JUMP|2|5
+
+  BLAZE_POWDER:
+    type: TO_CLAN
+    radius: 20
+    effects:
+      - INCREASE_DAMAGE|2|5
+
+  GHAST_TEAR:
+    type: TO_CLAN
+    radius: 20
+    effects:
+      - REGENERATION|1|5
+
+  MAGMA_CREAM:
+    type: TO_CLAN
+    radius: 20
+    effects:
+      - FIRE_RESISTANCE|1|5
+
+  WHEAT:
+    type: TO_CLAN
+    radius: 20
+    effects:
+      - INVISIBILITY|1|5

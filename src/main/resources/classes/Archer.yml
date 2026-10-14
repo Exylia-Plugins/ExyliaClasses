@@ -1,0 +1,119 @@
+display-name: "<#c8c8c8><bold>ARCHER</bold>"
+permission: "NONE"
+
+equipment:
+  helmet: LEATHER_HELMET
+  chestplate: LEATHER_CHESTPLATE
+  leggings: LEATHER_LEGGINGS
+  boots: LEATHER_BOOTS
+
+passive-effects:
+  - SPEED|3
+  - DAMAGE_RESISTANCE|2
+
+warmup:
+  time: 5
+  sound:
+    enabled: true
+    type: "BLOCK_AMETHYST_BLOCK_PLACE|1|1"
+  particle:
+    enabled: true
+    type: "BUBBLE_POP|100|1.5|1.5|1.5|3"
+  sound-completed:
+    enabled: true
+    type: "BLOCK_PISTON_EXTEND|1|1"
+  particle-completed:
+    enabled: true
+    type: "REVERSE_PORTAL|100|1.5|1.5|1.5|3"
+  sound-cancel:
+    enabled: true
+    type: "BLOCK_ANVIL_PLACE|1|1"
+  particle-cancel:
+    enabled: true
+    type: "DRIP_LAVA|100|1.5|1.5|1.5|3"
+
+abilities:
+  SUGAR:
+    display-name: "<#63e5ff><bold>SPEED"
+    type: SELF
+    effects:
+      - SPEED|5|5
+    cooldown: 30
+    energy-cost: 0
+    radius: 0
+    particles:
+      enabled: true
+      type: "CRIT|60|0.6|0.6|0.6|1"
+    sound:
+      enabled: true
+      type: "ENTITY_BLAZE_SHOOT|1|1.5"
+
+  FEATHER:
+    display-name: "<#63ff8a><bold>JUMP"
+    type: SELF
+    effects:
+      - JUMP|5|5
+    cooldown: 30
+    energy-cost: 0
+    radius: 0
+    particles:
+      enabled: true
+      type: "CLOUD|40|0.5|0.5|0.5|0.1"
+    sound:
+      enabled: true
+      type: "ENTITY_HORSE_JUMP|1|1"
+
+  IRON_INGOT:
+    display-name: "<#9e9e9e><bold>RESISTANCE"
+    type: SELF
+    effects:
+      - DAMAGE_RESISTANCE|3|5
+    cooldown: 30
+    energy-cost: 0
+    radius: 0
+    particles:
+      enabled: true
+      type: "CAMPFIRE_COSY_SMOKE|60|0.5|0.5|0.5|0.1"
+    sound:
+      enabled: true
+      type: "BLOCK_ANVIL_USE|1|1"
+
+weapons:
+  ARROW:
+    type: MARK
+    mark-duration: 10
+    give-glow: true
+    mark-same-class: false
+    marks:
+      1:
+        extra-damage: 7
+        color: "<#9e9e9e>"
+        glow-color: gray
+        icon: "◆"
+        remove-invisibility: true
+        attacked-effects: []
+        attacker-effects: []
+      2:
+        extra-damage: 14
+        color: "<#55ff55>"
+        glow-color: green
+        icon: "◆◆"
+        remove-invisibility: true
+        attacked-effects: []
+        attacker-effects: []
+      3:
+        extra-damage: 21
+        color: "<#ffff55>"
+        glow-color: yellow
+        icon: "◆◆◆"
+        remove-invisibility: true
+        attacked-effects: []
+        attacker-effects: []
+      4:
+        extra-damage: 30
+        color: "<#ff5555>"
+        glow-color: red
+        icon: "◆◆◆◆"
+        remove-invisibility: true
+        attacked-effects: []
+        attacker-effects: []

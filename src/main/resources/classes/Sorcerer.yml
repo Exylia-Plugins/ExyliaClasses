@@ -1,0 +1,163 @@
+display-name: "<#7134eb><bold>SORCERER</bold>"
+permission: "NONE"
+
+equipment:
+  helmet: GOLDEN_HELMET
+  chestplate: CHAINMAIL_CHESTPLATE
+  leggings: CHAINMAIL_LEGGINGS
+  boots: GOLDEN_BOOTS
+
+passive-effects:
+  - SPEED|2
+  - DAMAGE_RESISTANCE|2
+  - REGENERATION|1
+
+warmup:
+  time: 5
+  sound:
+    enabled: true
+    type: "BLOCK_AMETHYST_BLOCK_PLACE|1|1"
+  particle:
+    enabled: true
+    type: "BUBBLE_POP|100|1.5|1.5|1.5|3"
+  sound-completed:
+    enabled: true
+    type: "BLOCK_PISTON_EXTEND|1|1"
+  particle-completed:
+    enabled: true
+    type: "REVERSE_PORTAL|100|1.5|1.5|1.5|3"
+  sound-cancel:
+    enabled: true
+    type: "BLOCK_ANVIL_PLACE|1|1"
+  particle-cancel:
+    enabled: true
+    type: "DRIP_LAVA|100|1.5|1.5|1.5|3"
+
+energy:
+  enabled: true
+  name: "Energy"
+  symbol: "⚡"
+  color: "<#714de8>"
+  max: 100
+  regen-per-tick: 0.1
+
+abilities:
+  SPIDER_EYE:
+    display-name: "<#32b015><bold>POISON"
+    type: TO_ENEMY
+    radius: 25
+    effects:
+      - POISON|2|4
+    cooldown: 7
+    energy-cost: 35
+    particles:
+      enabled: true
+      type: "SPELL_WITCH|100|1.5|1.5|1.5|2"
+    sound:
+      enabled: true
+      type: "ENTITY_WITCH_AMBIENT|1|1"
+
+  IRON_NUGGET:
+    display-name: "<#1e88e5><bold>SLOWNESS"
+    type: TO_ENEMY
+    radius: 25
+    effects:
+      - SLOW|2|5
+    cooldown: 8
+    energy-cost: 30
+    particles:
+      enabled: true
+      type: "CLOUD|80|1.2|1.2|1.2|1.5"
+    sound:
+      enabled: true
+      type: "ENTITY_SNOWBALL_THROW|1|1"
+
+  FERMENTED_SPIDER_EYE:
+    display-name: "<#9c27b0><bold>WEAKNESS"
+    type: TO_ENEMY
+    radius: 25
+    effects:
+      - WEAKNESS|1|6
+    cooldown: 6
+    energy-cost: 25
+    particles:
+      enabled: true
+      type: "PORTAL|90|1.0|1.0|1.0|2"
+    sound:
+      enabled: true
+      type: "ENTITY_ENDERMAN_AMBIENT|1|1"
+
+  ROTTEN_FLESH:
+    display-name: "<#ff9800><bold>HUNGER"
+    type: TO_ENEMY
+    radius: 25
+    effects:
+      - HUNGER|2|5
+    cooldown: 7
+    energy-cost: 28
+    particles:
+      enabled: true
+      type: "EGG_CRACK|100|1.5|1.5|1.5|2"
+    sound:
+      enabled: true
+      type: "ENTITY_PLAYER_BURP|1|1"
+
+  COAL:
+    display-name: "<#616161><bold>WITHER"
+    type: TO_ENEMY
+    radius: 25
+    effects:
+      - WITHER|2|5
+    cooldown: 10
+    energy-cost: 40
+    particles:
+      enabled: true
+      type: "SMOKE_LARGE|120|2.0|2.0|2.0|2.5"
+    sound:
+      enabled: true
+      type: "ENTITY_WITHER_AMBIENT|1|1"
+
+  GREEN_DYE:
+    display-name: "<#ff4081><bold>NAUSEA"
+    type: TO_ENEMY
+    radius: 25
+    effects:
+      - CONFUSION|1|6
+    cooldown: 9
+    energy-cost: 30
+    particles:
+      enabled: true
+      type: "PORTAL|100|1.5|1.5|1.5|2"
+    sound:
+      enabled: true
+      type: "ENTITY_ELDER_GUARDIAN_CURSE|1|1"
+
+  AMETHYST_SHARD:
+    display-name: "<#fdd835><bold>GLOWING"
+    type: TO_ENEMY
+    radius: 25
+    effects:
+      - GLOWING|1|6
+    cooldown: 9
+    energy-cost: 30
+    particles:
+      enabled: true
+      type: "ENCHANTMENT_TABLE|80|1.5|1.5|1.5|2"
+    sound:
+      enabled: true
+      type: "BLOCK_AMETHYST_BLOCK_CHIME|1|1"
+
+  FEATHER:
+    display-name: "<#81d4fa><bold>SLOW FALLING"
+    type: TO_ENEMY
+    radius: 25
+    effects:
+      - SLOW_FALLING|1|6
+    cooldown: 9
+    energy-cost: 40
+    particles:
+      enabled: true
+      type: "CLOUD|80|1.5|1.5|1.5|1.5"
+    sound:
+      enabled: true
+      type: "ENTITY_PHANTOM_FLAP|1|1"

@@ -1,0 +1,30 @@
+# Build output
+build/
+bin/
+dist/
+out/
+target/
+
+# Gradle
+.gradle/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Tooling
+.atl/
+.codegraph/

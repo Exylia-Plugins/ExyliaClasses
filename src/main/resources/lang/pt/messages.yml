@@ -1,0 +1,31 @@
+prefix: '{primary}&lEXYLIA CLASSES &8•&r'
+no-permission: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Você não tem permissão para usar a classe {highlight}%class%{error}.'
+warmup:
+  timer: '[sound:BLOCK_NOTE_BLOCK_PLING|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {muted}Entrando em {highlight}%class% {muted}em {warning}%duration% ⌚{muted}...'
+  ready: '[sound:ENTITY_PLAYER_LEVELUP|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {success}Agora você é {highlight}%class%{success}!'
+  canceled: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Troca de classe cancelada.'
+class-section:
+  removed: '{primary}&lEXYLIA CLASSES &8•&r {muted}Você não é mais {highlight}%class%{muted}.'
+abilities:
+  cooldown: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}%ability%&r {muted}está em recarga. Faltam {warning}%duration% ⌚{muted}.'
+  used: '{primary}&lEXYLIA CLASSES &8•&r {success}Você usou {highlight}%ability%{success}!'
+  clan: '{primary}&lEXYLIA CLASSES &8•&r {muted}%player% {success}usou {highlight}%ability% {muted}no seu grupo.'
+  enemy: '{primary}&lEXYLIA CLASSES &8•&r {error}%player% {muted}usou {highlight}%ability% {error}em você!'
+  no-energy: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Energia insuficiente. Precisa de {warning}%needed% {error}(tem {warning}%current%{error}).'
+weapons:
+  mark:
+    applied: '{primary}&lEXYLIA CLASSES &8•&r {muted}Você marcou {highlight}%target%{muted}. {muted}(+{error}%damage%% {muted}de dano)'
+    received: '{primary}&lEXYLIA CLASSES &8•&r {muted}Você foi marcado por {highlight}%attacker%{muted}. {muted}(+{error}%damage%% {muted}de dano)'
+    expired: '{primary}&lEXYLIA CLASSES &8•&r {muted}Suas marcas expiraram.'
+    same-class: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Você não pode marcar alguém da sua própria classe.'
+  backstab:
+    success: '[sound:ENTITY_PLAYER_ATTACK_CRIT|1.0|1.5]{primary}&lEXYLIA CLASSES &8•&r {success}Golpe pelas costas bem-sucedido!'
+    victim: '{primary}&lEXYLIA CLASSES &8•&r {error}Você levou um golpe pelas costas de {highlight}%attacker%{error}!'
+    no-cooldown: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Recarga de ataque baixa demais. {muted}(%current%% / %needed%%)'
+    cant-dead: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Você não pode matar com um golpe pelas costas.'
+command:
+  reload: '{primary}&lEXYLIA CLASSES &8•&r {success}Configuração recarregada com sucesso.'
+  no-permission: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Você não tem permissão para executar este comando.'
+boss-bars:
+  energy: '%energy_color%%symbol% %energy% / %max%'
+  mark: '%mark_color%%mark_icon% +%extra_damage%% {muted}(%time%)'

@@ -1,0 +1,106 @@
+display-name: "<#7d0606><bold>ROGUE</bold>"
+permission: "NONE"
+
+equipment:
+  helmet: CHAINMAIL_HELMET
+  chestplate: CHAINMAIL_CHESTPLATE
+  leggings: CHAINMAIL_LEGGINGS
+  boots: CHAINMAIL_BOOTS
+
+passive-effects:
+  - SPEED|2
+  - JUMP|2
+  - DAMAGE_RESISTANCE|1
+  - INVISIBILITY|1
+
+warmup:
+  time: 5
+  sound:
+    enabled: true
+    type: "BLOCK_AMETHYST_BLOCK_PLACE|1|1"
+  particle:
+    enabled: true
+    type: "BUBBLE_POP|100|1.5|1.5|1.5|3"
+  sound-completed:
+    enabled: true
+    type: "BLOCK_PISTON_EXTEND|1|1"
+  particle-completed:
+    enabled: true
+    type: "REVERSE_PORTAL|100|1.5|1.5|1.5|3"
+  sound-cancel:
+    enabled: true
+    type: "BLOCK_ANVIL_PLACE|1|1"
+  particle-cancel:
+    enabled: true
+    type: "DRIP_LAVA|100|1.5|1.5|1.5|3"
+
+abilities:
+  IRON_INGOT:
+    display-name: "<#ababab><bold>RESISTANCE"
+    type: SELF
+    effects:
+      - DAMAGE_RESISTANCE|2|5
+    cooldown: 30
+    energy-cost: 0
+    radius: 0
+    particles:
+      enabled: true
+      type: "CAMPFIRE_COSY_SMOKE|100|1.5|1.5|1.5|3"
+    sound:
+      enabled: true
+      type: "BLOCK_BEACON_POWER_SELECT|1|1"
+
+  SUGAR:
+    display-name: "<#63fffa><bold>SPEED"
+    type: SELF
+    effects:
+      - SPEED|3|7
+    cooldown: 45
+    energy-cost: 0
+    radius: 0
+    particles:
+      enabled: true
+      type: "SOUL_FIRE_FLAME|100|1.5|1.5|1.5|3"
+    sound:
+      enabled: true
+      type: "BLOCK_BEACON_POWER_SELECT|1|1"
+
+  FEATHER:
+    display-name: "<#57ff36><bold>JUMP"
+    type: SELF
+    effects:
+      - JUMP|9|7
+    cooldown: 45
+    energy-cost: 0
+    radius: 0
+    particles:
+      enabled: true
+      type: "SPELL_WITCH|100|1.5|1.5|1.5|3"
+    sound:
+      enabled: true
+      type: "BLOCK_BEACON_POWER_SELECT|1|1"
+
+weapons:
+  GOLDEN_SWORD:
+    type: BACKSTAB
+    extra-damage: 8
+    can-dead: false
+    attack-cooldown-need: 0.6
+    break-item: true
+    attacked-effects:
+      - SLOW|1|3
+    attacker-effects:
+      - SLOW|3|3
+      - WEAKNESS|3|3
+    attacked-particles:
+      enabled: true
+      type: "SMALL_FLAME|100|1.5|1.5|1.5|3"
+    attacked-sound:
+      enabled: true
+      type: "BLOCK_BEACON_POWER_SELECT|1|1"
+    attacker-particles:
+      enabled: true
+      type: "SMALL_FLAME|100|1.5|1.5|1.5|3"
+    attacker-sound:
+      enabled: true
+      type: "BLOCK_BEACON_POWER_SELECT|1|1"
