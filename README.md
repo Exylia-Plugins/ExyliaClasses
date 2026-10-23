@@ -6,7 +6,7 @@ Built on [ExyliaLib](https://github.com/DiGround-s/ExyliaLib).
 
 ## Requirements
 
-- Paper or Folia 1.21+, Java 21
+- Paper or Folia 1.21.4 or newer, Java 21
 - [PacketEvents](https://modrinth.com/plugin/packetevents)
 - [ExyliaLib](https://modrinth.com/plugin/exylialib) ([GitHub releases](https://github.com/DiGround-s/ExyliaLib/releases)). Install it first; without it the plugin stays off and says where to get it.
 
