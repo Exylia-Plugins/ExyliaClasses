@@ -75,7 +75,7 @@ abilities:
     radius: 0
     particles:
       enabled: true
-      type: "FIREWORKS_SPARK|100|1.5|1.5|1.5|2"
+      type: "HAPPY_VILLAGER|40|1.5|1.5|1.5|2"
     sound:
       enabled: true
       type: "ENTITY_EVOKER_PREPARE_SUMMON|1|1"

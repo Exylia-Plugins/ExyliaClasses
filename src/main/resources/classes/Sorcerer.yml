@@ -130,7 +130,7 @@ abilities:
       type: "PORTAL|100|1.5|1.5|1.5|2"
     sound:
       enabled: true
-      type: "ENTITY_ELDER_GUARDIAN_CURSE|1|1"
+      type: "ENTITY_EVOKER_CAST_SPELL|0.8|1"
 
   AMETHYST_SHARD:
     display-name: "<#fdd835><bold>GLOWING"
