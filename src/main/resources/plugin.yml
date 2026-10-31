@@ -22,6 +22,32 @@ softdepend:
   - ExyliaLib
   - PlaceholderAPI
 
+permissions:
+  exyliaclasses.admin.reload:
+    description: Reload the classes and the configuration with /classes reload.
+    default: op
+  # Classes. Each class file names the node that lets a player wear it ('permission:',
+  # "NONE" for everybody). The bundled classes use exyliaclasses.class.<id>, held by
+  # everybody, so a server sells a class by denying its node to the default group.
+  exyliaclasses.class.archer:
+    description: Wear the Archer class.
+    default: true
+  exyliaclasses.class.bard:
+    description: Wear the Bard class.
+    default: true
+  exyliaclasses.class.miner:
+    description: Wear the Miner class.
+    default: true
+  exyliaclasses.class.rogue:
+    description: Wear the Rogue class.
+    default: true
+  exyliaclasses.class.sorcerer:
+    description: Wear the Sorcerer class.
+    default: true
+  exyliaclasses.class.tank:
+    description: Wear the Tank class.
+    default: true
+
 libraries:
   # The same list ExyliaLib declares, in the same order and the same versions.
   # The server's library loader fetches each one once and shares it, so a plugin

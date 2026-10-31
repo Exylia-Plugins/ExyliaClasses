@@ -1,5 +1,7 @@
 display-name: "<#7134eb><bold>SORCERER</bold>"
-permission: "NONE"
+# Who may wear this class. "NONE" lets everybody; a node such as this one, which
+# every player holds by default, lets a server deny it to the default group and sell it.
+permission: "exyliaclasses.class.sorcerer"
 
 equipment:
   helmet: GOLDEN_HELMET
