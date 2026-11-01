@@ -32,10 +32,11 @@ public class ArmorListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
-        plugin.getServer().getGlobalRegionScheduler().runDelayed(plugin, t -> {
+        // On the player's own thread: the global region scheduler is the wrong thread on Folia.
+        net.exylia.lib.task.Tasks.of(plugin).runAtEntityLater(player, 2L, () -> {
             classManager.restoreCooldownOverlays(player);
             classManager.checkArmorChange(player);
-        }, 2L);
+        });
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
