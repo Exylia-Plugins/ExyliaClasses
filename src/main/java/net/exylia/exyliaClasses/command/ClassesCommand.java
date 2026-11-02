@@ -1,7 +1,9 @@
 package net.exylia.exyliaClasses.command;
 
 import net.exylia.exyliaClasses.ExyliaClasses;
+import net.exylia.lib.config.ConfigMenus;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
 import revxrsal.commands.annotation.Subcommand;
 import revxrsal.commands.bukkit.annotation.CommandPermission;
@@ -13,5 +15,11 @@ public class ClassesCommand {
     @CommandPermission("exyliaclasses.admin.reload")
     public void reload(CommandSender sender) {
         ExyliaClasses.getInstance().reload(sender);
+    }
+
+    @Subcommand("settings")
+    @CommandPermission("exyliaclasses.admin.settings")
+    public void settings(Player player) {
+        ConfigMenus.of(ExyliaClasses.getInstance().getPlugin()).permission("exyliaclasses.admin.settings").open(player);
     }
 }
