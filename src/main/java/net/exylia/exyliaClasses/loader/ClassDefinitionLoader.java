@@ -13,6 +13,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.util.*;
+import java.util.function.Consumer;
 import net.exylia.lib.config.BundledFiles;
 import net.exylia.lib.debug.Debug;
 
@@ -20,10 +21,34 @@ public class ClassDefinitionLoader {
 
     private final JavaPlugin plugin;
     private final Debug debug;
+    /** Where a part of a class the reader had to leave out is reported: the log, or a checker's list. */
+    private final Consumer<String> skipped;
 
     public ClassDefinitionLoader(JavaPlugin plugin) {
         this.plugin = plugin;
         this.debug = Debug.of(plugin);
+        this.skipped = debug::warn;
+    }
+
+    private ClassDefinitionLoader(JavaPlugin plugin, Consumer<String> skipped) {
+        this.plugin = plugin;
+        this.debug = Debug.of(plugin);
+        this.skipped = skipped;
+    }
+
+    /**
+     * What would stop {@code yaml}, the class file {@code name}, from loading whole: the
+     * editors' checker, one line per part the reader would leave out or the error that
+     * would cost the class.
+     */
+    public static List<String> problems(JavaPlugin plugin, String name, ConfigurationSection yaml) {
+        List<String> problems = new ArrayList<>();
+        try {
+            new ClassDefinitionLoader(plugin, problems::add).parse(name, yaml);
+        } catch (Exception e) {
+            problems.add("the class would not load: " + e.getMessage());
+        }
+        return problems;
     }
 
     public List<ClassDefinition> loadAll() {
@@ -53,7 +78,10 @@ public class ClassDefinitionLoader {
         File file = new File(plugin.getDataFolder(), "classes/" + name + ".yml");
         if (!file.exists()) return null;
 
-        YamlConfiguration cfg = YamlConfiguration.loadConfiguration(file);
+        return parse(name, YamlConfiguration.loadConfiguration(file));
+    }
+
+    private ClassDefinition parse(String name, ConfigurationSection cfg) {
         String id = name.toLowerCase();
         String displayName = cfg.getString("display-name", id);
         String permission = cfg.getString("permission", "NONE");
@@ -88,7 +116,7 @@ public class ClassDefinitionLoader {
         try {
             map.put(slot, Material.valueOf(value.toUpperCase()));
         } catch (IllegalArgumentException e) {
-            debug.warn("Invalid material for " + key + ": " + value);
+            skipped.accept("Invalid material for " + key + ": " + value);
         }
     }
 
@@ -133,7 +161,10 @@ public class ClassDefinitionLoader {
             try {
                 Material m = Material.valueOf(key.toUpperCase());
                 ConfigurationSection s = section.getConfigurationSection(key);
-                if (s == null) continue;
+                if (s == null) {
+                    skipped.accept("Not a section for ability: " + key);
+                    continue;
+                }
                 map.put(m, new Ability(
                     s.getString("display-name", key),
                     m,
@@ -145,7 +176,7 @@ public class ClassDefinitionLoader {
                     parseParticleString(s, "particles"),
                     parseSoundString(s, "sound")));
             } catch (IllegalArgumentException e) {
-                debug.warn("Invalid material for ability: " + key);
+                skipped.accept("Invalid material for ability: " + key);
             }
         }
         return map;
@@ -158,13 +189,16 @@ public class ClassDefinitionLoader {
             try {
                 Material m = Material.valueOf(key.toUpperCase());
                 ConfigurationSection s = section.getConfigurationSection(key);
-                if (s == null) continue;
+                if (s == null) {
+                    skipped.accept("Not a section for hold-effect: " + key);
+                    continue;
+                }
                 map.put(m, new HoldEffect(m,
                     AbilityType.fromString(s.getString("type", "SELF")),
                     s.getDouble("radius", 0),
                     s.getStringList("effects")));
             } catch (IllegalArgumentException e) {
-                debug.warn("Invalid material for hold-effect: " + key);
+                skipped.accept("Invalid material for hold-effect: " + key);
             }
         }
         return map;
@@ -177,7 +211,10 @@ public class ClassDefinitionLoader {
             try {
                 Material m = Material.valueOf(key.toUpperCase());
                 ConfigurationSection s = section.getConfigurationSection(key);
-                if (s == null) continue;
+                if (s == null) {
+                    skipped.accept("Not a section for weapon: " + key);
+                    continue;
+                }
                 WeaponType type = WeaponType.valueOf(s.getString("type", "MARK").toUpperCase());
                 Weapon weapon = switch (type) {
                     case MARK -> parseMarkWeapon(m, s);
@@ -185,7 +222,7 @@ public class ClassDefinitionLoader {
                 };
                 if (weapon != null) map.put(m, weapon);
             } catch (IllegalArgumentException e) {
-                debug.warn("Invalid material or type for weapon: " + key);
+                skipped.accept("Invalid material or type for weapon: " + key);
             }
         }
         return map;
@@ -209,7 +246,7 @@ public class ClassDefinitionLoader {
                         lvl.getStringList("attacker-effects"),
                         null, null, null, null));
                 } catch (NumberFormatException e) {
-                    debug.warn("Invalid mark level: " + levelKey);
+                    skipped.accept("Invalid mark level: " + levelKey);
                 }
             }
         }
@@ -230,7 +267,7 @@ public class ClassDefinitionLoader {
             Object effectsObj = entry.get("effects");
             SpecialPassiveType type = SpecialPassiveType.fromString(typeStr);
             if (type == null) {
-                debug.warn("Invalid special passive type: " + typeStr);
+                skipped.accept("Invalid special passive type: " + typeStr);
                 continue;
             }
             List<String> effects = effectsObj instanceof List<?> list

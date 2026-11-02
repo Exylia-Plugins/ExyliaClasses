@@ -7,6 +7,7 @@ import net.exylia.exyliaClasses.command.CommandRegistry;
 import net.exylia.exyliaClasses.config.ClassesConfig;
 import net.exylia.exyliaClasses.config.ClassesMessages;
 import net.exylia.exyliaClasses.listener.*;
+import net.exylia.exyliaClasses.loader.ClassDefinitionLoader;
 import net.exylia.exyliaClasses.manager.ClassManager;
 import net.exylia.exyliaClasses.manager.PlayerStateManager;
 import net.exylia.exyliaClasses.placeholder.ClassesPlaceholders;
@@ -14,8 +15,11 @@ import net.exylia.lib.config.Configs;
 import net.exylia.lib.debug.Debug;
 import net.exylia.lib.reload.Reloads;
 import net.exylia.lib.text.Prefixes;
+import net.exylia.lib.web.WebEditor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.io.File;
 
 
 /**
@@ -70,6 +74,8 @@ public final class ExyliaClasses {
                 .step("classes", classManager::loadClasses)
                 .step("active players", this::refreshOnlinePlayers);
 
+        registerClassFiles();
+
         // The reload only runs when asked; enable has to set the prefix itself.
         Prefixes.set(plugin, ClassesMessages.load(plugin).prefix());
 
@@ -108,6 +114,30 @@ public final class ExyliaClasses {
     private void checkOnlinePlayers() {
         for (var player : plugin.getServer().getOnlinePlayers()) {
             classManager.checkArmorChange(player);
+        }
+    }
+
+    /**
+     * Each class file, editable in game and in the browser, refused whole when part of the
+     * class would not load. The files there at startup: one added later waits for a restart.
+     */
+    private void registerClassFiles() {
+        File[] files = new File(plugin.getDataFolder(), "classes").listFiles((dir, name) -> name.endsWith(".yml"));
+        if (files == null) return;
+        for (File file : files) {
+            String name = file.getName().substring(0, file.getName().length() - ".yml".length());
+            try {
+                WebEditor.of(plugin).yaml(name.toLowerCase(), "classes/" + name)
+                        .title(name)
+                        .permission("exyliaclasses.admin.settings")
+                        .check(yaml -> ClassDefinitionLoader.problems(plugin, name, yaml))
+                        .onApplied(() -> {
+                            classManager.loadClasses();
+                            refreshOnlinePlayers();
+                        });
+            } catch (IllegalArgumentException invalid) {
+                debug.warn("classes/" + file.getName() + " cannot be edited in game: " + invalid.getMessage());
+            }
         }
     }
 
