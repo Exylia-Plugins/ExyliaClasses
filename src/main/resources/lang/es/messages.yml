@@ -1,4 +1,4 @@
-prefix: '{primary}&lEXYLIA CLASSES {letters_black}•<reset>'
+prefix: '{primary}&lCLASSES {letters_black}•<reset>'
 no-permission: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}No tienes permiso para usar la clase {highlight}%class%{error}.'
 warmup:
   timer: '[sound:BLOCK_NOTE_BLOCK_PLING|1.0|1.0]%prefix% {muted}Entrando a {highlight}%class% {muted}en {warning}%duration% ⌚{muted}...'

@@ -30,7 +30,7 @@ public record ClassesMessages(
 
     public ClassesMessages() {
         this(
-            "{primary}&lEXYLIA CLASSES {letters_black}•<reset>",
+            "{primary}&lCLASSES {letters_black}•<reset>",
             "[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}You don't have permission to use the class {highlight}%class%{error}.",
             new Warmup(),
             new ClassSection(),

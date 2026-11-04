@@ -1,4 +1,4 @@
-prefix: '{primary}&lEXYLIA CLASSES {letters_black}•<reset>'
+prefix: '{primary}&lCLASSES {letters_black}•<reset>'
 no-permission: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}У тебя нет прав на класс {highlight}%class%{error}.'
 warmup:
   timer: '[sound:BLOCK_NOTE_BLOCK_PLING|1.0|1.0]%prefix% {muted}Смена класса на {highlight}%class% {muted}через {warning}%duration% ⌚{muted}...'

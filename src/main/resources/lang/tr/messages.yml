@@ -1,4 +1,4 @@
-prefix: '{primary}&lEXYLIA CLASSES {letters_black}•<reset>'
+prefix: '{primary}&lCLASSES {letters_black}•<reset>'
 no-permission: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}Bu sınıfı kullanma yetkin yok: {highlight}%class%{error}.'
 warmup:
   timer: '[sound:BLOCK_NOTE_BLOCK_PLING|1.0|1.0]%prefix% {muted}Sınıfın {highlight}%class% {muted}olarak değişiyor: {warning}%duration% ⌚{muted}...'
