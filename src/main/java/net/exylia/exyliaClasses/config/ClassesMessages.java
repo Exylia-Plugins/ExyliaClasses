@@ -30,8 +30,8 @@ public record ClassesMessages(
 
     public ClassesMessages() {
         this(
-            "{primary}&lEXYLIA CLASSES &8•&r",
-            "[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}You don't have permission to use the class {highlight}%class%{error}.",
+            "{primary}&lEXYLIA CLASSES {letters_black}•<reset>",
+            "[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}You don't have permission to use the class {highlight}%class%{error}.",
             new Warmup(),
             new ClassSection(),
             new Abilities(),
@@ -70,9 +70,9 @@ public record ClassesMessages(
     ) {
         public Warmup() {
             this(
-                "[sound:BLOCK_NOTE_BLOCK_PLING|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {muted}Joining {highlight}%class% {muted}in {warning}%duration% ⌚{muted}...",
-                "[sound:ENTITY_PLAYER_LEVELUP|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {success}You are now {highlight}%class%{success}!",
-                "[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Class change cancelled."
+                "[sound:BLOCK_NOTE_BLOCK_PLING|1.0|1.0]%prefix% {muted}Joining {highlight}%class% {muted}in {warning}%duration% ⌚{muted}...",
+                "[sound:ENTITY_PLAYER_LEVELUP|1.0|1.0]%prefix% {success}You are now {highlight}%class%{success}!",
+                "[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}Class change cancelled."
             );
         }
     }
@@ -83,7 +83,7 @@ public record ClassesMessages(
             String removed
     ) {
         public ClassSection() {
-            this("{primary}&lEXYLIA CLASSES &8•&r {muted}You are no longer {highlight}%class%{muted}.");
+            this("%prefix% {muted}You are no longer {highlight}%class%{muted}.");
         }
     }
 
@@ -106,11 +106,11 @@ public record ClassesMessages(
     ) {
         public Abilities() {
             this(
-                "[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}%ability%&r {muted}is on cooldown. {warning}%duration% ⌚ {muted}remaining.",
-                "{primary}&lEXYLIA CLASSES &8•&r {success}You used {highlight}%ability%{success}!",
-                "{primary}&lEXYLIA CLASSES &8•&r {muted}%player% {success}used {highlight}%ability% {muted}on your group.",
-                "{primary}&lEXYLIA CLASSES &8•&r {error}%player% {muted}used {highlight}%ability% {error}on you!",
-                "[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Not enough energy. Need {warning}%needed% {error}(have {warning}%current%{error})."
+                "[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}%ability%&r {muted}is on cooldown. {warning}%duration% ⌚ {muted}remaining.",
+                "%prefix% {success}You used {highlight}%ability%{success}!",
+                "%prefix% {muted}%player% {success}used {highlight}%ability% {muted}on your group.",
+                "%prefix% {error}%player% {muted}used {highlight}%ability% {error}on you!",
+                "[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}Not enough energy. Need {warning}%needed% {error}(have {warning}%current%{error})."
             );
         }
     }
@@ -138,10 +138,10 @@ public record ClassesMessages(
         ) {
             public Mark() {
                 this(
-                    "{primary}&lEXYLIA CLASSES &8•&r {muted}You marked {highlight}%target%{muted}. {muted}(+{error}%damage%% {muted}dmg)",
-                    "{primary}&lEXYLIA CLASSES &8•&r {muted}You were marked by {highlight}%attacker%{muted}. {muted}(+{error}%damage%% {muted}dmg)",
-                    "{primary}&lEXYLIA CLASSES &8•&r {muted}Your marks have expired.",
-                    "[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}You cannot mark someone of your own class."
+                    "%prefix% {muted}You marked {highlight}%target%{muted}. {muted}(+{error}%damage%% {muted}dmg)",
+                    "%prefix% {muted}You were marked by {highlight}%attacker%{muted}. {muted}(+{error}%damage%% {muted}dmg)",
+                    "%prefix% {muted}Your marks have expired.",
+                    "[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}You cannot mark someone of your own class."
                 );
             }
         }
@@ -162,10 +162,10 @@ public record ClassesMessages(
         ) {
             public Backstab() {
                 this(
-                    "[sound:ENTITY_PLAYER_ATTACK_CRIT|1.0|1.5]{primary}&lEXYLIA CLASSES &8•&r {success}Backstab successful!",
-                    "{primary}&lEXYLIA CLASSES &8•&r {error}You were backstabbed by {highlight}%attacker%{error}!",
-                    "[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}Attack cooldown too low. {muted}(%current%% / %needed%%)",
-                    "[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}You cannot kill with backstab."
+                    "[sound:ENTITY_PLAYER_ATTACK_CRIT|1.0|1.5]%prefix% {success}Backstab successful!",
+                    "%prefix% {error}You were backstabbed by {highlight}%attacker%{error}!",
+                    "[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}Attack cooldown too low. {muted}(%current%% / %needed%%)",
+                    "[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}You cannot kill with backstab."
                 );
             }
         }
@@ -181,8 +181,8 @@ public record ClassesMessages(
     ) {
         public Command() {
             this(
-                "{primary}&lEXYLIA CLASSES &8•&r {success}Configuration reloaded successfully.",
-                "[sound:ENTITY_VILLAGER_NO|1.0|1.0]{primary}&lEXYLIA CLASSES &8•&r {error}You don't have permission to execute this command."
+                "%prefix% {success}Configuration reloaded successfully.",
+                "[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}You don't have permission to execute this command."
             );
         }
     }
