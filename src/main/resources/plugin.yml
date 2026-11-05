@@ -13,14 +13,13 @@ exylia-lib: '${exyliaLibVersion}'
 
 folia-supported: true
 
-depend:
-  - packetevents
-
 softdepend:
   # Required, but soft so this plugin still starts without it: it then says where to get ExyliaLib
   # and stays off until it is installed.
   - ExyliaLib
   - PlaceholderAPI
+  # Optional: without it the plugin runs and only its packet-drawn extras stay off.
+  - packetevents
 
 permissions:
   exyliaclasses.admin.reload:
