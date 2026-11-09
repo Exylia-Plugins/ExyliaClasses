@@ -1,0 +1,18 @@
+display-name: <#ffd82b><bold>BARDO</bold>
+energy:
+  name: Energía
+abilities:
+  SUGAR:
+    display-name: <#ffd82b><bold>VELOCIDAD
+  IRON_INGOT:
+    display-name: <#9e9e9e><bold>RESISTENCIA
+  FEATHER:
+    display-name: <#63e5ff><bold>SALTO
+  BLAZE_POWDER:
+    display-name: <#ff5555><bold>FUERZA
+  GHAST_TEAR:
+    display-name: <#ff77ff><bold>REGENERACIÓN
+  MAGMA_CREAM:
+    display-name: <#ff9f20><bold>RESISTENCIA AL FUEGO
+  WHEAT:
+    display-name: <#e0e0e0><bold>INVISIBILIDAD

@@ -12,6 +12,7 @@ import net.exylia.exyliaClasses.manager.ClassManager;
 import net.exylia.exyliaClasses.manager.PlayerStateManager;
 import net.exylia.exyliaClasses.placeholder.ClassesPlaceholders;
 import net.exylia.lib.config.Configs;
+import net.exylia.lib.config.Languages;
 import net.exylia.lib.debug.Debug;
 import net.exylia.lib.reload.Reloads;
 import net.exylia.lib.text.Prefixes;
@@ -122,12 +123,12 @@ public final class ExyliaClasses {
      * class would not load. The files there at startup: one added later waits for a restart.
      */
     private void registerClassFiles() {
-        File[] files = new File(plugin.getDataFolder(), "classes").listFiles((dir, name) -> name.endsWith(".yml"));
+        File[] files = Languages.file(plugin, "classes").listFiles((dir, name) -> name.endsWith(".yml"));
         if (files == null) return;
         for (File file : files) {
             String name = file.getName().substring(0, file.getName().length() - ".yml".length());
             try {
-                WebEditor.of(plugin).yaml(name.toLowerCase(), "classes/" + name)
+                WebEditor.of(plugin).yaml(name.toLowerCase(), Languages.path(plugin, "classes/" + name))
                         .title(name)
                         .permission("exyliaclasses.admin.settings")
                         .check(yaml -> ClassDefinitionLoader.problems(plugin, name, yaml))

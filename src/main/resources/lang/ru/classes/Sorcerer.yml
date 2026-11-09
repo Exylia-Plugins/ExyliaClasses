@@ -1,0 +1,20 @@
+display-name: <#7134eb><bold>ЧАРОДЕЙ</bold>
+energy:
+  name: Энергия
+abilities:
+  SPIDER_EYE:
+    display-name: <#32b015><bold>ЯД
+  IRON_NUGGET:
+    display-name: <#1e88e5><bold>МЕДЛИТЕЛЬНОСТЬ
+  FERMENTED_SPIDER_EYE:
+    display-name: <#9c27b0><bold>СЛАБОСТЬ
+  ROTTEN_FLESH:
+    display-name: <#ff9800><bold>ГОЛОД
+  COAL:
+    display-name: <#616161><bold>ИССУШЕНИЕ
+  GREEN_DYE:
+    display-name: <#ff4081><bold>ТОШНОТА
+  AMETHYST_SHARD:
+    display-name: <#fdd835><bold>СВЕЧЕНИЕ
+  FEATHER:
+    display-name: <#81d4fa><bold>МЕДЛЕННОЕ ПАДЕНИЕ

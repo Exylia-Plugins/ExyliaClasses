@@ -74,6 +74,11 @@ dependencies {
     compileOnly 'io.github.revxrsal:lamp.common:4.0.0-rc.17'
     compileOnly 'io.github.revxrsal:lamp.bukkit:4.0.0-rc.17'
     compileOnly 'io.github.revxrsal:lamp.brigadier:4.0.0-rc.17'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.11.4'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT'
+    testImplementation "net.exylia:ExyliaLib:${exyliaLibVersion}"
 }
 
 java {
@@ -84,6 +89,10 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
     options.compilerArgs << '-parameters'
     options.release.set(21)
+}
+
+test {
+    useJUnitPlatform()
 }
 
 processResources {

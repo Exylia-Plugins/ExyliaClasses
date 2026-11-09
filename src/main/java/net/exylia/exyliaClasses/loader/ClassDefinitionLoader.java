@@ -14,7 +14,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.io.File;
 import java.util.*;
 import java.util.function.Consumer;
-import net.exylia.lib.config.BundledFiles;
+import net.exylia.lib.config.Languages;
 import net.exylia.lib.debug.Debug;
 
 public class ClassDefinitionLoader {
@@ -54,9 +54,10 @@ public class ClassDefinitionLoader {
     public List<ClassDefinition> loadAll() {
         // Refreshed on every load so classes and keys added in a release reach
         // existing servers; the *.yml filter below skips the .yml.v1 backups.
-        BundledFiles.refresh(plugin, ExyliaClasses.class, "classes");
+        Languages.adoptCatalogue(plugin, ExyliaClasses.class, "classes");
+        Languages.refresh(plugin, ExyliaClasses.class, "classes");
 
-        File classesDir = new File(plugin.getDataFolder(), "classes");
+        File classesDir = Languages.file(plugin, "classes");
         List<ClassDefinition> result = new ArrayList<>();
 
         File[] files = classesDir.listFiles((dir, name) -> name.endsWith(".yml"));
@@ -75,7 +76,7 @@ public class ClassDefinitionLoader {
     }
 
     private ClassDefinition load(String name) {
-        File file = new File(plugin.getDataFolder(), "classes/" + name + ".yml");
+        File file = Languages.file(plugin, "classes/" + name + ".yml");
         if (!file.exists()) return null;
 
         return parse(name, YamlConfiguration.loadConfiguration(file));

@@ -1,0 +1,18 @@
+display-name: <#ffd82b><bold>БАРД</bold>
+energy:
+  name: Энергия
+abilities:
+  SUGAR:
+    display-name: <#ffd82b><bold>СКОРОСТЬ
+  IRON_INGOT:
+    display-name: <#9e9e9e><bold>СОПРОТИВЛЕНИЕ
+  FEATHER:
+    display-name: <#63e5ff><bold>ПРЫЖОК
+  BLAZE_POWDER:
+    display-name: <#ff5555><bold>СИЛА
+  GHAST_TEAR:
+    display-name: <#ff77ff><bold>РЕГЕНЕРАЦИЯ
+  MAGMA_CREAM:
+    display-name: <#ff9f20><bold>ОГНЕСТОЙКОСТЬ
+  WHEAT:
+    display-name: <#e0e0e0><bold>НЕВИДИМОСТЬ

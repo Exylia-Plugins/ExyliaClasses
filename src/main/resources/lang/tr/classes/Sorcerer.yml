@@ -1,0 +1,20 @@
+display-name: <#7134eb><bold>BÜYÜCÜ</bold>
+energy:
+  name: Enerji
+abilities:
+  SPIDER_EYE:
+    display-name: <#32b015><bold>ZEHİR
+  IRON_NUGGET:
+    display-name: <#1e88e5><bold>YAVAŞLIK
+  FERMENTED_SPIDER_EYE:
+    display-name: <#9c27b0><bold>ZAYIFLIK
+  ROTTEN_FLESH:
+    display-name: <#ff9800><bold>AÇLIK
+  COAL:
+    display-name: <#616161><bold>SOLMA
+  GREEN_DYE:
+    display-name: <#ff4081><bold>BULANTI
+  AMETHYST_SHARD:
+    display-name: <#fdd835><bold>PARLAMA
+  FEATHER:
+    display-name: <#81d4fa><bold>YAVAŞ DÜŞÜŞ

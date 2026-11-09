@@ -1,0 +1,20 @@
+display-name: <#7134eb><bold>SORCIER</bold>
+energy:
+  name: Énergie
+abilities:
+  SPIDER_EYE:
+    display-name: <#32b015><bold>POISON
+  IRON_NUGGET:
+    display-name: <#1e88e5><bold>LENTEUR
+  FERMENTED_SPIDER_EYE:
+    display-name: <#9c27b0><bold>FAIBLESSE
+  ROTTEN_FLESH:
+    display-name: <#ff9800><bold>FAIM
+  COAL:
+    display-name: <#616161><bold>WITHER
+  GREEN_DYE:
+    display-name: <#ff4081><bold>NAUSÉE
+  AMETHYST_SHARD:
+    display-name: <#fdd835><bold>LUMINESCENCE
+  FEATHER:
+    display-name: <#81d4fa><bold>CHUTE LENTE

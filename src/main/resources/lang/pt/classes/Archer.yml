@@ -1,0 +1,8 @@
+display-name: <#c8c8c8><bold>ARQUEIRO</bold>
+abilities:
+  SUGAR:
+    display-name: <#63e5ff><bold>VELOCIDADE
+  FEATHER:
+    display-name: <#63ff8a><bold>SALTO
+  IRON_INGOT:
+    display-name: <#9e9e9e><bold>RESISTÊNCIA
