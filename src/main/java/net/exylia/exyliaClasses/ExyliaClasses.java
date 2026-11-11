@@ -9,6 +9,7 @@ import net.exylia.exyliaClasses.config.ClassesMessages;
 import net.exylia.exyliaClasses.listener.*;
 import net.exylia.exyliaClasses.loader.ClassDefinitionLoader;
 import net.exylia.exyliaClasses.manager.ClassManager;
+import net.exylia.exyliaClasses.menu.SettingsMenus;
 import net.exylia.exyliaClasses.manager.PlayerStateManager;
 import net.exylia.exyliaClasses.placeholder.ClassesPlaceholders;
 import net.exylia.lib.config.Configs;
@@ -45,6 +46,7 @@ public final class ExyliaClasses {
     private SpecialPassiveListener specialPassiveListener;
     private ClassesConfig config;
     private Reloads reloads;
+    private SettingsMenus settings;
     private Debug debug;
 
     public void start(JavaPlugin plugin) {
@@ -72,10 +74,15 @@ public final class ExyliaClasses {
                 .step("configs", () -> Configs.reloadAll(plugin))
                 .step("prefix", () -> Prefixes.set(plugin, ClassesMessages.load(plugin).prefix()))
                 .step("debug flag", () -> debug.enabled(ClassesConfig.load(plugin).debug()))
+                .step("menus", () -> { if (settings != null) settings.load(); })
                 .step("classes", classManager::loadClasses)
                 .step("active players", this::refreshOnlinePlayers);
 
         registerClassFiles();
+
+        settings = new SettingsMenus(plugin, debug);
+        settings.registerActions();
+        settings.load();
 
         // The reload only runs when asked; enable has to set the prefix itself.
         Prefixes.set(plugin, ClassesMessages.load(plugin).prefix());
@@ -154,4 +161,6 @@ public final class ExyliaClasses {
     }
 
     public Debug debug() { return debug; }
+
+    public void openSettings(org.bukkit.entity.Player admin) { settings.openHub(admin); }
 }

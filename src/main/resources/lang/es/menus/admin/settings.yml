@@ -1,0 +1,69 @@
+# DO NOT EDIT — REGENERATED ON EVERY STARTUP.
+#
+# Settings an admin tunes, one card per module. Everything else stays in the files.
+
+title: "{primary}&lCLASSES {letters_black}» {highlight}Settings"
+size: 27
+type: SIMPLE
+
+open_sounds:
+  - "minecraft:block.ender_chest.open|1.0|1.4"
+click_sounds:
+  - "minecraft:block.note_block.hat|1.0|1.0"
+close_sounds:
+  - "minecraft:block.barrel.close|1.0|0.7"
+
+filler:
+  global:
+    material: GRAY_STAINED_GLASS_PANE
+    hide_tooltip: true
+
+items:
+  header:
+    slot: 4
+    material: COMPARATOR
+    name: "<gradient:{primary}:{secondary_light}>Ajustes</gradient>"
+    lore:
+      - "{letters_black}Ajustes de clases"
+      - ""
+      - "{primary}✎ Información"
+      - " {letters}Las barras a cambiar en el juego."
+      - " {letters}El resto se queda en los archivos."
+
+  energy:
+    slot: 12
+    material: LIGHTNING_ROD
+    name: "{letters}Ajustes {letters_black}▸ <gradient:{primary}:{secondary_light}>Barra de energía</gradient>"
+    lore:
+      - "{letters_black}Página de ajustes"
+      - ""
+      - "{primary}✎ Información"
+      - " {letters}Si se muestra y cómo se ve."
+      - ""
+      - "{primary}✦ Estado"
+      - "  {letters_black}· {info}{icon:redstone} {letters}Visible{letters_black}: %energy_energy_bar_enabled%"
+      - "  {letters_black}· {info}{icon:star} {letters}Color{letters_black}: %energy_energy_bar_colour%"
+      - ""
+      - "{primary}{icon:click} Haz clic para abrir"
+      - "{letters_black}Cada ajuste, explicado."
+    actions:
+      - "exyliaclasses:settings_page energy"
+
+  mark:
+    slot: 14
+    material: TARGET
+    name: "{letters}Ajustes {letters_black}▸ <gradient:{primary}:{secondary_light}>Barra de marca</gradient>"
+    lore:
+      - "{letters_black}Página de ajustes"
+      - ""
+      - "{primary}✎ Información"
+      - " {letters}Si se muestra y cómo se ve."
+      - ""
+      - "{primary}✦ Estado"
+      - "  {letters_black}· {info}{icon:redstone} {letters}Visible{letters_black}: %mark_mark_bar_enabled%"
+      - "  {letters_black}· {info}{icon:star} {letters}Color{letters_black}: %mark_mark_bar_colour%"
+      - ""
+      - "{primary}{icon:click} Haz clic para abrir"
+      - "{letters_black}Cada ajuste, explicado."
+    actions:
+      - "exyliaclasses:settings_page mark"

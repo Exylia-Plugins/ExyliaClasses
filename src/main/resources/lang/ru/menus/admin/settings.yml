@@ -1,0 +1,69 @@
+# DO NOT EDIT — REGENERATED ON EVERY STARTUP.
+#
+# Settings an admin tunes, one card per module. Everything else stays in the files.
+
+title: "{primary}&lCLASSES {letters_black}» {highlight}Settings"
+size: 27
+type: SIMPLE
+
+open_sounds:
+  - "minecraft:block.ender_chest.open|1.0|1.4"
+click_sounds:
+  - "minecraft:block.note_block.hat|1.0|1.0"
+close_sounds:
+  - "minecraft:block.barrel.close|1.0|0.7"
+
+filler:
+  global:
+    material: GRAY_STAINED_GLASS_PANE
+    hide_tooltip: true
+
+items:
+  header:
+    slot: 4
+    material: COMPARATOR
+    name: "<gradient:{primary}:{secondary_light}>Настройки</gradient>"
+    lore:
+      - "{letters_black}Настройки классов"
+      - ""
+      - "{primary}✎ Информация"
+      - " {letters}Полосы, которые стоит менять."
+      - " {letters}Остальное остаётся в файлах."
+
+  energy:
+    slot: 12
+    material: LIGHTNING_ROD
+    name: "{letters}Настройки {letters_black}▸ <gradient:{primary}:{secondary_light}>Полоса энергии</gradient>"
+    lore:
+      - "{letters_black}Страница настроек"
+      - ""
+      - "{primary}✎ Информация"
+      - " {letters}Видна ли она и как выглядит."
+      - ""
+      - "{primary}✦ Статус"
+      - "  {letters_black}· {info}{icon:redstone} {letters}Показ{letters_black}: %energy_energy_bar_enabled%"
+      - "  {letters_black}· {info}{icon:star} {letters}Цвет{letters_black}: %energy_energy_bar_colour%"
+      - ""
+      - "{primary}{icon:click} Нажми, чтобы открыть"
+      - "{letters_black}Каждая настройка с пояснением."
+    actions:
+      - "exyliaclasses:settings_page energy"
+
+  mark:
+    slot: 14
+    material: TARGET
+    name: "{letters}Настройки {letters_black}▸ <gradient:{primary}:{secondary_light}>Полоса метки</gradient>"
+    lore:
+      - "{letters_black}Страница настроек"
+      - ""
+      - "{primary}✎ Информация"
+      - " {letters}Видна ли она и как выглядит."
+      - ""
+      - "{primary}✦ Статус"
+      - "  {letters_black}· {info}{icon:redstone} {letters}Показ{letters_black}: %mark_mark_bar_enabled%"
+      - "  {letters_black}· {info}{icon:star} {letters}Цвет{letters_black}: %mark_mark_bar_colour%"
+      - ""
+      - "{primary}{icon:click} Нажми, чтобы открыть"
+      - "{letters_black}Каждая настройка с пояснением."
+    actions:
+      - "exyliaclasses:settings_page mark"

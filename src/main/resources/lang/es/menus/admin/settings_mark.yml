@@ -1,0 +1,97 @@
+# DO NOT EDIT — REGENERATED ON EVERY STARTUP.
+#
+# The mark bar settings an admin tunes.
+
+title: "{primary}AJUSTES {letters_black}» {highlight}Barra de marca"
+size: 27
+type: SIMPLE
+
+open_sounds:
+  - "minecraft:block.ender_chest.open|1.0|1.4"
+click_sounds:
+  - "minecraft:block.note_block.hat|1.0|1.0"
+close_sounds:
+  - "minecraft:block.barrel.close|1.0|0.7"
+
+filler:
+  global:
+    material: GRAY_STAINED_GLASS_PANE
+    hide_tooltip: true
+
+items:
+  header:
+    slot: 4
+    material: TARGET
+    name: "<gradient:{primary}:{secondary_light}>Barra de marca</gradient>"
+    lore:
+      - "{letters_black}Ajustes de la barra de marca"
+      - ""
+      - "{primary}✎ Información"
+      - " {letters}La barra que cuenta atrás una"
+      - " {letters}marca puesta sobre un jugador."
+
+  mark-bar-enabled:
+    slot: 12
+    material: LEVER
+    name: "{letters}Barra de marca {letters_black}▸ <gradient:{primary}:{secondary_light}>Mostrar barra</gradient>"
+    lore:
+      - "{letters_black}Ajuste de la barra de marca"
+      - ""
+      - "{primary}✎ Información"
+      - " {letters}Muestra la barra de marca a los"
+      - " {letters}jugadores que llevan una marca."
+      - ""
+      - "{primary}✦ Estado"
+      - "  {letters_black}· {info}{icon:redstone} {letters}Visible{letters_black}: %mark_mark_bar_enabled%"
+      - "  {letters_black}· {info}{icon:book} {letters}Predeterminado{letters_black}: %mark_mark_bar_enabled_default%"
+      - ""
+      - "%mark_mark_bar_enabled_click%"
+    actions:
+      - "exyliaclasses:setting mark mark-bar.enabled"
+
+  mark-bar-colour:
+    slot: 13
+    material: RED_DYE
+    name: "{letters}Barra de marca {letters_black}▸ <gradient:{primary}:{secondary_light}>Color</gradient>"
+    lore:
+      - "{letters_black}Ajuste de la barra de marca"
+      - ""
+      - "{primary}✎ Información"
+      - " {letters}El color de la barra."
+      - ""
+      - "{primary}✦ Estado"
+      - "  {letters_black}· {info}{icon:star} {letters}Color{letters_black}: %mark_mark_bar_colour%"
+      - "  {letters_black}· {info}{icon:book} {letters}Predeterminado{letters_black}: %mark_mark_bar_colour_default%"
+      - ""
+      - "%mark_mark_bar_colour_click%"
+    actions:
+      - "exyliaclasses:setting mark mark-bar.colour"
+
+  mark-bar-overlay:
+    slot: 14
+    material: CHAIN
+    name: "{letters}Barra de marca {letters_black}▸ <gradient:{primary}:{secondary_light}>Segmentos</gradient>"
+    lore:
+      - "{letters_black}Ajuste de la barra de marca"
+      - ""
+      - "{primary}✎ Información"
+      - " {letters}Cómo se divide la barra. Una lisa"
+      - " {letters}va bien con un cronómetro."
+      - ""
+      - "{primary}✦ Estado"
+      - "  {letters_black}· {info}{icon:hopper} {letters}Segmentos{letters_black}: %mark_mark_bar_overlay%"
+      - "  {letters_black}· {info}{icon:book} {letters}Predeterminado{letters_black}: %mark_mark_bar_overlay_default%"
+      - ""
+      - "%mark_mark_bar_overlay_click%"
+    actions:
+      - "exyliaclasses:setting mark mark-bar.overlay"
+
+  back:
+    slot: 22
+    sound: "minecraft:item.bundle.remove_one|1.0|0.5"
+    material: 'basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjIzZmI2NzQyOTcxNmIyMWJjNmU4ZTdkNjY5Y2VkZGY2NWIxM2UwNzkwYTVjZTU1YjJlMDc3YjgyZDE5ZTEyNCJ9fX0='
+    name: "{letters}Volver {letters_black}▸ <gradient:{error}:{error_light}>Ajustes</gradient>"
+    lore:
+      - "{error}{icon:click} Haz clic para volver"
+    actions:
+      - "exyliaclasses:settings_hub"

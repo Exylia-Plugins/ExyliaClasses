@@ -1,0 +1,145 @@
+{
+ "namespace": "exyliaclasses",
+ "menu": "menus/admin/settings",
+ "title": "CLASSES",
+ "back": {
+  "label": "Classes",
+  "action": "exyliaclasses:settings_hub"
+ },
+ "hub": {
+  "about": [
+   "The bars worth changing in game.",
+   "The rest stays in the files."
+  ]
+ },
+ "pages": [
+  {
+   "id": "energy",
+   "title": "Energy bar",
+   "context": "Energy bar",
+   "icon": "LIGHTNING_ROD",
+   "comment": [
+    "The energy bar settings an admin tunes."
+   ],
+   "about": [
+    "The bar above the hotbar that",
+    "shows a class's energy."
+   ],
+   "hub": {
+    "about": [
+     "Show it, and how it looks."
+    ],
+    "stats": [
+     [
+      "redstone",
+      "Shown",
+      "energy-bar.enabled"
+     ],
+     [
+      "star",
+      "Colour",
+      "energy-bar.colour"
+     ]
+    ]
+   },
+   "cards": [
+    [
+     "energy-bar.enabled",
+     "Show bar",
+     "LEVER",
+     "redstone",
+     "Shown",
+     [
+      "Shows the energy bar to players",
+      "wearing a class with energy."
+     ]
+    ],
+    [
+     "energy-bar.colour",
+     "Colour",
+     "YELLOW_DYE",
+     "star",
+     "Colour",
+     [
+      "The colour of the bar."
+     ]
+    ],
+    [
+     "energy-bar.overlay",
+     "Segments",
+     "CHAIN",
+     "hopper",
+     "Segments",
+     [
+      "How the bar is divided. Notched",
+      "bars read as a number of pips."
+     ]
+    ]
+   ]
+  },
+  {
+   "id": "mark",
+   "title": "Mark bar",
+   "context": "Mark bar",
+   "icon": "TARGET",
+   "comment": [
+    "The mark bar settings an admin tunes."
+   ],
+   "about": [
+    "The bar that counts down a",
+    "mark placed on a player."
+   ],
+   "hub": {
+    "about": [
+     "Show it, and how it looks."
+    ],
+    "stats": [
+     [
+      "redstone",
+      "Shown",
+      "mark-bar.enabled"
+     ],
+     [
+      "star",
+      "Colour",
+      "mark-bar.colour"
+     ]
+    ]
+   },
+   "cards": [
+    [
+     "mark-bar.enabled",
+     "Show bar",
+     "LEVER",
+     "redstone",
+     "Shown",
+     [
+      "Shows the mark bar to players",
+      "carrying a mark."
+     ]
+    ],
+    [
+     "mark-bar.colour",
+     "Colour",
+     "RED_DYE",
+     "star",
+     "Colour",
+     [
+      "The colour of the bar."
+     ]
+    ],
+    [
+     "mark-bar.overlay",
+     "Segments",
+     "CHAIN",
+     "hopper",
+     "Segments",
+     [
+      "How the bar is divided. A smooth",
+      "bar suits a running timer."
+     ]
+    ]
+   ]
+  }
+ ]
+}

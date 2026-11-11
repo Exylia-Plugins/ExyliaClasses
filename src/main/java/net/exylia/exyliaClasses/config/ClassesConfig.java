@@ -3,6 +3,7 @@ package net.exylia.exyliaClasses.config;
 import net.exylia.lib.config.Comment;
 import net.exylia.lib.config.Configs;
 import net.exylia.lib.config.Languages;
+import net.exylia.lib.config.Menu;
 import net.exylia.lib.config.Migration;
 import net.exylia.exyliaClasses.ExyliaClasses;
 
@@ -53,9 +54,11 @@ public record ClassesConfig(
             boolean enabled,
 
             @Comment("Bar colour. PINK, BLUE, RED, GREEN, YELLOW, PURPLE or WHITE.")
+            @Menu.Choices({"PINK", "BLUE", "RED", "GREEN", "YELLOW", "PURPLE", "WHITE"})
             String colour,
 
             @Comment("Bar segmentation. PROGRESS, NOTCHED_6, NOTCHED_10, NOTCHED_12 or NOTCHED_20.")
+            @Menu.Choices({"PROGRESS", "NOTCHED_6", "NOTCHED_10", "NOTCHED_12", "NOTCHED_20"})
             String overlay
     ) {
         public BossBarConfig() {
@@ -83,13 +86,18 @@ public record ClassesConfig(
         }
     }
 
-    /** Loads and returns the config, creating it on first access. */
-    public static ClassesConfig load(org.bukkit.plugin.Plugin plugin) {
+    /** The config file, creating it on first access; the in-game settings edit it through this. */
+    public static net.exylia.lib.config.ConfigFile<ClassesConfig> file(org.bukkit.plugin.Plugin plugin) {
         return Configs.define(plugin, "config", ClassesConfig.class)
                 .version(3)
                 .migration(1, MIGRATION_FROM_1)
                 .migration(2, Configs.moveTo(plugin, "messages", MOVED_TO_MESSAGES))
-                .load().get();
+                .load();
+    }
+
+    /** Loads and returns the config, creating it on first access. */
+    public static ClassesConfig load(org.bukkit.plugin.Plugin plugin) {
+        return file(plugin).get();
     }
 
     /** The same, for callers that hold the plugin rather than the Bukkit one. */

@@ -1,0 +1,97 @@
+# DO NOT EDIT — REGENERATED ON EVERY STARTUP.
+#
+# The mark bar settings an admin tunes.
+
+title: "{primary}НАСТРОЙКИ {letters_black}» {highlight}Полоса метки"
+size: 27
+type: SIMPLE
+
+open_sounds:
+  - "minecraft:block.ender_chest.open|1.0|1.4"
+click_sounds:
+  - "minecraft:block.note_block.hat|1.0|1.0"
+close_sounds:
+  - "minecraft:block.barrel.close|1.0|0.7"
+
+filler:
+  global:
+    material: GRAY_STAINED_GLASS_PANE
+    hide_tooltip: true
+
+items:
+  header:
+    slot: 4
+    material: TARGET
+    name: "<gradient:{primary}:{secondary_light}>Полоса метки</gradient>"
+    lore:
+      - "{letters_black}Настройки полосы метки"
+      - ""
+      - "{primary}✎ Информация"
+      - " {letters}Полоса обратного отсчёта метки,"
+      - " {letters}наложенной на игрока."
+
+  mark-bar-enabled:
+    slot: 12
+    material: LEVER
+    name: "{letters}Полоса метки {letters_black}▸ <gradient:{primary}:{secondary_light}>Показывать полосу</gradient>"
+    lore:
+      - "{letters_black}Настройка полосы метки"
+      - ""
+      - "{primary}✎ Информация"
+      - " {letters}Показывает полосу метки игрокам,"
+      - " {letters}на которых наложена метка."
+      - ""
+      - "{primary}✦ Статус"
+      - "  {letters_black}· {info}{icon:redstone} {letters}Показ{letters_black}: %mark_mark_bar_enabled%"
+      - "  {letters_black}· {info}{icon:book} {letters}По умолчанию{letters_black}: %mark_mark_bar_enabled_default%"
+      - ""
+      - "%mark_mark_bar_enabled_click%"
+    actions:
+      - "exyliaclasses:setting mark mark-bar.enabled"
+
+  mark-bar-colour:
+    slot: 13
+    material: RED_DYE
+    name: "{letters}Полоса метки {letters_black}▸ <gradient:{primary}:{secondary_light}>Цвет</gradient>"
+    lore:
+      - "{letters_black}Настройка полосы метки"
+      - ""
+      - "{primary}✎ Информация"
+      - " {letters}Цвет полосы."
+      - ""
+      - "{primary}✦ Статус"
+      - "  {letters_black}· {info}{icon:star} {letters}Цвет{letters_black}: %mark_mark_bar_colour%"
+      - "  {letters_black}· {info}{icon:book} {letters}По умолчанию{letters_black}: %mark_mark_bar_colour_default%"
+      - ""
+      - "%mark_mark_bar_colour_click%"
+    actions:
+      - "exyliaclasses:setting mark mark-bar.colour"
+
+  mark-bar-overlay:
+    slot: 14
+    material: CHAIN
+    name: "{letters}Полоса метки {letters_black}▸ <gradient:{primary}:{secondary_light}>Деления</gradient>"
+    lore:
+      - "{letters_black}Настройка полосы метки"
+      - ""
+      - "{primary}✎ Информация"
+      - " {letters}Как делится полоса. Сплошная"
+      - " {letters}подходит для таймера."
+      - ""
+      - "{primary}✦ Статус"
+      - "  {letters_black}· {info}{icon:hopper} {letters}Деления{letters_black}: %mark_mark_bar_overlay%"
+      - "  {letters_black}· {info}{icon:book} {letters}По умолчанию{letters_black}: %mark_mark_bar_overlay_default%"
+      - ""
+      - "%mark_mark_bar_overlay_click%"
+    actions:
+      - "exyliaclasses:setting mark mark-bar.overlay"
+
+  back:
+    slot: 22
+    sound: "minecraft:item.bundle.remove_one|1.0|0.5"
+    material: 'basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjIzZmI2NzQyOTcxNmIyMWJjNmU4ZTdkNjY5Y2VkZGY2NWIxM2UwNzkwYTVjZTU1YjJlMDc3YjgyZDE5ZTEyNCJ9fX0='
+    name: "{letters}Назад {letters_black}▸ <gradient:{error}:{error_light}>Настройки</gradient>"
+    lore:
+      - "{error}{icon:click} Нажми, чтобы вернуться"
+    actions:
+      - "exyliaclasses:settings_hub"

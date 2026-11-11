@@ -1,0 +1,97 @@
+# DO NOT EDIT — REGENERATED ON EVERY STARTUP.
+#
+# The energy bar settings an admin tunes.
+
+title: "{primary}AYARLAR {letters_black}» {highlight}Enerji çubuğu"
+size: 27
+type: SIMPLE
+
+open_sounds:
+  - "minecraft:block.ender_chest.open|1.0|1.4"
+click_sounds:
+  - "minecraft:block.note_block.hat|1.0|1.0"
+close_sounds:
+  - "minecraft:block.barrel.close|1.0|0.7"
+
+filler:
+  global:
+    material: GRAY_STAINED_GLASS_PANE
+    hide_tooltip: true
+
+items:
+  header:
+    slot: 4
+    material: LIGHTNING_ROD
+    name: "<gradient:{primary}:{secondary_light}>Enerji çubuğu</gradient>"
+    lore:
+      - "{letters_black}Enerji çubuğu ayarları"
+      - ""
+      - "{primary}✎ Bilgi"
+      - " {letters}Hotbar’ın üstündeki, sınıfın"
+      - " {letters}enerjisini gösteren çubuk."
+
+  energy-bar-enabled:
+    slot: 12
+    material: LEVER
+    name: "{letters}Enerji çubuğu {letters_black}▸ <gradient:{primary}:{secondary_light}>Çubuğu göster</gradient>"
+    lore:
+      - "{letters_black}Enerji çubuğu ayarı"
+      - ""
+      - "{primary}✎ Bilgi"
+      - " {letters}Enerjili sınıf giyen oyunculara"
+      - " {letters}enerji çubuğunu gösterir."
+      - ""
+      - "{primary}✦ Durum"
+      - "  {letters_black}· {info}{icon:redstone} {letters}Gösterim{letters_black}: %energy_energy_bar_enabled%"
+      - "  {letters_black}· {info}{icon:book} {letters}Varsayılan{letters_black}: %energy_energy_bar_enabled_default%"
+      - ""
+      - "%energy_energy_bar_enabled_click%"
+    actions:
+      - "exyliaclasses:setting energy energy-bar.enabled"
+
+  energy-bar-colour:
+    slot: 13
+    material: YELLOW_DYE
+    name: "{letters}Enerji çubuğu {letters_black}▸ <gradient:{primary}:{secondary_light}>Renk</gradient>"
+    lore:
+      - "{letters_black}Enerji çubuğu ayarı"
+      - ""
+      - "{primary}✎ Bilgi"
+      - " {letters}Çubuğun rengi."
+      - ""
+      - "{primary}✦ Durum"
+      - "  {letters_black}· {info}{icon:star} {letters}Renk{letters_black}: %energy_energy_bar_colour%"
+      - "  {letters_black}· {info}{icon:book} {letters}Varsayılan{letters_black}: %energy_energy_bar_colour_default%"
+      - ""
+      - "%energy_energy_bar_colour_click%"
+    actions:
+      - "exyliaclasses:setting energy energy-bar.colour"
+
+  energy-bar-overlay:
+    slot: 14
+    material: CHAIN
+    name: "{letters}Enerji çubuğu {letters_black}▸ <gradient:{primary}:{secondary_light}>Bölümler</gradient>"
+    lore:
+      - "{letters_black}Enerji çubuğu ayarı"
+      - ""
+      - "{primary}✎ Bilgi"
+      - " {letters}Çubuk nasıl bölünür. Çentikli çubuk"
+      - " {letters}işaret sayısı gibi okunur."
+      - ""
+      - "{primary}✦ Durum"
+      - "  {letters_black}· {info}{icon:hopper} {letters}Bölümler{letters_black}: %energy_energy_bar_overlay%"
+      - "  {letters_black}· {info}{icon:book} {letters}Varsayılan{letters_black}: %energy_energy_bar_overlay_default%"
+      - ""
+      - "%energy_energy_bar_overlay_click%"
+    actions:
+      - "exyliaclasses:setting energy energy-bar.overlay"
+
+  back:
+    slot: 22
+    sound: "minecraft:item.bundle.remove_one|1.0|0.5"
+    material: 'basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjIzZmI2NzQyOTcxNmIyMWJjNmU4ZTdkNjY5Y2VkZGY2NWIxM2UwNzkwYTVjZTU1YjJlMDc3YjgyZDE5ZTEyNCJ9fX0='
+    name: "{letters}Geri {letters_black}▸ <gradient:{error}:{error_light}>Ayarlar</gradient>"
+    lore:
+      - "{error}{icon:click} Geri dönmek için tıkla"
+    actions:
+      - "exyliaclasses:settings_hub"

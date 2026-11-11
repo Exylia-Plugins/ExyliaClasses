@@ -1,7 +1,6 @@
 package net.exylia.exyliaClasses.command;
 
 import net.exylia.exyliaClasses.ExyliaClasses;
-import net.exylia.lib.config.ConfigMenus;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import revxrsal.commands.annotation.Command;
@@ -20,6 +19,6 @@ public class ClassesCommand {
     @Subcommand("settings")
     @CommandPermission("exyliaclasses.admin.settings")
     public void settings(Player player) {
-        ConfigMenus.of(ExyliaClasses.getInstance().getPlugin()).permission("exyliaclasses.admin.settings").open(player);
+        ExyliaClasses.getInstance().openSettings(player);
     }
 }

@@ -1,0 +1,97 @@
+# DO NOT EDIT — REGENERATED ON EVERY STARTUP.
+#
+# The energy bar settings an admin tunes.
+
+title: "{primary}&lSETTINGS {letters_black}» {highlight}Energy bar"
+size: 27
+type: SIMPLE
+
+open_sounds:
+  - "minecraft:block.ender_chest.open|1.0|1.4"
+click_sounds:
+  - "minecraft:block.note_block.hat|1.0|1.0"
+close_sounds:
+  - "minecraft:block.barrel.close|1.0|0.7"
+
+filler:
+  global:
+    material: GRAY_STAINED_GLASS_PANE
+    hide_tooltip: true
+
+items:
+  header:
+    slot: 4
+    material: LIGHTNING_ROD
+    name: "<gradient:{primary}:{secondary_light}>Energy bar</gradient>"
+    lore:
+      - "{letters_black}Energy bar settings"
+      - ""
+      - "{primary}✎ Information"
+      - " {letters}The bar above the hotbar that"
+      - " {letters}shows a class's energy."
+
+  energy-bar-enabled:
+    slot: 12
+    material: LEVER
+    name: "{letters}Energy bar {letters_black}▸ <gradient:{primary}:{secondary_light}>Show bar</gradient>"
+    lore:
+      - "{letters_black}Energy bar setting"
+      - ""
+      - "{primary}✎ Information"
+      - " {letters}Shows the energy bar to players"
+      - " {letters}wearing a class with energy."
+      - ""
+      - "{primary}✦ Status"
+      - "  {letters_black}· {info}{icon:redstone} {letters}Shown{letters_black}: %energy_energy_bar_enabled%"
+      - "  {letters_black}· {info}{icon:book} {letters}Default{letters_black}: %energy_energy_bar_enabled_default%"
+      - ""
+      - "%energy_energy_bar_enabled_click%"
+    actions:
+      - "exyliaclasses:setting energy energy-bar.enabled"
+
+  energy-bar-colour:
+    slot: 13
+    material: YELLOW_DYE
+    name: "{letters}Energy bar {letters_black}▸ <gradient:{primary}:{secondary_light}>Colour</gradient>"
+    lore:
+      - "{letters_black}Energy bar setting"
+      - ""
+      - "{primary}✎ Information"
+      - " {letters}The colour of the bar."
+      - ""
+      - "{primary}✦ Status"
+      - "  {letters_black}· {info}{icon:star} {letters}Colour{letters_black}: %energy_energy_bar_colour%"
+      - "  {letters_black}· {info}{icon:book} {letters}Default{letters_black}: %energy_energy_bar_colour_default%"
+      - ""
+      - "%energy_energy_bar_colour_click%"
+    actions:
+      - "exyliaclasses:setting energy energy-bar.colour"
+
+  energy-bar-overlay:
+    slot: 14
+    material: CHAIN
+    name: "{letters}Energy bar {letters_black}▸ <gradient:{primary}:{secondary_light}>Segments</gradient>"
+    lore:
+      - "{letters_black}Energy bar setting"
+      - ""
+      - "{primary}✎ Information"
+      - " {letters}How the bar is divided. Notched"
+      - " {letters}bars read as a number of pips."
+      - ""
+      - "{primary}✦ Status"
+      - "  {letters_black}· {info}{icon:hopper} {letters}Segments{letters_black}: %energy_energy_bar_overlay%"
+      - "  {letters_black}· {info}{icon:book} {letters}Default{letters_black}: %energy_energy_bar_overlay_default%"
+      - ""
+      - "%energy_energy_bar_overlay_click%"
+    actions:
+      - "exyliaclasses:setting energy energy-bar.overlay"
+
+  back:
+    slot: 22
+    sound: "minecraft:item.bundle.remove_one|1.0|0.5"
+    material: 'basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjIzZmI2NzQyOTcxNmIyMWJjNmU4ZTdkNjY5Y2VkZGY2NWIxM2UwNzkwYTVjZTU1YjJlMDc3YjgyZDE5ZTEyNCJ9fX0='
+    name: "{letters}Back {letters_black}▸ <gradient:{error}:{error_light}>Settings</gradient>"
+    lore:
+      - "{error}{icon:click} Click to go back"
+    actions:
+      - "exyliaclasses:settings_hub"
