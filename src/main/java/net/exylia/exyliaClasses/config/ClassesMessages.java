@@ -173,7 +173,7 @@ public record ClassesMessages(
 
     @Comment("Command messages.")
     public record Command(
-            @Comment("Shown after /classes reload.")
+            @Comment("Shown after /classesadmin reload.")
             String reload,
 
             @Comment("Shown when a player lacks permission for a command.")

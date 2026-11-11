@@ -16,7 +16,7 @@ Optional: PlaceholderAPI, to expose the placeholders to other plugins.
 
 1. Put `ExyliaClasses.jar` (from the [latest release](https://github.com/Exylia-Plugins/ExyliaClasses/releases/latest)), PacketEvents and ExyliaLib in `plugins/`.
 2. Start the server. It writes `config.yml`, `lang/<language>/messages.yml` and the six class files under `classes/`.
-3. Put on a full set of a class's armour. Edit the class files and run `/classes reload` to apply changes.
+3. Put on a full set of a class's armour. Edit the class files and run `/classesadmin reload` to apply changes.
 
 ## Updates
 
