@@ -1,0 +1,18 @@
+display-name: <#ffd82b><bold>BARDE</bold>
+energy:
+  name: Energie
+abilities:
+  SUGAR:
+    display-name: <#ffd82b><bold>TEMPO
+  IRON_INGOT:
+    display-name: <#9e9e9e><bold>WIDERSTAND
+  FEATHER:
+    display-name: <#63e5ff><bold>SPRUNG
+  BLAZE_POWDER:
+    display-name: <#ff5555><bold>STÄRKE
+  GHAST_TEAR:
+    display-name: <#ff77ff><bold>REGENERATION
+  MAGMA_CREAM:
+    display-name: <#ff9f20><bold>FEUERRESISTENZ
+  WHEAT:
+    display-name: <#e0e0e0><bold>UNSICHTBARKEIT

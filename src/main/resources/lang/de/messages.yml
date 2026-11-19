@@ -1,0 +1,31 @@
+prefix: '{primary}&lCLASSES {letters_black}•<reset>'
+no-permission: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}Du hast keine Berechtigung, die Klasse {highlight}%class% {error}zu verwenden.'
+warmup:
+  timer: '[sound:BLOCK_NOTE_BLOCK_PLING|1.0|1.0]%prefix% {muted}Du wechselst in {highlight}%class% {muted}in {warning}%duration% ⌚{muted}...'
+  ready: '[sound:ENTITY_PLAYER_LEVELUP|1.0|1.0]%prefix% {success}Du bist jetzt {highlight}%class%{success}!'
+  canceled: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}Klassenwechsel abgebrochen.'
+class-section:
+  removed: '%prefix% {muted}Du bist nicht mehr {highlight}%class%{muted}.'
+abilities:
+  cooldown: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}%ability%&r {muted}ist im Cooldown. Noch {warning}%duration% ⌚{muted}.'
+  used: '%prefix% {success}Du hast {highlight}%ability% {success}benutzt!'
+  clan: '%prefix% {muted}%player% {success}hat {highlight}%ability% {muted}in deiner Gruppe benutzt.'
+  enemy: '%prefix% {error}%player% {muted}hat {highlight}%ability% {error}gegen dich benutzt!'
+  no-energy: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}Nicht genug Energie. Du brauchst {warning}%needed% {error}(du hast {warning}%current%{error}).'
+weapons:
+  mark:
+    applied: '%prefix% {muted}Du hast {highlight}%target% {muted}markiert. {muted}(+{error}%damage%% {muted}Schaden)'
+    received: '%prefix% {muted}Du wurdest von {highlight}%attacker% {muted}markiert. {muted}(+{error}%damage%% {muted}Schaden)'
+    expired: '%prefix% {muted}Deine Markierungen sind abgelaufen.'
+    same-class: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}Du kannst keinen Spieler deiner eigenen Klasse markieren.'
+  backstab:
+    success: '[sound:ENTITY_PLAYER_ATTACK_CRIT|1.0|1.5]%prefix% {success}Erfolgreicher Rückenstich!'
+    victim: '%prefix% {error}Du wurdest von {highlight}%attacker% {error}hinterrücks erstochen!'
+    no-cooldown: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}Angriffs-Cooldown zu niedrig. {muted}(%current%% / %needed%%)'
+    cant-dead: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}Du kannst mit einem Rückenstich nicht töten.'
+command:
+  reload: '%prefix% {success}Konfiguration erfolgreich neu geladen.'
+  no-permission: '[sound:ENTITY_VILLAGER_NO|1.0|1.0]%prefix% {error}Du hast keine Berechtigung, diesen Befehl auszuführen.'
+boss-bars:
+  energy: '%energy_color%%symbol% %energy% / %max%'
+  mark: '%mark_color%%mark_icon% +%extra_damage%% {muted}(%time%)'

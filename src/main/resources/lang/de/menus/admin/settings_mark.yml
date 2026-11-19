@@ -1,0 +1,97 @@
+# DO NOT EDIT — REGENERIERT BEI JEDEM START.
+#
+# Die Markenleisten-Einstellungen, die ein Admin anpasst.
+
+title: "{primary}&lEINSTELLUNGEN {letters_black}» {highlight}Markierungsleiste"
+size: 27
+type: SIMPLE
+
+open_sounds:
+  - "minecraft:block.ender_chest.open|1.0|1.4"
+click_sounds:
+  - "minecraft:block.note_block.hat|1.0|1.0"
+close_sounds:
+  - "minecraft:block.barrel.close|1.0|0.7"
+
+filler:
+  global:
+    material: GRAY_STAINED_GLASS_PANE
+    hide_tooltip: true
+
+items:
+  header:
+    slot: 4
+    material: TARGET
+    name: "<gradient:{primary}:{secondary_light}>Markierungsleiste</gradient>"
+    lore:
+      - "{letters_black}Einstellungen der Markierungsleiste"
+      - ""
+      - "{primary}✎ Information"
+      - " {letters}Die Leiste, die eine Markierung"
+      - " {letters}auf einem Spieler herunterzählt."
+
+  mark-bar-enabled:
+    slot: 12
+    material: LEVER
+    name: "{letters}Markierungsleiste {letters_black}▸ <gradient:{primary}:{secondary_light}>Leiste anzeigen</gradient>"
+    lore:
+      - "{letters_black}Einstellung der Markierungsleiste"
+      - ""
+      - "{primary}✎ Information"
+      - " {letters}Zeigt Spielern mit einer"
+      - " {letters}Markierung die Leiste an."
+      - ""
+      - "{primary}✦ Status"
+      - "  {letters_black}· {info}{icon:redstone} {letters}Angezeigt{letters_black}: %mark_mark_bar_enabled%"
+      - "  {letters_black}· {info}{icon:book} {letters}Standard{letters_black}: %mark_mark_bar_enabled_default%"
+      - ""
+      - "%mark_mark_bar_enabled_click%"
+    actions:
+      - "exyliaclasses:setting mark mark-bar.enabled"
+
+  mark-bar-colour:
+    slot: 13
+    material: RED_DYE
+    name: "{letters}Markierungsleiste {letters_black}▸ <gradient:{primary}:{secondary_light}>Farbe</gradient>"
+    lore:
+      - "{letters_black}Einstellung der Markierungsleiste"
+      - ""
+      - "{primary}✎ Information"
+      - " {letters}Die Farbe der Leiste."
+      - ""
+      - "{primary}✦ Status"
+      - "  {letters_black}· {info}{icon:star} {letters}Farbe{letters_black}: %mark_mark_bar_colour%"
+      - "  {letters_black}· {info}{icon:book} {letters}Standard{letters_black}: %mark_mark_bar_colour_default%"
+      - ""
+      - "%mark_mark_bar_colour_click%"
+    actions:
+      - "exyliaclasses:setting mark mark-bar.colour"
+
+  mark-bar-overlay:
+    slot: 14
+    material: CHAIN
+    name: "{letters}Markierungsleiste {letters_black}▸ <gradient:{primary}:{secondary_light}>Segmente</gradient>"
+    lore:
+      - "{letters_black}Einstellung der Markierungsleiste"
+      - ""
+      - "{primary}✎ Information"
+      - " {letters}Wie die Leiste unterteilt ist."
+      - " {letters}Glatt passt zu einem Timer."
+      - ""
+      - "{primary}✦ Status"
+      - "  {letters_black}· {info}{icon:hopper} {letters}Segmente{letters_black}: %mark_mark_bar_overlay%"
+      - "  {letters_black}· {info}{icon:book} {letters}Standard{letters_black}: %mark_mark_bar_overlay_default%"
+      - ""
+      - "%mark_mark_bar_overlay_click%"
+    actions:
+      - "exyliaclasses:setting mark mark-bar.overlay"
+
+  back:
+    slot: 22
+    sound: "minecraft:item.bundle.remove_one|1.0|0.5"
+    material: 'basehead-eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjIzZmI2NzQyOTcxNmIyMWJjNmU4ZTdkNjY5Y2VkZGY2NWIxM2UwNzkwYTVjZTU1YjJlMDc3YjgyZDE5ZTEyNCJ9fX0='
+    name: "{letters}Zurück {letters_black}▸ <gradient:{error}:{error_light}>Einstellungen</gradient>"
+    lore:
+      - "{error}{icon:click} Klicken, um zurückzugehen"
+    actions:
+      - "exyliaclasses:settings_hub"

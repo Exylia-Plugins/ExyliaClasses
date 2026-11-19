@@ -1,0 +1,20 @@
+display-name: <#7134eb><bold>HEXENMEISTER</bold>
+energy:
+  name: Energie
+abilities:
+  SPIDER_EYE:
+    display-name: <#32b015><bold>GIFT
+  IRON_NUGGET:
+    display-name: <#1e88e5><bold>VERLANGSAMUNG
+  FERMENTED_SPIDER_EYE:
+    display-name: <#9c27b0><bold>SCHWÄCHE
+  ROTTEN_FLESH:
+    display-name: <#ff9800><bold>HUNGER
+  COAL:
+    display-name: <#616161><bold>WITHER
+  GREEN_DYE:
+    display-name: <#ff4081><bold>ÜBELKEIT
+  AMETHYST_SHARD:
+    display-name: <#fdd835><bold>LEUCHTEN
+  FEATHER:
+    display-name: <#81d4fa><bold>LANGSAMER FALL
